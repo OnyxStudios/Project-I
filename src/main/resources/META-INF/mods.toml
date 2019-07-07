@@ -1,0 +1,15 @@
+modLoader="javafml"
+loaderVersion="[26,)"
+issueTrackerURL="https://github.com/NerdHubMC/Project-I/issues/"
+
+[[mods]]
+modId="projecti"
+version="1.0.0"
+displayName="Project I"
+displayURL="https://github.com/NerdHubMC/Project-I/"
+#logoFile="projecti.png"
+credits="Intangible for being the inspiration for this mod"
+authors="abused_master"
+description='''
+A mod that allows players to explore the intangible energies that make up creatures and deities, and by learning to use these forces they are able to create the appearence of magical powers!
+'''

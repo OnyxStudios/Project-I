@@ -6,6 +6,8 @@ import net.minecraft.entity.AgeableEntity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.ai.goal.LookAtGoal;
+import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.ai.goal.SwimGoal;
 import net.minecraft.entity.ai.goal.WaterAvoidingRandomWalkingGoal;
 import net.minecraft.entity.item.ItemEntity;
@@ -21,6 +23,7 @@ import net.minecraft.util.Hand;
 import net.minecraft.world.World;
 
 import javax.annotation.Nullable;
+import java.util.List;
 
 public class EntitySoulBase extends AnimalEntity {
 
@@ -46,8 +49,9 @@ public class EntitySoulBase extends AnimalEntity {
     protected void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(0, new SwimGoal(this));
-        this.goalSelector.addGoal(1, new WaterAvoidingRandomWalkingGoal(this, 1));
-        //this.goalSelector.addGoal(2, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(1, new WaterAvoidingRandomWalkingGoal(this, 1.0D));
+        this.goalSelector.addGoal(2, new LookAtGoal(this, PlayerEntity.class, 6.0F));
+        this.goalSelector.addGoal(3, new LookRandomlyGoal(this));
     }
 
     @Override
@@ -89,15 +93,17 @@ public class EntitySoulBase extends AnimalEntity {
     }
 
     @Override
-    protected void collideWithEntity(Entity entity) {
-        super.collideWithEntity(entity);
+    public void tick() {
+        super.tick();
 
-        if(entity instanceof ItemEntity) {
-            ItemEntity item = (ItemEntity) entity;
+        if(collided) {
+            List<ItemEntity> items = world.getEntitiesWithinAABB(ItemEntity.class, this.getBoundingBox());
 
-            if(item.getItem().isItemEqual(new ItemStack(Items.BONE))) {
-                if(!world.isRemote) {
-                    world.addEntity(new ItemEntity(world, item.posX, item.posY, item.posZ, new ItemStack(ModItems.SOUL_BONE, item.getItem().getCount())));
+            for (ItemEntity item : items) {
+                if(item.getItem().isItemEqual(new ItemStack(Items.BONE))) {
+                    if(!world.isRemote) {
+                        world.addEntity(new ItemEntity(world, item.posX, item.posY, item.posZ, new ItemStack(ModItems.SOUL_BONE, item.getItem().getCount())));
+                    }
                     item.remove();
                 }
             }

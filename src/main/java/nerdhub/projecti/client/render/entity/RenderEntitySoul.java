@@ -40,7 +40,35 @@ public class RenderEntitySoul extends LivingRenderer {
 
     public LivingEntity getSoulToRender(World world, EntitySoulBase entity) {
         LivingEntity soulEntity = (LivingEntity) ForgeRegistries.ENTITIES.getValue(new ResourceLocation(entity.getEntityType())).create(world);
-        soulEntity.deserializeNBT(entity.serializeNBT());
+        soulEntity.setPosition(entity.posX, entity.posY, entity.posZ);
+        soulEntity.lastTickPosX = entity.lastTickPosX;
+        soulEntity.lastTickPosY = entity.lastTickPosY;
+        soulEntity.lastTickPosZ = entity.lastTickPosZ;
+        soulEntity.setMotion(entity.getMotion());
+        soulEntity.onGround = entity.onGround;
+        soulEntity.prevPosX = entity.prevPosX;
+        soulEntity.prevPosY = entity.prevPosY;
+        soulEntity.prevPosZ = entity.prevPosZ;
+        soulEntity.rotationPitch = entity.rotationPitch;
+        soulEntity.rotationYaw = entity.rotationYaw;
+        soulEntity.rotationYawHead = entity.rotationYawHead;
+        soulEntity.prevRotationPitch = entity.prevRotationPitch;
+        soulEntity.prevRotationYaw = entity.prevRotationYaw;
+        soulEntity.prevRotationYawHead = entity.prevRotationYawHead;
+        soulEntity.limbSwing = entity.limbSwing;
+        soulEntity.limbSwingAmount = entity.limbSwingAmount;
+        soulEntity.prevLimbSwingAmount = entity.prevLimbSwingAmount;
+        soulEntity.isSwingInProgress = entity.isSwingInProgress;
+        soulEntity.swingProgress = entity.swingProgress;
+        soulEntity.prevSwingProgress = entity.prevSwingProgress;
+        soulEntity.renderYawOffset = entity.renderYawOffset;
+        soulEntity.prevRenderYawOffset = entity.prevRenderYawOffset;
+        soulEntity.ticksExisted = entity.ticksExisted;
+        soulEntity.removed = false;
+        soulEntity.isAirBorne = entity.isAirBorne;
+        soulEntity.setSneaking(entity.isSneaking());
+        soulEntity.setSprinting(entity.isSprinting());
+        soulEntity.setInvisible(entity.isInvisible());
 
         return soulEntity;
     }

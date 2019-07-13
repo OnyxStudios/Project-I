@@ -12,7 +12,7 @@ public class TileEntityCrystal extends TileEntityBase implements ITickableTileEn
     public boolean fullyGrown;
     public boolean returnItem;
 
-    public static int MAX_TICKS_PER_STAGE = 50;
+    public static int MAX_TICKS_PER_STAGE = 150;
 
     public TileEntityCrystal() {
         super(ModEntities.CRYSTAL_TYPE);

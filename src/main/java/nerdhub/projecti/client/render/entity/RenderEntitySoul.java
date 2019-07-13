@@ -1,6 +1,8 @@
 package nerdhub.projecti.client.render.entity;
 
+import com.mojang.blaze3d.platform.GLX;
 import com.mojang.blaze3d.platform.GlStateManager;
+import nerdhub.projecti.client.render.ShaderHelper;
 import nerdhub.projecti.entity.EntitySoulBase;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -11,9 +13,12 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.registries.ForgeRegistries;
+import org.lwjgl.opengl.ARBMultitexture;
+import org.lwjgl.opengl.ARBShaderObjects;
 import org.lwjgl.opengl.GL11;
 
 import javax.annotation.Nullable;
+import java.util.function.Consumer;
 
 public class RenderEntitySoul extends LivingRenderer {
 
@@ -30,9 +35,11 @@ public class RenderEntitySoul extends LivingRenderer {
         GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0.02f);
         GlStateManager.color4f(1, 1, 1, 0.4f);
+        ShaderHelper.useShader(ShaderHelper.bloomShader, generateBloomCallback(new ResourceLocation("textures/entity/pig/pig.png"), new float[] {0.8f, 1, 0.8f, 1}, new float[] {1, 1, 1, 0.2f}));
         EntityRenderer render = Minecraft.getInstance().getRenderManager().getEntityRenderObject(soulEntity);
         render.bindEntityTexture(soulEntity);
         render.doRender(soulEntity, x, y, z, yaw, partialTicks);
+        ShaderHelper.releaseShader();
         GlStateManager.disableBlend();
         GlStateManager.disableAlphaTest();
         GlStateManager.popMatrix();
@@ -65,6 +72,7 @@ public class RenderEntitySoul extends LivingRenderer {
         soulEntity.prevRenderYawOffset = entity.prevRenderYawOffset;
         soulEntity.ticksExisted = entity.ticksExisted;
         soulEntity.removed = false;
+        soulEntity.remove();
         soulEntity.isAirBorne = entity.isAirBorne;
         soulEntity.setSneaking(entity.isSneaking());
         soulEntity.setSprinting(entity.isSprinting());
@@ -77,5 +85,21 @@ public class RenderEntitySoul extends LivingRenderer {
     @Override
     protected ResourceLocation getEntityTexture(Entity entity) {
         return null;
+    }
+
+    public static Consumer<Integer> generateBloomCallback(ResourceLocation textureLoc, float[] color, float[] brightColor) {
+        return (Integer shader) -> {
+            int textureUniform = ARBShaderObjects.glGetUniformLocationARB(shader, "texture");
+            int colorUniform = ARBShaderObjects.glGetUniformLocationARB(shader, "color");
+            int brightColorUniform = ARBShaderObjects.glGetUniformLocationARB(shader, "brightColor");
+
+            GLX.glActiveTexture(ARBMultitexture.GL_TEXTURE0_ARB);
+            GlStateManager.enableTexture();
+            Minecraft.getInstance().getTextureManager().bindTexture(textureLoc);
+            ARBShaderObjects.glUniform1iARB(textureUniform, 0);
+
+            ARBShaderObjects.glUniform4fARB(colorUniform, color[0], color[1], color[2], color[2]);
+            ARBShaderObjects.glUniform4fARB(brightColorUniform, brightColor[0], brightColor[1], brightColor[2], brightColor[2]);
+        };
     }
 }

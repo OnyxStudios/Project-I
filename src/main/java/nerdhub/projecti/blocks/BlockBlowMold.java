@@ -1,7 +1,5 @@
 package nerdhub.projecti.blocks;
 
-import com.google.common.collect.Maps;
-import nerdhub.projecti.registry.ModItems;
 import nerdhub.projecti.tiles.TileEntityBlowMold;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -9,7 +7,6 @@ import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
@@ -26,22 +23,21 @@ import net.minecraft.world.World;
 import net.minecraftforge.fluids.FluidUtil;
 
 import javax.annotation.Nullable;
-import java.util.Map;
 
 public class BlockBlowMold extends ContainerBlock {
 
-    public static Map<Item, Item> RECIPES = Maps.newHashMap();
+    //public static Map<Item, Item> RECIPES = Maps.newHashMap();
 
     public BlockBlowMold() {
         super(Properties.create(Material.ROCK).hardnessAndResistance(1.5f));
         this.setRegistryName("blow_mold");
 
-        RECIPES.put(ModItems.FUNNEL_MOLD, null);
-        RECIPES.put(ModItems.DECANTER_MOLD, null);
-        RECIPES.put(ModItems.SPLITTER_MOLD, null);
-        RECIPES.put(ModItems.GOURD_MOLD, null);
-        RECIPES.put(ModItems.SPIRAL_MOLD, null);
-        RECIPES.put(ModItems.GEM_MOLD, null);
+        //RECIPES.put(ModItems.FUNNEL_MOLD, null);
+        //RECIPES.put(ModItems.DECANTER_MOLD, null);
+        //RECIPES.put(ModItems.SPLITTER_MOLD, null);
+        //RECIPES.put(ModItems.GOURD_MOLD, null);
+        //RECIPES.put(ModItems.SPIRAL_MOLD, null);
+        //RECIPES.put(ModItems.GEM_MOLD, null);
     }
 
     @Override
@@ -52,7 +48,7 @@ public class BlockBlowMold extends ContainerBlock {
 
         if(FluidUtil.getFluidHandler(heldItem).isPresent()) {
             return FluidUtil.interactWithFluidHandler(player, hand, blowMold.tank);
-        }else if(blowMold.inventory.getStackInSlot(0).isEmpty() && RECIPES.containsKey(blowMold.inventory.getStackInSlot(0).getItem())){
+        }else if(blowMold.inventory.getStackInSlot(0).isEmpty()){// && RECIPES.containsKey(blowMold.inventory.getStackInSlot(0).getItem())){
             targetStack = heldItem.copy();
             targetStack.setCount(1);
             blowMold.inventory.setStackInSlot(0, targetStack);

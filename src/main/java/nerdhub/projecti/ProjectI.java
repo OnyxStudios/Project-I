@@ -26,7 +26,7 @@ public class ProjectI {
     public static final ItemGroup modItemGroup = new ItemGroup("projecti") {
         @Override
         public ItemStack createIcon() {
-            return new ItemStack(ModItems.SOUL_BONE);
+            return new ItemStack(ModItems.KNOWLEDGE_GEM);
         }
     };
 

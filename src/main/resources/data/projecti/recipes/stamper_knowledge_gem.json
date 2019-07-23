@@ -1,0 +1,5 @@
+{
+  "type": "projecti:stamper",
+  "ingredients": ["projecti:blue_crystal", "projecti:soul_bone", "projecti:soul_bone", "minecraft:redstone"],
+  "result": "projecti:knowledge_gem"
+}

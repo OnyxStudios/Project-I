@@ -1,0 +1,12 @@
+{
+  "variants": {
+    "facing=north,status=open": { "model": "projecti:block/circuit_stamper_open2" },
+    "facing=south,status=open": { "model": "projecti:block/circuit_stamper_open2", "y": 180 },
+    "facing=west,status=open":  { "model": "projecti:block/circuit_stamper_open2", "y": 270 },
+    "facing=east,status=open":  { "model": "projecti:block/circuit_stamper_open2", "y": 90 },
+	"facing=north,status=closed": { "model": "projecti:block/circuit_stamper_closed" },
+    "facing=south,status=closed": { "model": "projecti:block/circuit_stamper_closed", "y": 180 },
+    "facing=west,status=closed":  { "model": "projecti:block/circuit_stamper_closed", "y": 270 },
+    "facing=east,status=closed":  { "model": "projecti:block/circuit_stamper_closed", "y": 90 }
+  }
+}

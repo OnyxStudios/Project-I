@@ -2,5 +2,14 @@
   "itemGroup.projecti": "Project I",
   "item.projecti.soul_bone": "Soul Bone",
   "item.projecti.yellow_crystal": "Yellow Crystal",
-  "block.projecti.blue_crystal": "Blue Crystal"
+  "item.projecti.knowledge_gem": "Knowledge Gem",
+  "item.projecti.funnel_mold": "Funnel Mold",
+  "item.projecti.decanter_mold": "Decanter Mold",
+  "item.projecti.splitter_mold": "Splitter Mold",
+  "item.projecti.gourd_mold": "Gourd Mold",
+  "item.projecti.spiral_mold": "Spiral Mold",
+  "item.projecti.gem_mold": "Gem Mold",
+  "block.projecti.blue_crystal": "Blue Crystal",
+  "block.projecti.circuit_stamper": "Circuit Stamper",
+  "block.projecti.blow_mold": "Blow Mold"
 }

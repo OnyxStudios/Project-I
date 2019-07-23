@@ -12,7 +12,7 @@ public class TileEntityCrystal extends TileEntityBase implements ITickableTileEn
     public boolean fullyGrown;
     public boolean returnItem;
 
-    public static int MAX_TICKS_PER_STAGE = 150;
+    public static int MAX_TICKS_PER_STAGE = 2400;
 
     public TileEntityCrystal() {
         super(ModEntities.CRYSTAL_TYPE);
@@ -40,13 +40,14 @@ public class TileEntityCrystal extends TileEntityBase implements ITickableTileEn
 
     @Override
     public void tick() {
-        if(!fullyGrown) {
+        if (!fullyGrown) {
             if (stage < 4 && age < MAX_TICKS_PER_STAGE) {
                 age++;
+
             } else if (age >= MAX_TICKS_PER_STAGE) {
                 this.grow();
             }
-        }else if(stage >= 4) {
+        } else if (stage >= 4) {
             this.fullyGrown = true;
         }
     }

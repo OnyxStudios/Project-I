@@ -7,8 +7,7 @@ import net.minecraft.item.Item;
 public class ItemBase extends Item {
 
     public ItemBase(String name) {
-        super(new Properties().group(ProjectI.modItemGroup));
-        this.setRegistryName(name);
+        this(name, new Properties().group(ProjectI.modItemGroup));
     }
 
     public ItemBase(String name, Food food) {

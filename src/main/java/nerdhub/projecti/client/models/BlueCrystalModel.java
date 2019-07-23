@@ -72,6 +72,7 @@ public class BlueCrystalModel extends Model {
         bone.render(0.0625F);
         bone2.render(0.0625F);
         bone3.render(0.0625F);
+
         if(tile.stage >= 1) {
             crystal1.render(0.0625F);
         }

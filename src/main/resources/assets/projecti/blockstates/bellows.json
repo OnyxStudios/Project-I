@@ -1,0 +1,8 @@
+{
+  "variants": {
+    "facing=north": { "model": "projecti:block/bellows" },
+    "facing=south": { "model": "projecti:block/bellows", "y": 180 },
+    "facing=west":  { "model": "projecti:block/bellows", "y": 270 },
+    "facing=east":  { "model": "projecti:block/bellows", "y": 90 }
+  }
+}

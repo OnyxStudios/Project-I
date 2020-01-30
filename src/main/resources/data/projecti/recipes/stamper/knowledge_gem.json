@@ -1,0 +1,12 @@
+{
+  "type": "projecti:stamper",
+  "ingredients": [
+    {"item": "projecti:blue_crystal"},
+    {"item": "projecti:soul_bone"},
+    {"item": "projecti:soul_bone"},
+    {"item": "minecraft:redstone"}
+  ],
+  "result": {
+    "item": "projecti:knowledge_gem"
+  }
+}

@@ -1,6 +1,7 @@
 package nerdhub.projecti.blocks;
 
 import nerdhub.projecti.tiles.TileEntityBlowMold;
+import nerdhub.projecti.utils.InventoryUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -8,6 +9,7 @@ import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockRenderLayer;
 import net.minecraft.util.Direction;
@@ -26,18 +28,9 @@ import javax.annotation.Nullable;
 
 public class BlockBlowMold extends ContainerBlock {
 
-    //public static Map<Item, Item> RECIPES = Maps.newHashMap();
-
     public BlockBlowMold() {
         super(Properties.create(Material.ROCK).hardnessAndResistance(1.5f));
         this.setRegistryName("blow_mold");
-
-        //RECIPES.put(ModItems.FUNNEL_MOLD, null);
-        //RECIPES.put(ModItems.DECANTER_MOLD, null);
-        //RECIPES.put(ModItems.SPLITTER_MOLD, null);
-        //RECIPES.put(ModItems.GOURD_MOLD, null);
-        //RECIPES.put(ModItems.SPIRAL_MOLD, null);
-        //RECIPES.put(ModItems.GEM_MOLD, null);
     }
 
     @Override
@@ -46,9 +39,17 @@ public class BlockBlowMold extends ContainerBlock {
         ItemStack targetStack;
         TileEntityBlowMold blowMold = (TileEntityBlowMold) world.getTileEntity(pos);
 
-        if(FluidUtil.getFluidHandler(heldItem).isPresent()) {
+        int slot = blowMold.inventory.getStackInSlot(1).isEmpty() ? 0 : 1;
+        boolean extract = heldItem.isItemEqual(blowMold.inventory.getStackInSlot(slot)) || (heldItem.isEmpty() && !blowMold.inventory.getStackInSlot(slot).isEmpty());
+
+        if (extract) {
+            if (heldItem.isEmpty()) player.setHeldItem(hand, blowMold.inventory.getStackInSlot(slot)); else player.getHeldItem(hand).grow(1);
+            blowMold.inventory.setStackInSlot(slot, ItemStack.EMPTY);
+
+            return true;
+        } else if (FluidUtil.getFluidHandler(heldItem).isPresent() || heldItem.getItem() == Items.LAVA_BUCKET) {
             return FluidUtil.interactWithFluidHandler(player, hand, blowMold.tank);
-        }else if(blowMold.inventory.getStackInSlot(0).isEmpty()){// && RECIPES.containsKey(blowMold.inventory.getStackInSlot(0).getItem())){
+        } else if (blowMold.inventory.getStackInSlot(0).isEmpty()) {// && RECIPES.containsKey(blowMold.inventory.getStackInSlot(0).getItem())){
             targetStack = heldItem.copy();
             targetStack.setCount(1);
             blowMold.inventory.setStackInSlot(0, targetStack);
@@ -58,6 +59,16 @@ public class BlockBlowMold extends ContainerBlock {
         }
 
         return false;
+    }
+
+    @Override
+    public void onReplaced(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (state.getBlock() != newState.getBlock()) {
+            TileEntityBlowMold blowMold = (TileEntityBlowMold) world.getTileEntity(pos);
+            InventoryUtils.dropInventoryItems(world, pos, blowMold.inventory);
+
+            super.onReplaced(state, world, pos, newState, isMoving);
+        }
     }
 
     @Override

@@ -43,14 +43,14 @@ public class RenderHelper {
         Minecraft mc = Minecraft.getInstance();
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder buffer = tessellator.getBuffer();
-        int brightness = mc.world.getCombinedLight(pos, fluid.getFluid().getLuminosity());
+        int brightness = mc.world.getCombinedLight(pos, fluid.getFluid().getAttributes().getLuminosity());
 
         buffer.begin(GL11.GL_QUADS, DefaultVertexFormats.BLOCK);
         mc.getTextureManager().bindTexture(AtlasTexture.LOCATION_BLOCKS_TEXTURE);
         setupRenderState();
         GlStateManager.translated(x, y, z);
 
-        TextureAtlasSprite still = mc.getTextureMap().getSprite(fluid.getFluid().getStill(fluid));
+        TextureAtlasSprite still = mc.getTextureMap().getSprite(fluid.getFluid().getAttributes().getStill(fluid));
         addTexturedQuad(buffer, still, x1, y1, z1, x2 - x1, y2 - y1, z2 - z1, Direction.DOWN, color, brightness);
         addTexturedQuad(buffer, still, x1, y1, z1, x2 - x1, y2 - y1, z2 - z1, Direction.NORTH, color, brightness);
         addTexturedQuad(buffer, still, x1, y1, z1, x2 - x1, y2 - y1, z2 - z1, Direction.EAST, color, brightness);
@@ -59,7 +59,6 @@ public class RenderHelper {
         addTexturedQuad(buffer, still, x1, y1, z1, x2 - x1, y2 - y1, z2 - z1, Direction.UP, color, brightness);
 
         tessellator.draw();
-
         cleanupRenderState();
     }
 

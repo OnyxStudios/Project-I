@@ -8,6 +8,7 @@ import nerdhub.projecti.client.render.tile.BlueCrystalRenderer;
 import nerdhub.projecti.client.render.tile.CircuitStamperRenderer;
 import nerdhub.projecti.entity.EntityKnowledge;
 import nerdhub.projecti.entity.EntitySoulBase;
+import nerdhub.projecti.tiles.TileEntityBellows;
 import nerdhub.projecti.tiles.TileEntityBlowMold;
 import nerdhub.projecti.tiles.TileEntityCrystal;
 import nerdhub.projecti.tiles.TileEntityStamper;
@@ -30,13 +31,14 @@ public class ModEntities {
     public static TileEntityType<TileEntityCrystal> CRYSTAL_TYPE = createTileType(TileEntityCrystal::new, "crystal_tile_entity", ModBlocks.BLUE_CRYSTAL);
     public static TileEntityType<TileEntityStamper> STAMPER_TYPE = createTileType(TileEntityStamper::new, "stamper_tile", ModBlocks.CIRCUIT_STAMPER);
     public static TileEntityType<TileEntityBlowMold> BLOW_MOLD_TYPE = createTileType(TileEntityBlowMold::new, "blow_mold_tile", ModBlocks.BLOW_MOLD);
+    public static TileEntityType<TileEntityBellows> BELLOWS_TYPE = createTileType(TileEntityBellows::new, "bellows_tile", ModBlocks.BELLOWS);
 
     public static EntityType<EntitySoulBase> ENTITY_SOUL = EntityType.Builder.<EntitySoulBase>create(EntitySoulBase::new, EntityClassification.MISC).build("entity_soul");
     public static EntityType<EntityKnowledge> ENTITY_KNOWLEDGE = EntityType.Builder.<EntityKnowledge>create(EntityKnowledge::new, EntityClassification.MISC).size(2, 2).build("entity_knowledge");
 
     @SubscribeEvent
     public static void registerTileEntities(RegistryEvent.Register<TileEntityType<?>> event) {
-        event.getRegistry().registerAll(CRYSTAL_TYPE, STAMPER_TYPE, BLOW_MOLD_TYPE);
+        event.getRegistry().registerAll(CRYSTAL_TYPE, STAMPER_TYPE, BLOW_MOLD_TYPE, BELLOWS_TYPE);
     }
 
     @SubscribeEvent
@@ -46,8 +48,8 @@ public class ModEntities {
 
     public static void renderEntities() {
         EntityRendererManager rendererManager = Minecraft.getInstance().getRenderManager();
-        rendererManager.entityRenderMap.put(EntitySoulBase.class, new RenderEntitySoul(rendererManager));
-        rendererManager.entityRenderMap.put(EntityKnowledge.class, new RenderEntityKnowledge(rendererManager));
+        rendererManager.renderers.put(EntitySoulBase.class, new RenderEntitySoul(rendererManager));
+        rendererManager.renderers.put(EntityKnowledge.class, new RenderEntityKnowledge(rendererManager));
 
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCrystal.class, new BlueCrystalRenderer());
         ClientRegistry.bindTileEntitySpecialRenderer(TileEntityStamper.class, new CircuitStamperRenderer());

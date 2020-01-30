@@ -1,8 +1,8 @@
 package nerdhub.projecti.tiles;
 
-import nerdhub.projecti.ProjectI;
 import nerdhub.projecti.blocks.BlockCircuitStamper;
 import nerdhub.projecti.registry.ModEntities;
+import nerdhub.projecti.registry.ModRecipes;
 import nerdhub.projecti.utils.InvCapWrapper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
@@ -53,7 +53,7 @@ public class TileEntityStamper extends TileEntityBase {
         if(!world.isRemote) {
             boolean open = getBlockState().get(BlockCircuitStamper.STATUS) == BlockCircuitStamper.StamperStatus.OPEN;
             if(world.isBlockPowered(pos) && open) {
-                Optional<IRecipe<InvCapWrapper>> recipeObj = world.getRecipeManager().getRecipe(ProjectI.STAMPER, new InvCapWrapper(inventory), world);
+                Optional<IRecipe<InvCapWrapper>> recipeObj = world.getRecipeManager().getRecipe(ModRecipes.STAMPER, new InvCapWrapper(inventory), world);
 
                 if (recipeObj.isPresent()) {
                     IRecipe recipe = recipeObj.get();

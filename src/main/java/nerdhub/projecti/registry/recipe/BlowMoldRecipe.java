@@ -1,58 +1,52 @@
 package nerdhub.projecti.registry.recipe;
 
 import nerdhub.projecti.registry.ModRecipes;
-import net.minecraft.inventory.IInventory;
+import nerdhub.projecti.utils.InvFluidWrapper;
+import net.minecraft.fluid.Fluid;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.item.crafting.IRecipeSerializer;
 import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.NonNullList;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
+import net.minecraftforge.fluids.FluidStack;
 
-public class StamperRecipe implements IRecipe<IInventory> {
+public class BlowMoldRecipe implements IRecipe<InvFluidWrapper> {
 
     protected IRecipeType<?> recipeType;
     protected ResourceLocation ID;
     protected String group;
-    protected Ingredient[] ingredients;
+    protected Ingredient mold;
     protected ItemStack result;
+    protected Fluid fluid;
 
-    public StamperRecipe(ResourceLocation id, String group, ItemStack result, Ingredient... ingredients) {
-        this.recipeType = ModRecipes.STAMPER;
+    public BlowMoldRecipe(ResourceLocation id, String group, Ingredient mold, ItemStack result, Fluid fluid) {
+        this.recipeType = ModRecipes.BLOW_MOLD;
         this.ID = id;
         this.group = group;
+        this.mold = mold;
         this.result = result;
-        this.ingredients = ingredients;
+        this.fluid = fluid;
     }
 
     @Override
-    public boolean matches(IInventory inv, World worldIn) {
-        for (int i = 0; i < 4; i++) {
-            ItemStack slotStack = inv.getStackInSlot(i);
-
-            if(slotStack.isEmpty() || !ingredients[i].test(slotStack)) {
-                return false;
-            }
+    public boolean matches(InvFluidWrapper inv, World worldIn) {
+        if(inv.getTank() != null && inv.getTank().getFluid().isFluidEqual(new FluidStack(fluid, 1000)) && mold.test(inv.getStackInSlot(0))) {
+            return true;
         }
 
-        return true;
+        return false;
     }
 
     @Override
-    public ItemStack getCraftingResult(IInventory inv) {
+    public ItemStack getCraftingResult(InvFluidWrapper inv) {
         return this.result.copy();
     }
 
     @Override
     public boolean canFit(int width, int height) {
-        return width == 2 && height == 2;
-    }
-
-    @Override
-    public NonNullList<Ingredient> getIngredients() {
-        return NonNullList.from(Ingredient.EMPTY, ingredients);
+        return true;
     }
 
     @Override
@@ -67,7 +61,7 @@ public class StamperRecipe implements IRecipe<IInventory> {
 
     @Override
     public IRecipeSerializer<?> getSerializer() {
-        return ModRecipes.STAMPER_SERIALIZER;
+        return ModRecipes.BLOW_MOLD_SERIALIZER;
     }
 
     @Override

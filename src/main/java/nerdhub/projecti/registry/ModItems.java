@@ -4,8 +4,7 @@ import nerdhub.projecti.ProjectI;
 import nerdhub.projecti.items.ItemBase;
 import nerdhub.projecti.items.ItemKnowledgeGem;
 import nerdhub.projecti.items.ItemSoulBone;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.Item;
+import net.minecraft.item.*;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -30,9 +29,26 @@ public class ModItems {
     public static Item BLUE_CRYSTAL_ITEM = new BlockItem(ModBlocks.BLUE_CRYSTAL, new Item.Properties().group(ProjectI.modItemGroup)).setRegistryName(ModBlocks.BLUE_CRYSTAL.getRegistryName());
     public static Item CIRCUIT_STAMPER_ITEM = new BlockItem(ModBlocks.CIRCUIT_STAMPER, new Item.Properties().group(ProjectI.modItemGroup)).setRegistryName(ModBlocks.CIRCUIT_STAMPER.getRegistryName());
     public static Item BLOW_MOLD_ITEM = new BlockItem(ModBlocks.BLOW_MOLD, new Item.Properties().group(ProjectI.modItemGroup)).setRegistryName(ModBlocks.BLOW_MOLD.getRegistryName());
+    public static Item BELLOWS_ITEM = new BlockItem(ModBlocks.BELLOWS, new Item.Properties().group(ProjectI.modItemGroup)).setRegistryName(ModBlocks.BELLOWS.getRegistryName());
+    public static final Item BLUE_CRYSTAL_BUCKET = new BucketItem(() -> ModBlocks.MOLTEN_BLUE_CRYSTAL, new Item.Properties().containerItem(Items.BUCKET).maxStackSize(1).group(ProjectI.modItemGroup)).setRegistryName("blue_crystal_bucket");
 
     @SubscribeEvent
     public static void registerItems(RegistryEvent.Register<Item> event) {
-        event.getRegistry().registerAll(SOUL_BONE, YELLOW_CRYSTAL, BLUE_CRYSTAL_ITEM, CIRCUIT_STAMPER_ITEM, KNOWLEDGE_GEM, BLOW_MOLD_ITEM, FUNNEL_MOLD, DECANTER_MOLD, SPLITTER_MOLD, GOURD_MOLD, SPIRAL_MOLD, GEM_MOLD);
+        event.getRegistry().registerAll(
+                SOUL_BONE,
+                YELLOW_CRYSTAL,
+                BLUE_CRYSTAL_ITEM,
+                CIRCUIT_STAMPER_ITEM,
+                KNOWLEDGE_GEM,
+                BLOW_MOLD_ITEM,
+                FUNNEL_MOLD,
+                DECANTER_MOLD,
+                SPLITTER_MOLD,
+                GOURD_MOLD,
+                SPIRAL_MOLD,
+                GEM_MOLD,
+                BELLOWS_ITEM,
+                BLUE_CRYSTAL_BUCKET
+        );
     }
 }

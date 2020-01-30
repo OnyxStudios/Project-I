@@ -1,8 +1,12 @@
 package nerdhub.projecti.tiles;
 
 import nerdhub.projecti.registry.ModEntities;
+import net.minecraft.block.Blocks;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.util.Direction;
+
+import java.util.Random;
 
 public class TileEntityCrystal extends TileEntityBase implements ITickableTileEntity {
 
@@ -11,11 +15,13 @@ public class TileEntityCrystal extends TileEntityBase implements ITickableTileEn
     public boolean rare;
     public boolean fullyGrown;
     public boolean returnItem;
+    public Direction randomDir;
 
     public static int MAX_TICKS_PER_STAGE = 2400;
 
     public TileEntityCrystal() {
         super(ModEntities.CRYSTAL_TYPE);
+        randomDir = Direction.random(new Random());
     }
 
     @Override
@@ -26,6 +32,7 @@ public class TileEntityCrystal extends TileEntityBase implements ITickableTileEn
         this.rare = nbt.getBoolean("rare");
         this.fullyGrown = nbt.getBoolean("fullyGrown");
         this.returnItem = nbt.getBoolean("returnItem");
+        this.randomDir = Direction.byName(nbt.getString("randomDir"));
     }
 
     @Override
@@ -35,6 +42,7 @@ public class TileEntityCrystal extends TileEntityBase implements ITickableTileEn
         nbt.putInt("stage", this.stage);
         nbt.putBoolean("rare", this.rare);
         nbt.putBoolean("returnItem", this.returnItem);
+        nbt.putString("randomDir", randomDir != null ? this.randomDir.getName() : Direction.NORTH.getName());
         return nbt;
     }
 
@@ -42,7 +50,7 @@ public class TileEntityCrystal extends TileEntityBase implements ITickableTileEn
     public void tick() {
         if (!fullyGrown) {
             if (stage < 4 && age < MAX_TICKS_PER_STAGE) {
-                age++;
+                age += world.getBlockState(pos.down()).getBlock() == Blocks.STONE ? 2 : 1;
 
             } else if (age >= MAX_TICKS_PER_STAGE) {
                 this.grow();

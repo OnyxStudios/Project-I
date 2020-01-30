@@ -9,7 +9,9 @@
   "item.projecti.gourd_mold": "Gourd Mold",
   "item.projecti.spiral_mold": "Spiral Mold",
   "item.projecti.gem_mold": "Gem Mold",
+  "item.projecti.blue_crystal_bucket": "Molten Blue Crystal Bucket",
   "block.projecti.blue_crystal": "Blue Crystal",
   "block.projecti.circuit_stamper": "Circuit Stamper",
-  "block.projecti.blow_mold": "Blow Mold"
+  "block.projecti.blow_mold": "Blow Mold",
+  "block.projecti.bellows": "Bellows"
 }

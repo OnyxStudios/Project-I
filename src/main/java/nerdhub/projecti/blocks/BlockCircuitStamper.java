@@ -1,6 +1,7 @@
 package nerdhub.projecti.blocks;
 
 import nerdhub.projecti.tiles.TileEntityStamper;
+import nerdhub.projecti.utils.BlockUtils;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.item.ItemEntity;
@@ -12,6 +13,7 @@ import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -129,6 +131,11 @@ public class BlockCircuitStamper extends ContainerBlock {
     }
 
     @Override
+    public BlockRenderLayer getRenderLayer() {
+        return BlockRenderLayer.CUTOUT;
+    }
+
+    @Override
     public BlockState rotate(BlockState state, Rotation rotation) {
         return state.with(FACING, rotation.rotate(state.get(FACING)));
     }
@@ -154,21 +161,7 @@ public class BlockCircuitStamper extends ContainerBlock {
         VoxelShape baseShape = VoxelShapes.or(bottomShape, Block.makeCuboidShape(0, 1, 0, 16, 3, 16));
         VoxelShape topShape;
         if(state.get(STATUS) == StamperStatus.OPEN) {
-            switch (state.get(FACING)) {
-                case SOUTH:
-                    topShape = Block.makeCuboidShape(0, 0, 0, 16, 16, 3);
-                    break;
-                case EAST:
-                    topShape = Block.makeCuboidShape(0, 0, 0, 3, 16, 16);
-                    break;
-                case WEST:
-                    topShape = Block.makeCuboidShape(16, 0, 0, 13, 16, 16);
-                    break;
-                case NORTH:
-                default:
-                    topShape = Block.makeCuboidShape(0, 0, 13, 16, 16, 16);
-                    break;
-            }
+            topShape = VoxelShapes.create(BlockUtils.rotateBox(new AxisAlignedBB(0, 0, 13, 16, 16, 16), state.get(FACING)));
         }else {
             topShape = Block.makeCuboidShape(0, 3, 0, 16, 5, 16);
         }

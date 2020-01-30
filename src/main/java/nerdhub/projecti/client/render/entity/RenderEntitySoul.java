@@ -36,7 +36,7 @@ public class RenderEntitySoul extends LivingRenderer {
         GlStateManager.alphaFunc(GL11.GL_GREATER, 0.02f);
         GlStateManager.color4f(1, 1, 1, 0.4f);
         ShaderHelper.useShader(ShaderHelper.bloomShader, generateBloomCallback(new ResourceLocation("textures/entity/pig/pig.png"), new float[] {0.8f, 1, 0.8f, 1}, new float[] {1, 1, 1, 0.2f}));
-        EntityRenderer render = Minecraft.getInstance().getRenderManager().getEntityRenderObject(soulEntity);
+        EntityRenderer render = Minecraft.getInstance().getRenderManager().getRenderer(soulEntity);
         render.bindEntityTexture(soulEntity);
         render.doRender(soulEntity, x, y, z, yaw, partialTicks);
         ShaderHelper.releaseShader();

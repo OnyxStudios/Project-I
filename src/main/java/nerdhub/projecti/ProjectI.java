@@ -2,12 +2,10 @@ package nerdhub.projecti;
 
 import nerdhub.projecti.registry.ModEntities;
 import nerdhub.projecti.registry.ModItems;
-import nerdhub.projecti.registry.recipe.StamperRecipe;
-import nerdhub.projecti.registry.recipe.StamperRecipeSerializer;
+import nerdhub.projecti.registry.ModRecipes;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -30,11 +28,7 @@ public class ProjectI {
         }
     };
 
-    public static final IRecipeType STAMPER = IRecipeType.register(MODID + ":stamper");
-    public static final StamperRecipeSerializer<StamperRecipe> STAMPER_SERIALIZER = new StamperRecipeSerializer<>(StamperRecipe::new);
-
     public ProjectI() {
-        //FluidRegistry.enableUniversalBucket();
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::init);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::initClient);
         FMLJavaModLoadingContext.get().getModEventBus().register(this);
@@ -49,6 +43,9 @@ public class ProjectI {
 
     @SubscribeEvent
     public void registerRecipes(RegistryEvent.Register<IRecipeSerializer<?>> event) {
-        event.getRegistry().register(ProjectI.STAMPER_SERIALIZER.setRegistryName(new ResourceLocation(MODID, "stamper")));
+        event.getRegistry().registerAll(
+                ModRecipes.STAMPER_SERIALIZER.setRegistryName(new ResourceLocation(MODID, "stamper")),
+                ModRecipes.BLOW_MOLD_SERIALIZER.setRegistryName(new ResourceLocation(MODID, "blow_mold"))
+        );
     }
 }

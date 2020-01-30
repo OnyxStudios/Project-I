@@ -14,6 +14,8 @@ public class BlowMoldRenderer extends TileEntityRenderer<TileEntityBlowMold> {
 
     @Override
     public void render(TileEntityBlowMold tile, double x, double y, double z, float partialTicks, int stage) {
+        long angle = (System.currentTimeMillis() / 10) % 360;
+
         if(tile.tank.getFluidAmount() >= 1000) {
             GlStateManager.pushMatrix();
             GlStateManager.enableBlend();
@@ -33,7 +35,10 @@ public class BlowMoldRenderer extends TileEntityRenderer<TileEntityBlowMold> {
 
             if(!tile.inventory.getStackInSlot(1).isEmpty()) {
                 //Undo then render result
-                GlStateManager.translated(-0.5, -0.9, -0.35);
+                GlStateManager.rotated(-90, 1, 0 ,0);
+                GlStateManager.scaled(0.5, 0.5, 0.35);
+                GlStateManager.translated(0, 0.5, 0.3);
+                GlStateManager.rotated(angle, 0, 1, 0);
                 Minecraft.getInstance().getItemRenderer().renderItem(tile.inventory.getStackInSlot(1), ItemCameraTransforms.TransformType.GROUND);
             }
         }

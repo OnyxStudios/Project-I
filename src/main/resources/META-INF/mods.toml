@@ -1,13 +1,14 @@
 modLoader="javafml"
-loaderVersion="[26,)"
-issueTrackerURL="https://github.com/NerdHubMC/Project-I/issues/"
+loaderVersion="[36,)"
+license="MIT"
+issueTrackerURL="https://github.com/OnyxStudios/Project-I/issues/"
 
 [[mods]]
 modId="projecti"
-version="1.0.0"
+version="${file.jarVersion}"
 displayName="Project I"
-displayURL="https://github.com/NerdHubMC/Project-I/"
-#logoFile="projecti.png"
+displayURL="https://github.com/OnyxStudios/Project-I/"
+logoFile="logo.png"
 credits="Intangible for being the inspiration for this mod"
 authors="abused_master"
 description='''

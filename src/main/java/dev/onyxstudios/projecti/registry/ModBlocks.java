@@ -2,6 +2,7 @@ package dev.onyxstudios.projecti.registry;
 
 import dev.onyxstudios.projecti.ProjectI;
 import dev.onyxstudios.projecti.blocks.BlueCrystalBlock;
+import dev.onyxstudios.projecti.blocks.CircuitStamperBlock;
 import dev.onyxstudios.projecti.blocks.fluid.BaseFluidBlock;
 import dev.onyxstudios.projecti.blocks.fluid.FluidMoltenBlueCrystal;
 import dev.onyxstudios.projecti.items.BlueCrystalItem;
@@ -9,6 +10,7 @@ import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.fluid.Fluid;
+import net.minecraft.item.BlockItem;
 import net.minecraft.item.BucketItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.Items;
@@ -28,6 +30,9 @@ public class ModBlocks {
 
     public static RegistryObject<Block> BLUE_CRYSTAL = blockRegistry.register("blue_crystal", BlueCrystalBlock::new);
     public static RegistryObject<Item> BLUE_CRYSTAL_ITEM = itemRegistry.register("blue_crystal", BlueCrystalItem::new);
+
+    public static RegistryObject<Block> STAMPER = blockRegistry.register("circuit_stamper", CircuitStamperBlock::new);
+    public static RegistryObject<Item> STAMPER_ITEM = itemRegistry.register("circuit_stamper", () -> new BlockItem(STAMPER.get(), ITEM_BLOCK_PROPS));
 
     //Fluids
     private static AbstractBlock.Properties HOT_FLUID_PROPS = AbstractBlock.Properties.of(Material.LAVA).randomTicks().lightLevel(value -> 100).noDrops();

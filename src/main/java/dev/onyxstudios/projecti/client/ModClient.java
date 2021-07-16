@@ -2,6 +2,7 @@ package dev.onyxstudios.projecti.client;
 
 import dev.onyxstudios.projecti.ProjectI;
 import dev.onyxstudios.projecti.client.render.tile.BlueCrystalRenderer;
+import dev.onyxstudios.projecti.client.render.tile.CircuitStamperRenderer;
 import dev.onyxstudios.projecti.registry.ModBlocks;
 import dev.onyxstudios.projecti.registry.ModEntities;
 import net.minecraft.client.Minecraft;
@@ -28,10 +29,12 @@ public class ModClient {
 
     private static void initTESRS() {
         ClientRegistry.bindTileEntityRenderer(ModEntities.CRYSTAL_TYPE.get(), BlueCrystalRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(ModEntities.STAMPER_TYPE.get(), CircuitStamperRenderer::new);
     }
 
     private static void initLayers() {
         RenderTypeLookup.setRenderLayer(ModBlocks.BLUE_CRYSTAL.get(), RenderType.translucent());
+        RenderTypeLookup.setRenderLayer(ModBlocks.STAMPER.get(), RenderType.cutout());
     }
 
     private static void initEntityRenders() {

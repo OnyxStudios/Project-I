@@ -74,4 +74,9 @@ public class StamperRecipe implements IRecipe<IInventory> {
     public IRecipeType<?> getType() {
         return this.recipeType;
     }
+
+    @Override
+    public boolean isSpecial() {
+        return true;
+    }
 }

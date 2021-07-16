@@ -68,4 +68,9 @@ public class BlowMoldRecipe implements IRecipe<InvFluidWrapper> {
     public IRecipeType<?> getType() {
         return this.recipeType;
     }
+
+    @Override
+    public boolean isSpecial() {
+        return true;
+    }
 }

@@ -7,7 +7,6 @@ import dev.onyxstudios.projecti.registry.ModItems;
 import dev.onyxstudios.projecti.registry.ModRecipes;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -24,7 +23,7 @@ public class ProjectI {
     public static ItemGroup TAB = new ItemGroup(MODID) {
         @Override
         public ItemStack makeIcon() {
-            return Items.BONE.getDefaultInstance();
+            return ModItems.SOUL_BONE.get().getDefaultInstance();
         }
     };
 
@@ -35,6 +34,7 @@ public class ProjectI {
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModBlocks.blockRegistry.register(modBus);
         ModBlocks.itemRegistry.register(modBus);
+        ModBlocks.fluidRegistry.register(modBus);
         ModItems.itemRegistry.register(modBus);
         ModEntities.tileRegistry.register(modBus);
         ModEntities.containerRegistry.register(modBus);

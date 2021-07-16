@@ -69,9 +69,14 @@ minecraft {
     }
 }
 
+repositories {
+    maven { url 'https://dl.cloudsmith.io/public/geckolib3/geckolib/maven/' }
+}
+
 dependencies {
     minecraft "net.minecraftforge:forge:${forge_version}"
     annotationProcessor 'org.spongepowered:mixin:0.8.2:processor'
+    implementation fg.deobf("software.bernie.geckolib:geckolib-forge-${gecko_version}")
 }
 
 jar {

@@ -11,7 +11,6 @@ import net.minecraft.block.ContainerBlock;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.item.ItemEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.state.EnumProperty;
@@ -41,7 +40,8 @@ public class CircuitStamperBlock extends ContainerBlock {
     public CircuitStamperBlock() {
         super(Properties.of(Material.STONE)
                 .strength(1.5f, 1.5f)
-                .harvestTool(ToolType.PICKAXE));
+                .harvestTool(ToolType.PICKAXE)
+                .noOcclusion());
         registerDefaultState(getStateDefinition().any().setValue(STATUS, StamperStatus.OPEN).setValue(HORIZONTAL_FACING, Direction.NORTH));
     }
 
@@ -119,11 +119,6 @@ public class CircuitStamperBlock extends ContainerBlock {
         }
 
         return ActionResultType.SUCCESS;
-    }
-
-    @Override
-    public boolean removedByPlayer(BlockState state, World world, BlockPos pos, PlayerEntity player, boolean willHarvest, FluidState fluid) {
-        return super.removedByPlayer(state, world, pos, player, willHarvest, fluid);
     }
 
     @Override

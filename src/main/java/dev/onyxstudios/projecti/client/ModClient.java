@@ -1,6 +1,7 @@
 package dev.onyxstudios.projecti.client;
 
 import dev.onyxstudios.projecti.ProjectI;
+import dev.onyxstudios.projecti.client.render.tile.BellowsRenderer;
 import dev.onyxstudios.projecti.client.render.tile.BlueCrystalRenderer;
 import dev.onyxstudios.projecti.client.render.tile.CircuitStamperRenderer;
 import dev.onyxstudios.projecti.registry.ModBlocks;
@@ -30,11 +31,13 @@ public class ModClient {
     private static void initTESRS() {
         ClientRegistry.bindTileEntityRenderer(ModEntities.CRYSTAL_TYPE.get(), BlueCrystalRenderer::new);
         ClientRegistry.bindTileEntityRenderer(ModEntities.STAMPER_TYPE.get(), CircuitStamperRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(ModEntities.BELLOWS_TYPE.get(), BellowsRenderer::new);
     }
 
     private static void initLayers() {
         RenderTypeLookup.setRenderLayer(ModBlocks.BLUE_CRYSTAL.get(), RenderType.translucent());
         RenderTypeLookup.setRenderLayer(ModBlocks.STAMPER.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.BELLOWS.get(), RenderType.cutout());
     }
 
     private static void initEntityRenders() {

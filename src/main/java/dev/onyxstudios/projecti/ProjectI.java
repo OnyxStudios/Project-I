@@ -14,6 +14,7 @@ import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import software.bernie.geckolib3.GeckoLib;
 
 @Mod(ProjectI.MODID)
 public class ProjectI {
@@ -40,6 +41,7 @@ public class ProjectI {
         ModEntities.containerRegistry.register(modBus);
         ModEntities.entityRegistry.register(modBus);
         ModRecipes.recipeRegistry.register(modBus);
+        GeckoLib.initialize();
     }
 
     public void init(FMLCommonSetupEvent event) {

@@ -1,6 +1,7 @@
 package dev.onyxstudios.projecti.registry;
 
 import dev.onyxstudios.projecti.ProjectI;
+import dev.onyxstudios.projecti.blocks.BellowsBlock;
 import dev.onyxstudios.projecti.blocks.BlueCrystalBlock;
 import dev.onyxstudios.projecti.blocks.CircuitStamperBlock;
 import dev.onyxstudios.projecti.blocks.fluid.BaseFluidBlock;
@@ -33,6 +34,9 @@ public class ModBlocks {
 
     public static RegistryObject<Block> STAMPER = blockRegistry.register("circuit_stamper", CircuitStamperBlock::new);
     public static RegistryObject<Item> STAMPER_ITEM = itemRegistry.register("circuit_stamper", () -> new BlockItem(STAMPER.get(), ITEM_BLOCK_PROPS));
+
+    public static RegistryObject<Block> BELLOWS = blockRegistry.register("bellows", BellowsBlock::new);
+    public static RegistryObject<Item> BELLOWS_ITEM = itemRegistry.register("bellows", () -> new BlockItem(BELLOWS.get(), ITEM_BLOCK_PROPS));
 
     //Fluids
     private static AbstractBlock.Properties HOT_FLUID_PROPS = AbstractBlock.Properties.of(Material.LAVA).randomTicks().lightLevel(value -> 100).noDrops();

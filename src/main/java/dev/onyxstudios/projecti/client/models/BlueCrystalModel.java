@@ -18,8 +18,8 @@ public class BlueCrystalModel extends Model {
     public static final BlueCrystalModel INSTANCE = new BlueCrystalModel();
     public static final RenderMaterial CRYSTAL_RESOURCE_LOCATION = new RenderMaterial(PlayerContainer.BLOCK_ATLAS, ModClient.CRYSTAL_NOISE);
 
-    private static Vector4f CRYSTAL_COLOR = new Vector4f(69 / 255f, 136 / 255f, 245 / 255f, 0.6f);
-    private static Vector4f RARE_COLOR = new Vector4f(255 / 255f, 201 / 255f, 94 / 255f, 0.6f);
+    private static Vector4f CRYSTAL_COLOR = new Vector4f(3 / 255f, 58 / 255f, 145 / 255f, 0.35f);
+    private static Vector4f RARE_COLOR = new Vector4f(235 / 255f, 152 / 255f, 0, 0.35f);
 
     private final ModelRenderer modelBase;
     private final ModelRendererScale[] crystalPillars = new ModelRendererScale[4];

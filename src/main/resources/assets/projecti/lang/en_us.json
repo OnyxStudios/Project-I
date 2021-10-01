@@ -13,5 +13,10 @@
   "block.projecti.blue_crystal": "Blue Crystal",
   "block.projecti.circuit_stamper": "Circuit Stamper",
   "block.projecti.blow_mold": "Blow Mold",
-  "block.projecti.bellows": "Bellows"
+  "block.projecti.bellows": "Bellows",
+  "block.projecti.decanter": "Decanter",
+  "block.projecti.funnel": "Funnel",
+  "block.projecti.gourd": "Gourd",
+  "block.projecti.spiral": "Spiral",
+  "block.projecti.splitter": "Splitter"
 }

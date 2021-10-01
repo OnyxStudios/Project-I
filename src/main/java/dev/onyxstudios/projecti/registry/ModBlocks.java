@@ -1,6 +1,8 @@
 package dev.onyxstudios.projecti.registry;
 
 import dev.onyxstudios.projecti.ProjectI;
+import dev.onyxstudios.projecti.api.block.AlembicType;
+import dev.onyxstudios.projecti.blocks.AlembicBlock;
 import dev.onyxstudios.projecti.blocks.BellowsBlock;
 import dev.onyxstudios.projecti.blocks.BlueCrystalBlock;
 import dev.onyxstudios.projecti.blocks.CircuitStamperBlock;
@@ -27,7 +29,7 @@ public class ModBlocks {
     public static final DeferredRegister<Fluid> fluidRegistry = DeferredRegister.create(ForgeRegistries.FLUIDS, ProjectI.MODID);
 
     //Blocks
-    private static Item.Properties ITEM_BLOCK_PROPS = new Item.Properties().tab(ProjectI.TAB);
+    private static final Item.Properties ITEM_BLOCK_PROPS = new Item.Properties().tab(ProjectI.TAB);
 
     public static RegistryObject<Block> BLUE_CRYSTAL = blockRegistry.register("blue_crystal", BlueCrystalBlock::new);
     public static RegistryObject<Item> BLUE_CRYSTAL_ITEM = itemRegistry.register("blue_crystal", BlueCrystalItem::new);
@@ -37,6 +39,21 @@ public class ModBlocks {
 
     public static RegistryObject<Block> BELLOWS = blockRegistry.register("bellows", BellowsBlock::new);
     public static RegistryObject<Item> BELLOWS_ITEM = itemRegistry.register("bellows", () -> new BlockItem(BELLOWS.get(), ITEM_BLOCK_PROPS));
+
+    public static RegistryObject<Block> FUNNEL = blockRegistry.register("funnel", () -> new AlembicBlock(AlembicType.FUNNEL));
+    public static RegistryObject<Item> FUNNEL_ITEM = itemRegistry.register("funnel", () -> new BlockItem(FUNNEL.get(), ITEM_BLOCK_PROPS));
+
+    public static RegistryObject<Block> DECANTER = blockRegistry.register("decanter", () -> new AlembicBlock(AlembicType.DECANTER));
+    public static RegistryObject<Item> DECANTER_ITEM = itemRegistry.register("decanter", () -> new BlockItem(DECANTER.get(), ITEM_BLOCK_PROPS));
+
+    public static RegistryObject<Block> GOURD = blockRegistry.register("gourd", () -> new AlembicBlock(AlembicType.GOURD));
+    public static RegistryObject<Item> GOURD_ITEM = itemRegistry.register("gourd", () -> new BlockItem(GOURD.get(), ITEM_BLOCK_PROPS));
+
+    public static RegistryObject<Block> SPIRAL = blockRegistry.register("spiral", () -> new AlembicBlock(AlembicType.SPIRAL));
+    public static RegistryObject<Item> SPIRAL_ITEM = itemRegistry.register("spiral", () -> new BlockItem(SPIRAL.get(), ITEM_BLOCK_PROPS));
+
+    public static RegistryObject<Block> SPLITTER = blockRegistry.register("splitter", () -> new AlembicBlock(AlembicType.SPLITTER));
+    public static RegistryObject<Item> SPLITTER_ITEM = itemRegistry.register("splitter", () -> new BlockItem(SPLITTER.get(), ITEM_BLOCK_PROPS));
 
     //Fluids
     private static AbstractBlock.Properties HOT_FLUID_PROPS = AbstractBlock.Properties.of(Material.LAVA).randomTicks().lightLevel(value -> 100).noDrops();

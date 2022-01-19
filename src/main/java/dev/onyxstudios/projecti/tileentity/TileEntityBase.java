@@ -28,7 +28,6 @@ public class TileEntityBase extends TileEntity {
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
         super.onDataPacket(net, packet);
-        this.load(level.getBlockState(packet.getPos()), packet.getTag());
-        this.level.sendBlockUpdated(this.getBlockPos(), level.getBlockState(this.getBlockPos()), level.getBlockState(this.getBlockPos()), 3);
+        handleUpdateTag(level.getBlockState(packet.getPos()), packet.getTag());
     }
 }

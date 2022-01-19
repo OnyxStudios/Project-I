@@ -52,7 +52,7 @@ public class AlembicBlock extends ContainerBlock {
             Block.box(3, 8, 7.5, 5.5, 9, 8.5)
     ).reduce((v1, v2) -> VoxelShapes.join(v1, v2, IBooleanFunction.OR)).get();
 
-    private AlembicType type;
+    private final AlembicType type;
 
     public AlembicBlock(AlembicType type) {
         super(Properties.of(Material.GLASS)
@@ -62,32 +62,71 @@ public class AlembicBlock extends ContainerBlock {
                 .lightLevel(value -> 1)
                 .sound(SoundType.GLASS)
         );
+
         this.type = type;
     }
 
     @Override
-    public void neighborChanged(BlockState state, World world, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean isMoving) {
+    public void onPlace(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moving) {
+        super.onPlace(state, world, pos, oldState, moving);
         if (world.isClientSide()) return;
 
-        TileEntity tile = world.getBlockEntity(pos);
-        boolean isFunnel = getAlembicType() == AlembicType.FUNNEL;
-        if (tile instanceof TileEntityAlembic) {
-            TileEntityAlembic alembic = (TileEntityAlembic) tile;
-            TileEntity neighborTile = world.getBlockEntity(neighborPos);
+        TileEntity tileEntity = world.getBlockEntity(pos);
+        if (tileEntity instanceof TileEntityAlembic) {
 
-            if ((isFunnel || alembic.hasParent()) && !alembic.hasChild() && neighborTile instanceof TileEntityAlembic) {
-                BlockPos offset = pos.subtract(neighborPos);
-                Direction direction = Direction.fromNormal(offset.getX(), offset.getY(), offset.getZ());
-                if (direction == null || direction == Direction.DOWN || direction == Direction.UP) return;
+            for (Direction direction : Direction.values()) {
+                BlockPos offsetPos = pos.relative(direction);
+                if (connectAlembics(world, pos, offsetPos, direction)) {
+                    world.sendBlockUpdated(pos, state, world.getBlockState(pos), Constants.BlockFlags.DEFAULT_AND_RERENDER);
+                    world.sendBlockUpdated(offsetPos, world.getBlockState(offsetPos), world.getBlockState(offsetPos), Constants.BlockFlags.DEFAULT_AND_RERENDER);
+                    break;
+                }
+            }
+        }
+    }
 
-                alembic.setChild(direction.getOpposite());
-                ((TileEntityAlembic) neighborTile).setParent(direction);
-                world.sendBlockUpdated(pos, state, world.getBlockState(pos), Constants.BlockFlags.DEFAULT);
-                world.sendBlockUpdated(neighborPos, world.getBlockState(neighborPos), world.getBlockState(neighborPos), Constants.BlockFlags.DEFAULT);
+    @Override
+    public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
+        if (!world.isClientSide() && world.getBlockEntity(pos) instanceof TileEntityAlembic) {
+            TileEntityAlembic alembic = (TileEntityAlembic) world.getBlockEntity(pos);
+
+            if (alembic.hasParent()) {
+                alembic.getParent().removeChild();
+            }
+
+            if (alembic.hasChild()) {
+                alembic.getChild().removeParent();
+                alembic.getChild().validatePath();
             }
         }
 
-        super.neighborChanged(state, world, pos, neighborBlock, neighborPos, isMoving);
+        super.onRemove(state, world, pos, newState, moved);
+    }
+
+    public boolean connectAlembics(World world, BlockPos pos, BlockPos neighborPos, Direction neighborDirection) {
+        TileEntityAlembic alembic = (TileEntityAlembic) world.getBlockEntity(pos);
+        TileEntity neighborEntity = world.getBlockEntity(neighborPos);
+        if (alembic != null && neighborEntity instanceof TileEntityAlembic) {
+            TileEntityAlembic neighborAlembic = (TileEntityAlembic) neighborEntity;
+            boolean isFunnel = getAlembicType() == AlembicType.FUNNEL;
+            boolean neighborFunnel = neighborAlembic.getAlembicType() == AlembicType.FUNNEL;
+
+            if (isFunnel && !neighborFunnel) {
+                if (!neighborAlembic.hasParent()) {
+                    neighborAlembic.setParent(neighborDirection.getOpposite());
+                    alembic.setChild(neighborDirection);
+                    return true;
+                }
+            } else if (!isFunnel && (neighborFunnel || neighborAlembic.hasParent())) {
+                if (!neighborAlembic.hasChild()) {
+                    neighborAlembic.setChild(neighborDirection.getOpposite());
+                    alembic.setParent(neighborDirection);
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     @Override
@@ -118,7 +157,7 @@ public class AlembicBlock extends ContainerBlock {
     }
 
     @Override
-    public BlockRenderType getRenderShape(BlockState p_149645_1_) {
+    public BlockRenderType getRenderShape(BlockState state) {
         return BlockRenderType.MODEL;
     }
 

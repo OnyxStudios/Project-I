@@ -7,6 +7,7 @@ import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraftforge.common.util.Constants;
 
 public class TileEntityAlembic extends TileEntityBase {
 
@@ -31,11 +32,28 @@ public class TileEntityAlembic extends TileEntityBase {
     @Override
     public void load(BlockState blockState, CompoundNBT compound) {
         super.load(blockState, compound);
+
+        this.parentDir = null;
         if (compound.contains("parentDir"))
             this.parentDir = Direction.byName(compound.getString("parentDir"));
 
+        this.childDir = null;
         if (compound.contains("childDir"))
             this.childDir = Direction.byName(compound.getString("childDir"));
+    }
+
+    public void removeChild() {
+        if (childDir == null || level == null) return;
+        childDir = null;
+        this.setChanged();
+        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Constants.BlockFlags.DEFAULT);
+    }
+
+    public void removeParent() {
+        if (parentDir == null || level == null) return;
+        parentDir = null;
+        this.setChanged();
+        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Constants.BlockFlags.DEFAULT);
     }
 
     public void setChild(Direction direction) {
@@ -74,8 +92,31 @@ public class TileEntityAlembic extends TileEntityBase {
         return ((AlembicBlock) getBlockState().getBlock()).getAlembicType();
     }
 
+    public void validatePath() {
+        if (level == null || getAlembicType() == AlembicType.FUNNEL) return;
+
+        if (parentDir == null) {
+            if (childDir != null) {
+                getChild().setParent(null);
+                getChild().validatePath();
+                childDir = null;
+            }
+        } else {
+            TileEntityAlembic parent = getParent();
+            if (parent == null) {
+                parentDir = null;
+                validatePath();
+            } else if (parent.getAlembicType() != AlembicType.FUNNEL) {
+                parent.validatePath();
+            }
+        }
+
+        this.setChanged();
+        level.sendBlockUpdated(getBlockPos(), getBlockState(), level.getBlockState(getBlockPos()), Constants.BlockFlags.DEFAULT);
+    }
+
     private TileEntityAlembic getTile(Direction direction) {
-        if (direction == null || !hasLevel()) return null;
+        if (direction == null || level == null) return null;
         TileEntity tile = level.getBlockEntity(getBlockPos().relative(direction));
         if (!(tile instanceof TileEntityAlembic)) return null;
 

@@ -4,10 +4,10 @@ import dev.onyxstudios.projecti.api.block.StamperStatus;
 import dev.onyxstudios.projecti.blocks.CircuitStamperBlock;
 import dev.onyxstudios.projecti.registry.ModEntities;
 import dev.onyxstudios.projecti.registry.ModRecipes;
+import dev.onyxstudios.projecti.registry.recipes.StamperRecipe;
 import dev.onyxstudios.projecti.utils.InvCapWrapper;
 import net.minecraft.block.BlockState;
 import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
@@ -22,7 +22,7 @@ import java.util.Optional;
 
 public class TileEntityStamper extends TileEntityBase {
 
-    private ItemStackHandler inventory = new ItemStackHandler(5) {
+    private final ItemStackHandler inventory = new ItemStackHandler(5) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
@@ -54,10 +54,10 @@ public class TileEntityStamper extends TileEntityBase {
             boolean open = getBlockState().getValue(CircuitStamperBlock.STATUS) == StamperStatus.OPEN;
             boolean powered = level.hasNeighborSignal(getBlockPos());
             if (powered && open) {
-                Optional<IRecipe<InvCapWrapper>> recipeObj = level.getRecipeManager().getRecipeFor(ModRecipes.STAMPER, new InvCapWrapper(inventory), level);
+                Optional<StamperRecipe> recipeObj = level.getRecipeManager().getRecipeFor(ModRecipes.STAMPER, new InvCapWrapper(inventory), level);
 
                 if (recipeObj.isPresent()) {
-                    IRecipe recipe = recipeObj.get();
+                    StamperRecipe recipe = recipeObj.get();
                     ItemStack result = recipe.getResultItem();
 
                     if (!inventory.getStackInSlot(4).isEmpty() && (!inventory.getStackInSlot(4).sameItem(result) || inventory.getStackInSlot(4).getCount() >= 64))

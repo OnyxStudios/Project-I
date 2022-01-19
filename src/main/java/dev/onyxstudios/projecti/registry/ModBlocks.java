@@ -2,13 +2,11 @@ package dev.onyxstudios.projecti.registry;
 
 import dev.onyxstudios.projecti.ProjectI;
 import dev.onyxstudios.projecti.api.block.AlembicType;
-import dev.onyxstudios.projecti.blocks.AlembicBlock;
-import dev.onyxstudios.projecti.blocks.BellowsBlock;
-import dev.onyxstudios.projecti.blocks.BlueCrystalBlock;
-import dev.onyxstudios.projecti.blocks.CircuitStamperBlock;
+import dev.onyxstudios.projecti.blocks.*;
 import dev.onyxstudios.projecti.blocks.fluid.BaseFluidBlock;
 import dev.onyxstudios.projecti.blocks.fluid.FluidMoltenBlueCrystal;
 import dev.onyxstudios.projecti.items.BlueCrystalItem;
+import dev.onyxstudios.projecti.items.BoneCageItem;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
@@ -55,9 +53,12 @@ public class ModBlocks {
     public static RegistryObject<Block> SPLITTER = blockRegistry.register("splitter", () -> new AlembicBlock(AlembicType.SPLITTER));
     public static RegistryObject<Item> SPLITTER_ITEM = itemRegistry.register("splitter", () -> new BlockItem(SPLITTER.get(), ITEM_BLOCK_PROPS));
 
+    public static RegistryObject<Block> BONE_CAGE = blockRegistry.register("bone_cage", BoneCageBlock::new);
+    public static RegistryObject<Item> BONE_CAGE_ITEM = itemRegistry.register("bone_cage", BoneCageItem::new);
+
     //Fluids
-    private static AbstractBlock.Properties HOT_FLUID_PROPS = AbstractBlock.Properties.of(Material.LAVA).randomTicks().lightLevel(value -> 100).noDrops();
-    private static Item.Properties BUCKET_PROPS = new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(ProjectI.TAB);
+    private static final AbstractBlock.Properties HOT_FLUID_PROPS = AbstractBlock.Properties.of(Material.LAVA).randomTicks().lightLevel(value -> 100).noDrops();
+    private static final Item.Properties BUCKET_PROPS = new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(ProjectI.TAB);
 
     public static FluidMoltenBlueCrystal MOLTEN_BLUE_CRYSTAL = new FluidMoltenBlueCrystal.Source();
     public static FluidMoltenBlueCrystal FLOWING_MOLTEN_BLUE_CRYSTAL = new FluidMoltenBlueCrystal.Flowing();

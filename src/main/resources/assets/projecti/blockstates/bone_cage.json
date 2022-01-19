@@ -1,0 +1,23 @@
+{
+  "variants": {
+    "cage_open=false,cage_type=bottom,facing=north": { "model": "projecti:block/bone_cage_bottom_closed" },
+    "cage_open=false,cage_type=bottom,facing=south": { "model": "projecti:block/bone_cage_bottom_closed", "y": 180 },
+    "cage_open=false,cage_type=bottom,facing=west": { "model": "projecti:block/bone_cage_bottom_closed",  "y": 270 },
+    "cage_open=false,cage_type=bottom,facing=east": { "model": "projecti:block/bone_cage_bottom_closed", "y": 90 },
+
+    "cage_open=true,cage_type=bottom,facing=north": { "model": "projecti:block/bone_cage_bottom_open" },
+    "cage_open=true,cage_type=bottom,facing=south": { "model": "projecti:block/bone_cage_bottom_open", "y": 180 },
+    "cage_open=true,cage_type=bottom,facing=west": { "model": "projecti:block/bone_cage_bottom_open",  "y": 270 },
+    "cage_open=true,cage_type=bottom,facing=east": { "model": "projecti:block/bone_cage_bottom_open", "y": 90 },
+
+    "cage_open=false,cage_type=top,facing=north": { "model": "projecti:block/bone_cage_top_closed" },
+    "cage_open=false,cage_type=top,facing=south": { "model": "projecti:block/bone_cage_top_closed", "y": 180 },
+    "cage_open=false,cage_type=top,facing=west": { "model": "projecti:block/bone_cage_top_closed",  "y": 270 },
+    "cage_open=false,cage_type=top,facing=east": { "model": "projecti:block/bone_cage_top_closed", "y": 90 },
+
+    "cage_open=true,cage_type=top,facing=north": { "model": "projecti:block/bone_cage_top_open" },
+    "cage_open=true,cage_type=top,facing=south": { "model": "projecti:block/bone_cage_top_open", "y": 180 },
+    "cage_open=true,cage_type=top,facing=west": { "model": "projecti:block/bone_cage_top_open",  "y": 270 },
+    "cage_open=true,cage_type=top,facing=east": { "model": "projecti:block/bone_cage_top_open", "y": 90 }
+  }
+}

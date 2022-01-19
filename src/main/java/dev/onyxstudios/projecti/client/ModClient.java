@@ -49,6 +49,7 @@ public class ModClient {
         RenderTypeLookup.setRenderLayer(ModBlocks.BLUE_CRYSTAL.get(), RenderType.translucent());
         RenderTypeLookup.setRenderLayer(ModBlocks.STAMPER.get(), RenderType.cutout());
         RenderTypeLookup.setRenderLayer(ModBlocks.BELLOWS.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.BONE_CAGE.get(), RenderType.cutout());
 
         RenderTypeLookup.setRenderLayer(ModBlocks.FUNNEL.get(), RenderType.translucent());
         RenderTypeLookup.setRenderLayer(ModBlocks.DECANTER.get(), RenderType.translucent());

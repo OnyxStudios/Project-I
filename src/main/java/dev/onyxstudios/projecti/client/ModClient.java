@@ -1,10 +1,7 @@
 package dev.onyxstudios.projecti.client;
 
 import dev.onyxstudios.projecti.ProjectI;
-import dev.onyxstudios.projecti.client.render.tile.AlembicRenderer;
-import dev.onyxstudios.projecti.client.render.tile.BellowsRenderer;
-import dev.onyxstudios.projecti.client.render.tile.BlueCrystalRenderer;
-import dev.onyxstudios.projecti.client.render.tile.CircuitStamperRenderer;
+import dev.onyxstudios.projecti.client.render.tile.*;
 import dev.onyxstudios.projecti.registry.ModBlocks;
 import dev.onyxstudios.projecti.registry.ModEntities;
 import net.minecraft.client.Minecraft;
@@ -43,6 +40,7 @@ public class ModClient {
         ClientRegistry.bindTileEntityRenderer(ModEntities.STAMPER_TYPE.get(), CircuitStamperRenderer::new);
         ClientRegistry.bindTileEntityRenderer(ModEntities.BELLOWS_TYPE.get(), BellowsRenderer::new);
         ClientRegistry.bindTileEntityRenderer(ModEntities.ALEMBIC_TYPE.get(), AlembicRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(ModEntities.BONE_CAGE_TYPE.get(), BoneCageRenderer::new);
     }
 
     private static void initLayers() {

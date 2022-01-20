@@ -89,8 +89,11 @@ public class BoneCageBlock extends Block {
             TileEntityBoneCage boneCage = (TileEntityBoneCage) world.getBlockEntity(cagePos);
 
             if (boneCage.isPowered() != flag) {
+                if(!boneCage.isPowered()) {
+                    toggleCage(world, pos, state);
+                }
+
                 boneCage.setPowered(flag);
-                toggleCage(world, pos, state);
             }
         }
     }

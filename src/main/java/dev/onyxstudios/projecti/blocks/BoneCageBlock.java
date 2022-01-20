@@ -8,6 +8,8 @@ import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.block.material.Material;
+import net.minecraft.entity.EntityPredicate;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.state.BooleanProperty;
@@ -15,6 +17,7 @@ import net.minecraft.state.EnumProperty;
 import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.shapes.IBooleanFunction;
@@ -89,7 +92,7 @@ public class BoneCageBlock extends Block {
             TileEntityBoneCage boneCage = (TileEntityBoneCage) world.getBlockEntity(cagePos);
 
             if (boneCage.isPowered() != flag) {
-                if(!boneCage.isPowered()) {
+                if (!boneCage.isPowered()) {
                     toggleCage(world, pos, state);
                 }
 
@@ -114,7 +117,31 @@ public class BoneCageBlock extends Block {
     }
 
     private void tryHandleMob(World world, BlockPos basePos) {
-        //TODO: Handle store and release of mobs
+        BlockState state = world.getBlockState(basePos);
+        Direction facing = state.getValue(HorizontalBlock.FACING);
+        BoneCageType cageType = state.getValue(CAGE_TYPE);
+        boolean open = state.getValue(CAGE_OPEN);
+        TileEntity tile = world.getBlockEntity(cageType == BoneCageType.BOTTOM ? basePos : basePos.below());
+        if (!(tile instanceof TileEntityBoneCage)) return;
+        TileEntityBoneCage boneCage = (TileEntityBoneCage) tile;
+
+        if (open) {
+            int expandX = facing.getAxis() == Direction.Axis.X ? 0 : 2;
+            int expandZ = facing.getAxis() == Direction.Axis.Z ? 0 : 2;
+            BlockPos forward2 = basePos.relative(facing, 3);
+            AxisAlignedBB boundingBox = new AxisAlignedBB(
+                    new BlockPos(basePos.getX() - expandX, basePos.getY() - 2, basePos.getZ() - expandZ),
+                    new BlockPos(forward2.getX() + expandX, forward2.getY() + 2, forward2.getZ() + expandZ)
+            );
+
+            LivingEntity entity = world.getNearestEntity(LivingEntity.class, EntityPredicate.DEFAULT, null, basePos.getX(), basePos.getY(), basePos.getZ(), boundingBox);
+            if (entity != null && !(entity instanceof PlayerEntity) && boneCage.canTrap(entity)) {
+                boneCage.trapEntity(entity);
+                entity.remove(true);
+            }
+        } else {
+            boneCage.releaseEntity();
+        }
     }
 
     @Override

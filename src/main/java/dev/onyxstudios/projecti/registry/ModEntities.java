@@ -3,10 +3,7 @@ package dev.onyxstudios.projecti.registry;
 import dev.onyxstudios.projecti.ProjectI;
 import dev.onyxstudios.projecti.entity.EntityBlueCrystal;
 import dev.onyxstudios.projecti.entity.EntityKnowledge;
-import dev.onyxstudios.projecti.tileentity.TileEntityAlembic;
-import dev.onyxstudios.projecti.tileentity.TileEntityBellows;
-import dev.onyxstudios.projecti.tileentity.TileEntityCrystal;
-import dev.onyxstudios.projecti.tileentity.TileEntityStamper;
+import dev.onyxstudios.projecti.tileentity.*;
 import net.minecraft.entity.EntityClassification;
 import net.minecraft.entity.EntityType;
 import net.minecraft.inventory.container.ContainerType;
@@ -27,6 +24,7 @@ public class ModEntities {
     public static RegistryObject<TileEntityType<TileEntityBellows>> BELLOWS_TYPE = tileRegistry.register("bellows_tile_type", () -> TileEntityType.Builder.of(TileEntityBellows::new, ModBlocks.BELLOWS.get()).build(null));
     public static RegistryObject<TileEntityType<TileEntityAlembic>> ALEMBIC_TYPE = tileRegistry.register("alembic_tile_type", () -> TileEntityType.Builder.of(TileEntityAlembic::new,
             ModBlocks.FUNNEL.get(), ModBlocks.SPIRAL.get(), ModBlocks.SPLITTER.get(), ModBlocks.GOURD.get(), ModBlocks.DECANTER.get()).build(null));
+    public static RegistryObject<TileEntityType<TileEntityBoneCage>> BONE_CAGE_TYPE = tileRegistry.register("bone_cage_tile_type", () -> TileEntityType.Builder.of(TileEntityBoneCage::new, ModBlocks.BONE_CAGE.get()).build(null));
 
     //Entities
     private static final EntityType<EntityKnowledge> KNOWLEDGE_TYPE = EntityType.Builder.<EntityKnowledge>of(EntityKnowledge::new, EntityClassification.MISC).sized(2, 2).build("entity_knowledge");

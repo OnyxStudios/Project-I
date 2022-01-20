@@ -1,6 +1,7 @@
 package dev.onyxstudios.projecti.blocks;
 
 import dev.onyxstudios.projecti.api.block.BoneCageType;
+import dev.onyxstudios.projecti.tileentity.TileEntityBoneCage;
 import dev.onyxstudios.projecti.utils.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -46,6 +47,22 @@ public class BoneCageBlock extends Block {
             Block.box(15, 0, 0, 16, 15, 16)
     ).reduce((v1, v2) -> VoxelShapes.join(v1, v2, IBooleanFunction.OR)).get();
 
+    private static final VoxelShape BOTTOM_CLOSED_SHAPE = Stream.of(
+            Block.box(1, 1, 15, 15, 16, 16),
+            Block.box(0, 0, 0, 16, 1, 16),
+            Block.box(0, 1, 0, 1, 16, 16),
+            Block.box(15, 1, 0, 16, 16, 16),
+            Block.box(1, 1, 0, 15, 16, 1)
+    ).reduce((v1, v2) -> VoxelShapes.join(v1, v2, IBooleanFunction.OR)).get();
+
+    private static final VoxelShape TOP_CLOSED_SHAPE = Stream.of(
+            Block.box(1, 0, 15, 15, 15, 16),
+            Block.box(0, 15, 0, 16, 16, 16),
+            Block.box(0, 0, 0, 1, 15, 16),
+            Block.box(15, 0, 0, 16, 15, 16),
+            Block.box(1, 0, 0, 15, 15, 1)
+    ).reduce((v1, v2) -> VoxelShapes.join(v1, v2, IBooleanFunction.OR)).get();
+
     public BoneCageBlock() {
         super(Properties.of(Material.STONE)
                 .strength(1.5f, 1.5f)
@@ -60,10 +77,28 @@ public class BoneCageBlock extends Block {
         return ActionResultType.SUCCESS;
     }
 
+    @Override
+    public void neighborChanged(BlockState state, World world, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean isMoving) {
+        super.neighborChanged(state, world, pos, neighborBlock, neighborPos, isMoving);
+        if (world.isClientSide()) return;
+
+        BoneCageType cageType = state.getValue(CAGE_TYPE);
+        BlockPos cagePos = cageType == BoneCageType.BOTTOM ? pos : pos.below();
+        boolean flag = world.hasNeighborSignal(pos) || world.hasNeighborSignal(pos.relative(cageType.getCageDirection()));
+        if (neighborBlock != this && world.getBlockEntity(cagePos) instanceof TileEntityBoneCage) {
+            TileEntityBoneCage boneCage = (TileEntityBoneCage) world.getBlockEntity(cagePos);
+
+            if (boneCage.isPowered() != flag) {
+                boneCage.setPowered(flag);
+                toggleCage(world, pos, state);
+            }
+        }
+    }
+
     private void toggleCage(World world, BlockPos pos, BlockState state) {
+        boolean open = state.getValue(CAGE_OPEN);
         if (!world.isClientSide()) {
             BoneCageType cageType = state.getValue(CAGE_TYPE);
-            boolean open = state.getValue(CAGE_OPEN);
             tryHandleMob(world, cageType == BoneCageType.BOTTOM ? pos : pos.relative(Direction.DOWN));
 
             BlockPos otherPos = pos.relative(cageType.getCageDirection());
@@ -71,6 +106,8 @@ public class BoneCageBlock extends Block {
             world.setBlockAndUpdate(pos, state.setValue(CAGE_OPEN, !open));
             world.setBlockAndUpdate(otherPos, other.setValue(CAGE_OPEN, !open));
         }
+
+        world.playSound(null, pos.getX(), pos.getY(), pos.getZ(), open ? SoundEvents.WOODEN_DOOR_CLOSE : SoundEvents.WOODEN_DOOR_OPEN, SoundCategory.BLOCKS, 1, 1);
     }
 
     private void tryHandleMob(World world, BlockPos basePos) {
@@ -96,14 +133,12 @@ public class BoneCageBlock extends Block {
     public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext context) {
         boolean open = state.getValue(CAGE_OPEN);
 
-        if (open) {
-            BoneCageType cageType = state.getValue(CAGE_TYPE);
-            VoxelShape result = cageType == BoneCageType.TOP ? TOP_OPEN_SHAPE : BOTTOM_OPEN_SHAPE;
+        BoneCageType cageType = state.getValue(CAGE_TYPE);
+        VoxelShape result;
+        if (open) result = cageType == BoneCageType.TOP ? TOP_OPEN_SHAPE : BOTTOM_OPEN_SHAPE;
+        else result = cageType == BoneCageType.TOP ? TOP_CLOSED_SHAPE : BOTTOM_CLOSED_SHAPE;
 
-            return BlockUtils.rotateShape(result, state.getValue(HorizontalBlock.FACING));
-        }
-
-        return super.getShape(state, world, pos, context);
+        return BlockUtils.rotateShape(result, state.getValue(HorizontalBlock.FACING));
     }
 
     @Nullable
@@ -134,15 +169,14 @@ public class BoneCageBlock extends Block {
 
     @Override
     public boolean hasTileEntity(BlockState state) {
-        return state.getValue(CAGE_TYPE) == BoneCageType.BOTTOM;
+        return true;
     }
 
     @Nullable
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         if (state.getValue(CAGE_TYPE) == BoneCageType.BOTTOM) {
-            //TODO: Return the tile
-            return null;
+            return new TileEntityBoneCage();
         }
 
         return null;

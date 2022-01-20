@@ -15,14 +15,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.registries.ForgeRegistries;
 
-public class TileEntityBoneCage extends TileEntityBase {
+public class BoneCageTileEntity extends BaseTileEntity {
 
     private EntityType<?> storedEntity;
     private CompoundNBT entityData;
 
     private boolean powered;
 
-    public TileEntityBoneCage() {
+    public BoneCageTileEntity() {
         super(ModEntities.BONE_CAGE_TYPE.get());
     }
 

@@ -12,12 +12,12 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class TileEntitySoulRelay extends TileEntityBase implements IAnimatable {
+public class SoulRelayTileEntity extends BaseTileEntity implements IAnimatable {
 
     private final AnimationFactory animationFactory = new AnimationFactory(this);
     private boolean powered = false;
 
-    public TileEntitySoulRelay() {
+    public SoulRelayTileEntity() {
         super(ModEntities.SOUL_RELAY_TYPE.get());
     }
 
@@ -54,8 +54,8 @@ public class TileEntitySoulRelay extends TileEntityBase implements IAnimatable {
         return this.animationFactory;
     }
 
-    private PlayState predicate(AnimationEvent<TileEntitySoulRelay> event) {
-        AnimationController<TileEntitySoulRelay> controller = event.getController();
+    private PlayState predicate(AnimationEvent<SoulRelayTileEntity> event) {
+        AnimationController<SoulRelayTileEntity> controller = event.getController();
         controller.transitionLengthTicks = 0;
         if (event.getAnimatable().isPowered()) {
             controller.setAnimation(new AnimationBuilder().addAnimation("animation.soul_relay.spin", true));

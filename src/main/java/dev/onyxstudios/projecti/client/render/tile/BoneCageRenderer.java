@@ -1,7 +1,7 @@
 package dev.onyxstudios.projecti.client.render.tile;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import dev.onyxstudios.projecti.tileentity.TileEntityBoneCage;
+import dev.onyxstudios.projecti.tileentity.BoneCageTileEntity;
 import net.minecraft.block.HorizontalBlock;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
@@ -15,7 +15,7 @@ import net.minecraft.util.math.vector.Vector3f;
 import java.util.HashMap;
 import java.util.Map;
 
-public class BoneCageRenderer extends TileEntityRenderer<TileEntityBoneCage> {
+public class BoneCageRenderer extends TileEntityRenderer<BoneCageTileEntity> {
 
     private static final Map<EntityType<?>, Entity> FAKES = new HashMap<>();
     private static final float MAX_WIDTH = 0.75f;
@@ -26,7 +26,7 @@ public class BoneCageRenderer extends TileEntityRenderer<TileEntityBoneCage> {
     }
 
     @Override
-    public void render(TileEntityBoneCage tile, float partialTicks, MatrixStack stack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+    public void render(BoneCageTileEntity tile, float partialTicks, MatrixStack stack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
         if (tile.getStoredEntity() != null) {
             Direction facing = tile.getBlockState().getValue(HorizontalBlock.FACING);
 

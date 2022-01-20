@@ -1,6 +1,6 @@
 package dev.onyxstudios.projecti.blocks;
 
-import dev.onyxstudios.projecti.tileentity.TileEntitySoulRelay;
+import dev.onyxstudios.projecti.tileentity.SoulRelayTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.ContainerBlock;
@@ -42,8 +42,8 @@ public class SoulRelayBlock extends ContainerBlock {
     private void updatePower(World world, BlockPos pos, boolean powered) {
         TileEntity tile = world.getBlockEntity(pos);
 
-        if (tile instanceof TileEntitySoulRelay) {
-            ((TileEntitySoulRelay) tile).setPowered(powered);
+        if (tile instanceof SoulRelayTileEntity) {
+            ((SoulRelayTileEntity) tile).setPowered(powered);
 
             if (world.getBlockState(pos.above()).is(this)) {
                 updatePower(world, pos.above(), powered);
@@ -55,14 +55,14 @@ public class SoulRelayBlock extends ContainerBlock {
         if (world.isClientSide()) return;
         TileEntity tile = world.getBlockEntity(pos);
 
-        if (tile instanceof TileEntitySoulRelay) {
-            TileEntitySoulRelay soulRelay = (TileEntitySoulRelay) tile;
+        if (tile instanceof SoulRelayTileEntity) {
+            SoulRelayTileEntity soulRelay = (SoulRelayTileEntity) tile;
             boolean flag = world.hasNeighborSignal(pos);
             if (!flag) {
                 BlockPos below = pos.below();
 
-                if (world.getBlockEntity(below) instanceof TileEntitySoulRelay) {
-                    TileEntitySoulRelay belowRelay = (TileEntitySoulRelay) world.getBlockEntity(below);
+                if (world.getBlockEntity(below) instanceof SoulRelayTileEntity) {
+                    SoulRelayTileEntity belowRelay = (SoulRelayTileEntity) world.getBlockEntity(below);
 
                     if (belowRelay != null && belowRelay.isPowered())
                         flag = true;
@@ -88,6 +88,6 @@ public class SoulRelayBlock extends ContainerBlock {
     @Nullable
     @Override
     public TileEntity newBlockEntity(IBlockReader world) {
-        return new TileEntitySoulRelay();
+        return new SoulRelayTileEntity();
     }
 }

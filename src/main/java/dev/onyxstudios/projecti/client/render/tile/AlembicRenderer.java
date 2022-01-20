@@ -3,7 +3,7 @@ package dev.onyxstudios.projecti.client.render.tile;
 import com.mojang.blaze3d.matrix.MatrixStack;
 import dev.onyxstudios.projecti.api.block.AlembicType;
 import dev.onyxstudios.projecti.client.ModClient;
-import dev.onyxstudios.projecti.tileentity.TileEntityAlembic;
+import dev.onyxstudios.projecti.tileentity.AlembicTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Atlases;
 import net.minecraft.client.renderer.BlockModelRenderer;
@@ -15,14 +15,14 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.vector.Vector3f;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
-public class AlembicRenderer extends TileEntityRenderer<TileEntityAlembic> {
+public class AlembicRenderer extends TileEntityRenderer<AlembicTileEntity> {
 
     public AlembicRenderer(TileEntityRendererDispatcher rendererDispatcher) {
         super(rendererDispatcher);
     }
 
     @Override
-    public void render(TileEntityAlembic tile, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+    public void render(AlembicTileEntity tile, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
         BlockModelRenderer renderer = Minecraft.getInstance().getBlockRenderer().getModelRenderer();
 
         boolean isFunnel = tile.getAlembicType() == AlembicType.FUNNEL;
@@ -74,7 +74,7 @@ public class AlembicRenderer extends TileEntityRenderer<TileEntityAlembic> {
     }
 
     @Override
-    public boolean shouldRenderOffScreen(TileEntityAlembic tile) {
+    public boolean shouldRenderOffScreen(AlembicTileEntity tile) {
         return true;
     }
 }

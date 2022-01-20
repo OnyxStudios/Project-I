@@ -1,7 +1,7 @@
 package dev.onyxstudios.projecti.blocks;
 
 import dev.onyxstudios.projecti.api.block.StamperStatus;
-import dev.onyxstudios.projecti.tileentity.TileEntityStamper;
+import dev.onyxstudios.projecti.tileentity.StamperTileEntity;
 import dev.onyxstudios.projecti.utils.BlockUtils;
 import dev.onyxstudios.projecti.utils.InventoryUtils;
 import net.minecraft.block.Block;
@@ -50,8 +50,8 @@ public class CircuitStamperBlock extends ContainerBlock {
         TileEntity tile = world.getBlockEntity(pos);
         ItemStack heldStack = player.getItemInHand(hand);
 
-        if (!world.isClientSide && state.getValue(STATUS) == StamperStatus.OPEN && tile instanceof TileEntityStamper && rayTraceResult.getDirection() == Direction.UP) {
-            TileEntityStamper stamper = (TileEntityStamper) tile;
+        if (!world.isClientSide && state.getValue(STATUS) == StamperStatus.OPEN && tile instanceof StamperTileEntity && rayTraceResult.getDirection() == Direction.UP) {
+            StamperTileEntity stamper = (StamperTileEntity) tile;
             if (!heldStack.isEmpty() || (heldStack.isEmpty() && player.isShiftKeyDown())) {
                 int slot;
                 Vector3d hitVec = rayTraceResult.getLocation().subtract(new Vector3d(pos.getX(), pos.getY(), pos.getZ()));
@@ -125,8 +125,8 @@ public class CircuitStamperBlock extends ContainerBlock {
     public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
             //If the generator has an inventory, drop stacks stored
-            if (world.getBlockEntity(pos) instanceof TileEntityStamper) {
-                InventoryUtils.dropInventoryItems(world, pos, ((TileEntityStamper) world.getBlockEntity(pos)).getInventory());
+            if (world.getBlockEntity(pos) instanceof StamperTileEntity) {
+                InventoryUtils.dropInventoryItems(world, pos, ((StamperTileEntity) world.getBlockEntity(pos)).getInventory());
                 world.updateNeighbourForOutputSignal(pos, this);
             }
 
@@ -139,8 +139,8 @@ public class CircuitStamperBlock extends ContainerBlock {
         super.neighborChanged(state, world, pos, block, neighborPos, moving);
         TileEntity tile = world.getBlockEntity(pos);
 
-        if (tile instanceof TileEntityStamper) {
-            ((TileEntityStamper) tile).run();
+        if (tile instanceof StamperTileEntity) {
+            ((StamperTileEntity) tile).run();
         }
     }
 
@@ -194,6 +194,6 @@ public class CircuitStamperBlock extends ContainerBlock {
     @Nullable
     @Override
     public TileEntity newBlockEntity(IBlockReader world) {
-        return new TileEntityStamper();
+        return new StamperTileEntity();
     }
 }

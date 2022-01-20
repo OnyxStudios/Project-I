@@ -10,14 +10,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.util.Constants;
 
-public class TileEntityAlembic extends TileEntityBase implements ITickableTileEntity {
+public class AlembicTileEntity extends BaseTileEntity implements ITickableTileEntity {
 
     private Direction parentDir;
     private Direction childDir;
 
     private boolean powered;
 
-    public TileEntityAlembic() {
+    public AlembicTileEntity() {
         super(ModEntities.ALEMBIC_TYPE.get());
     }
 
@@ -81,11 +81,11 @@ public class TileEntityAlembic extends TileEntityBase implements ITickableTileEn
         this.powered = powered;
     }
 
-    public TileEntityAlembic getParent() {
+    public AlembicTileEntity getParent() {
         return getTile(parentDir);
     }
 
-    public TileEntityAlembic getChild() {
+    public AlembicTileEntity getChild() {
         return getTile(childDir);
     }
 
@@ -123,7 +123,7 @@ public class TileEntityAlembic extends TileEntityBase implements ITickableTileEn
                 childDir = null;
             }
         } else {
-            TileEntityAlembic parent = getParent();
+            AlembicTileEntity parent = getParent();
             if (parent == null) {
                 parentDir = null;
                 validatePath();
@@ -136,11 +136,11 @@ public class TileEntityAlembic extends TileEntityBase implements ITickableTileEn
         level.sendBlockUpdated(getBlockPos(), getBlockState(), level.getBlockState(getBlockPos()), Constants.BlockFlags.DEFAULT);
     }
 
-    private TileEntityAlembic getTile(Direction direction) {
+    private AlembicTileEntity getTile(Direction direction) {
         if (direction == null || level == null) return null;
         TileEntity tile = level.getBlockEntity(getBlockPos().relative(direction));
-        if (!(tile instanceof TileEntityAlembic)) return null;
+        if (!(tile instanceof AlembicTileEntity)) return null;
 
-        return (TileEntityAlembic) tile;
+        return (AlembicTileEntity) tile;
     }
 }

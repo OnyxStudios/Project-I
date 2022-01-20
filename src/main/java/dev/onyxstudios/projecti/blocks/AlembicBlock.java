@@ -1,7 +1,7 @@
 package dev.onyxstudios.projecti.blocks;
 
 import dev.onyxstudios.projecti.api.block.AlembicType;
-import dev.onyxstudios.projecti.tileentity.TileEntityAlembic;
+import dev.onyxstudios.projecti.tileentity.AlembicTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.tileentity.TileEntity;
@@ -72,7 +72,7 @@ public class AlembicBlock extends ContainerBlock {
         if (world.isClientSide()) return;
 
         TileEntity tileEntity = world.getBlockEntity(pos);
-        if (tileEntity instanceof TileEntityAlembic) {
+        if (tileEntity instanceof AlembicTileEntity) {
 
             for (Direction direction : Direction.values()) {
                 BlockPos offsetPos = pos.relative(direction);
@@ -93,8 +93,8 @@ public class AlembicBlock extends ContainerBlock {
         if (neighborBlock != this) {
             TileEntity tile = world.getBlockEntity(pos);
 
-            if (tile instanceof TileEntityAlembic) {
-                TileEntityAlembic alembic = (TileEntityAlembic) tile;
+            if (tile instanceof AlembicTileEntity) {
+                AlembicTileEntity alembic = (AlembicTileEntity) tile;
                 boolean flag = world.hasNeighborSignal(pos);
 
                 if (alembic.isPowered() != flag) {
@@ -106,8 +106,8 @@ public class AlembicBlock extends ContainerBlock {
 
     @Override
     public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (!world.isClientSide() && world.getBlockEntity(pos) instanceof TileEntityAlembic) {
-            TileEntityAlembic alembic = (TileEntityAlembic) world.getBlockEntity(pos);
+        if (!world.isClientSide() && world.getBlockEntity(pos) instanceof AlembicTileEntity) {
+            AlembicTileEntity alembic = (AlembicTileEntity) world.getBlockEntity(pos);
 
             if (alembic.hasParent()) {
                 alembic.getParent().removeChild();
@@ -123,10 +123,10 @@ public class AlembicBlock extends ContainerBlock {
     }
 
     public boolean connectAlembics(World world, BlockPos pos, BlockPos neighborPos, Direction neighborDirection) {
-        TileEntityAlembic alembic = (TileEntityAlembic) world.getBlockEntity(pos);
+        AlembicTileEntity alembic = (AlembicTileEntity) world.getBlockEntity(pos);
         TileEntity neighborEntity = world.getBlockEntity(neighborPos);
-        if (alembic != null && neighborEntity instanceof TileEntityAlembic) {
-            TileEntityAlembic neighborAlembic = (TileEntityAlembic) neighborEntity;
+        if (alembic != null && neighborEntity instanceof AlembicTileEntity) {
+            AlembicTileEntity neighborAlembic = (AlembicTileEntity) neighborEntity;
             boolean isFunnel = getAlembicType() == AlembicType.FUNNEL;
             boolean neighborFunnel = neighborAlembic.getAlembicType() == AlembicType.FUNNEL;
 
@@ -183,6 +183,6 @@ public class AlembicBlock extends ContainerBlock {
     @Nullable
     @Override
     public TileEntity newBlockEntity(IBlockReader world) {
-        return new TileEntityAlembic();
+        return new AlembicTileEntity();
     }
 }

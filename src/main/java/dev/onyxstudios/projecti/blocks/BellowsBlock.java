@@ -1,6 +1,6 @@
 package dev.onyxstudios.projecti.blocks;
 
-import dev.onyxstudios.projecti.tileentity.TileEntityBellows;
+import dev.onyxstudios.projecti.tileentity.BellowsTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
 import net.minecraft.block.BlockState;
@@ -56,6 +56,6 @@ public class BellowsBlock extends ContainerBlock {
     @Nullable
     @Override
     public TileEntity newBlockEntity(IBlockReader world) {
-        return new TileEntityBellows();
+        return new BellowsTileEntity();
     }
 }

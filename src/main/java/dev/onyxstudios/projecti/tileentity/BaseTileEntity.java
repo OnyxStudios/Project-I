@@ -8,9 +8,9 @@ import net.minecraft.tileentity.TileEntityType;
 
 import javax.annotation.Nullable;
 
-public class TileEntityBase extends TileEntity {
+public class BaseTileEntity extends TileEntity {
 
-    public TileEntityBase(TileEntityType<?> tileEntityType) {
+    public BaseTileEntity(TileEntityType<?> tileEntityType) {
         super(tileEntityType);
     }
 

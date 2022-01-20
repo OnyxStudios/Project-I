@@ -11,21 +11,21 @@ import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 
-public class EntityKnowledge extends LivingEntity {
+public class KnowledgeEntity extends LivingEntity {
 
     private PlayerEntity owner;
     private int blocksMoved;
     private double moveX, moveY, moveZ;
 
-    public EntityKnowledge(World world) {
+    public KnowledgeEntity(World world) {
         super(ModEntities.ENTITY_KNOWLEDGE.get(), world);
     }
 
-    public EntityKnowledge(EntityType<?> type, World world) {
+    public KnowledgeEntity(EntityType<?> type, World world) {
         super(ModEntities.ENTITY_KNOWLEDGE.get(), world);
     }
 
-    public EntityKnowledge(World world, PlayerEntity player) {
+    public KnowledgeEntity(World world, PlayerEntity player) {
         super(ModEntities.ENTITY_KNOWLEDGE.get(), world);
         this.owner = player;
         this.blocksMoved = 0;

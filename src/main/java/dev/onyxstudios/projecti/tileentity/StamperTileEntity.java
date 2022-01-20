@@ -20,19 +20,19 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class TileEntityStamper extends TileEntityBase {
+public class StamperTileEntity extends BaseTileEntity {
 
     private final ItemStackHandler inventory = new ItemStackHandler(5) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
-            TileEntityStamper.this.setChanged();
+            StamperTileEntity.this.setChanged();
         }
     };
 
     private final LazyOptional<IItemHandler> capabilityInventory = LazyOptional.of(() -> inventory);
 
-    public TileEntityStamper() {
+    public StamperTileEntity() {
         super(ModEntities.STAMPER_TYPE.get());
     }
 

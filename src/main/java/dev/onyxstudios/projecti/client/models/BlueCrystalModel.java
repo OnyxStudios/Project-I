@@ -4,7 +4,7 @@ import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.vertex.IVertexBuilder;
 import dev.onyxstudios.projecti.client.ModClient;
 import dev.onyxstudios.projecti.mixins.client.ModelRendererAccessor;
-import dev.onyxstudios.projecti.tileentity.TileEntityCrystal;
+import dev.onyxstudios.projecti.tileentity.CrystalTileEntity;
 import it.unimi.dsi.fastutil.objects.ObjectList;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.model.Model;
@@ -144,7 +144,7 @@ public class BlueCrystalModel extends Model {
         modelBase.render(matrixStack, vertexBuilder, light, lightOverlay, CRYSTAL_COLOR.x(), CRYSTAL_COLOR.y(), CRYSTAL_COLOR.z(), CRYSTAL_COLOR.w());
     }
 
-    public void renderCrystals(TileEntityCrystal tile, MatrixStack matrixStack, IVertexBuilder builder, int light, int lightOverlay) {
+    public void renderCrystals(CrystalTileEntity tile, MatrixStack matrixStack, IVertexBuilder builder, int light, int lightOverlay) {
         for (int i = 0; i < 4; i++) {
             if (tile.stage < i + 1 && tile.stage != i) continue;
 
@@ -154,7 +154,7 @@ public class BlueCrystalModel extends Model {
             matrixStack.pushPose();
             float scale = 1;
             if (tile.stage < i + 1)
-                scale = (tile.age / (float) TileEntityCrystal.MAX_TICKS_PER_STAGE);
+                scale = (tile.age / (float) CrystalTileEntity.MAX_TICKS_PER_STAGE);
 
             crystalRender.renderWithScale(matrixStack, builder, 1, scale, 1, light, lightOverlay, color.x(), color.y(), color.z(), color.w());
             matrixStack.popPose();

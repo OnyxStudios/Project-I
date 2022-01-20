@@ -15,11 +15,11 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class TileEntityBellows extends TileEntityBase implements ITickableTileEntity, IAnimatable {
+public class BellowsTileEntity extends BaseTileEntity implements ITickableTileEntity, IAnimatable {
 
     private final AnimationFactory animationFactory = new AnimationFactory(this);
 
-    public TileEntityBellows() {
+    public BellowsTileEntity() {
         super(ModEntities.BELLOWS_TYPE.get());
     }
 
@@ -45,8 +45,8 @@ public class TileEntityBellows extends TileEntityBase implements ITickableTileEn
         return this.animationFactory;
     }
 
-    private PlayState predicate(AnimationEvent<TileEntityBellows> event) {
-        AnimationController<TileEntityBellows> controller = event.getController();
+    private PlayState predicate(AnimationEvent<BellowsTileEntity> event) {
+        AnimationController<BellowsTileEntity> controller = event.getController();
         controller.transitionLengthTicks = 0;
         if (event.getAnimatable().getLevel().hasNeighborSignal(event.getAnimatable().getBlockPos())) {
             controller.setAnimation(new AnimationBuilder().addAnimation("animation.bellows.deploy", true));

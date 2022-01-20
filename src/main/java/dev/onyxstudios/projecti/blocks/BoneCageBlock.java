@@ -1,7 +1,7 @@
 package dev.onyxstudios.projecti.blocks;
 
 import dev.onyxstudios.projecti.api.block.BoneCageType;
-import dev.onyxstudios.projecti.tileentity.TileEntityBoneCage;
+import dev.onyxstudios.projecti.tileentity.BoneCageTileEntity;
 import dev.onyxstudios.projecti.utils.BlockUtils;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockRenderType;
@@ -90,8 +90,8 @@ public class BoneCageBlock extends Block {
         Direction facing = state.getValue(HorizontalBlock.FACING);
         boolean flag = world.getSignal(pos.relative(facing), facing) >= 13;
 
-        if (neighborBlock != this && world.getBlockEntity(cagePos) instanceof TileEntityBoneCage) {
-            TileEntityBoneCage boneCage = (TileEntityBoneCage) world.getBlockEntity(cagePos);
+        if (neighborBlock != this && world.getBlockEntity(cagePos) instanceof BoneCageTileEntity) {
+            BoneCageTileEntity boneCage = (BoneCageTileEntity) world.getBlockEntity(cagePos);
 
             if (boneCage != null && boneCage.isPowered() != flag) {
                 if (!boneCage.isPowered()) {
@@ -124,8 +124,8 @@ public class BoneCageBlock extends Block {
         BoneCageType cageType = state.getValue(CAGE_TYPE);
         boolean open = state.getValue(CAGE_OPEN);
         TileEntity tile = world.getBlockEntity(cageType == BoneCageType.BOTTOM ? basePos : basePos.below());
-        if (!(tile instanceof TileEntityBoneCage)) return;
-        TileEntityBoneCage boneCage = (TileEntityBoneCage) tile;
+        if (!(tile instanceof BoneCageTileEntity)) return;
+        BoneCageTileEntity boneCage = (BoneCageTileEntity) tile;
 
         if (open) {
             int expandX = facing.getAxis() == Direction.Axis.X ? 0 : 2;
@@ -152,8 +152,8 @@ public class BoneCageBlock extends Block {
         if (!world.isClientSide() && state.getBlock() != newState.getBlock()) {
             TileEntity tile = world.getBlockEntity(cageType == BoneCageType.BOTTOM ? pos : pos.below());
 
-            if (tile instanceof TileEntityBoneCage) {
-                TileEntityBoneCage boneCage = (TileEntityBoneCage) tile;
+            if (tile instanceof BoneCageTileEntity) {
+                BoneCageTileEntity boneCage = (BoneCageTileEntity) tile;
                 boneCage.releaseEntity();
             }
         }
@@ -215,7 +215,7 @@ public class BoneCageBlock extends Block {
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         if (state.getValue(CAGE_TYPE) == BoneCageType.BOTTOM) {
-            return new TileEntityBoneCage();
+            return new BoneCageTileEntity();
         }
 
         return null;

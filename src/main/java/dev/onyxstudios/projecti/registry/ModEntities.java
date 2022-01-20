@@ -25,6 +25,7 @@ public class ModEntities {
     public static RegistryObject<TileEntityType<TileEntityAlembic>> ALEMBIC_TYPE = tileRegistry.register("alembic_tile_type", () -> TileEntityType.Builder.of(TileEntityAlembic::new,
             ModBlocks.FUNNEL.get(), ModBlocks.SPIRAL.get(), ModBlocks.SPLITTER.get(), ModBlocks.GOURD.get(), ModBlocks.DECANTER.get()).build(null));
     public static RegistryObject<TileEntityType<TileEntityBoneCage>> BONE_CAGE_TYPE = tileRegistry.register("bone_cage_tile_type", () -> TileEntityType.Builder.of(TileEntityBoneCage::new, ModBlocks.BONE_CAGE.get()).build(null));
+    public static RegistryObject<TileEntityType<TileEntitySoulRelay>> SOUL_RELAY_TYPE = tileRegistry.register("soul_relay_tile_type", () -> TileEntityType.Builder.of(TileEntitySoulRelay::new, ModBlocks.SOUL_RELAY.get()).build(null));
 
     //Entities
     private static final EntityType<EntityKnowledge> KNOWLEDGE_TYPE = EntityType.Builder.<EntityKnowledge>of(EntityKnowledge::new, EntityClassification.MISC).sized(2, 2).build("entity_knowledge");

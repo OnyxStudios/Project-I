@@ -37,7 +37,7 @@ public class TileEntityBellows extends TileEntityBase implements ITickableTileEn
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 0, this::predicate));
+        data.addAnimationController(new AnimationController<>(this, "controller", 0, this::predicate));
     }
 
     @Override
@@ -45,8 +45,8 @@ public class TileEntityBellows extends TileEntityBase implements ITickableTileEn
         return this.animationFactory;
     }
 
-    private <E extends TileEntity & IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        AnimationController controller = event.getController();
+    private PlayState predicate(AnimationEvent<TileEntityBellows> event) {
+        AnimationController<TileEntityBellows> controller = event.getController();
         controller.transitionLengthTicks = 0;
         if (event.getAnimatable().getLevel().hasNeighborSignal(event.getAnimatable().getBlockPos())) {
             controller.setAnimation(new AnimationBuilder().addAnimation("animation.bellows.deploy", true));

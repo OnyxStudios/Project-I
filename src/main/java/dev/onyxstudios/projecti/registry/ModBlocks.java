@@ -56,6 +56,9 @@ public class ModBlocks {
     public static RegistryObject<Block> BONE_CAGE = blockRegistry.register("bone_cage", BoneCageBlock::new);
     public static RegistryObject<Item> BONE_CAGE_ITEM = itemRegistry.register("bone_cage", BoneCageItem::new);
 
+    public static RegistryObject<Block> SOUL_RELAY = blockRegistry.register("soul_relay", SoulRelayBlock::new);
+    public static RegistryObject<Item> SOUL_RELAY_ITEM = itemRegistry.register("soul_relay", () -> new BlockItem(SOUL_RELAY.get(), ITEM_BLOCK_PROPS));
+
     //Fluids
     private static final AbstractBlock.Properties HOT_FLUID_PROPS = AbstractBlock.Properties.of(Material.LAVA).randomTicks().lightLevel(value -> 100).noDrops();
     private static final Item.Properties BUCKET_PROPS = new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(ProjectI.TAB);

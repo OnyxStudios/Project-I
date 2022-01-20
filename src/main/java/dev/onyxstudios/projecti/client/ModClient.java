@@ -41,6 +41,7 @@ public class ModClient {
         ClientRegistry.bindTileEntityRenderer(ModEntities.BELLOWS_TYPE.get(), BellowsRenderer::new);
         ClientRegistry.bindTileEntityRenderer(ModEntities.ALEMBIC_TYPE.get(), AlembicRenderer::new);
         ClientRegistry.bindTileEntityRenderer(ModEntities.BONE_CAGE_TYPE.get(), BoneCageRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(ModEntities.SOUL_RELAY_TYPE.get(), SoulRelayRenderer::new);
     }
 
     private static void initLayers() {
@@ -48,6 +49,7 @@ public class ModClient {
         RenderTypeLookup.setRenderLayer(ModBlocks.STAMPER.get(), RenderType.cutout());
         RenderTypeLookup.setRenderLayer(ModBlocks.BELLOWS.get(), RenderType.cutout());
         RenderTypeLookup.setRenderLayer(ModBlocks.BONE_CAGE.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.SOUL_RELAY.get(), RenderType.cutout());
 
         RenderTypeLookup.setRenderLayer(ModBlocks.FUNNEL.get(), RenderType.translucent());
         RenderTypeLookup.setRenderLayer(ModBlocks.DECANTER.get(), RenderType.translucent());

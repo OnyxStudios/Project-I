@@ -1,5 +1,6 @@
 package dev.onyxstudios.projecti.tileentity;
 
+import dev.onyxstudios.projecti.registry.ModBlocks;
 import dev.onyxstudios.projecti.registry.ModEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalBlock;
@@ -57,7 +58,7 @@ public class TileEntityBoneCage extends TileEntityBase {
         Entity entity = storedEntity.create(level);
 
         if (entity != null) {
-            Direction facing = getBlockState().getValue(HorizontalBlock.FACING);
+            Direction facing = getBlockState().is(ModBlocks.BONE_CAGE.get()) ? getBlockState().getValue(HorizontalBlock.FACING) : Direction.NORTH;
             BlockPos spawnPos = getBlockPos().relative(facing);
 
             entity.load(entityData);

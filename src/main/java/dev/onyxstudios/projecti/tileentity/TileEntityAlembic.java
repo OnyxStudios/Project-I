@@ -5,14 +5,17 @@ import dev.onyxstudios.projecti.blocks.AlembicBlock;
 import dev.onyxstudios.projecti.registry.ModEntities;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.util.Constants;
 
-public class TileEntityAlembic extends TileEntityBase {
+public class TileEntityAlembic extends TileEntityBase implements ITickableTileEntity {
 
     private Direction parentDir;
     private Direction childDir;
+
+    private boolean powered;
 
     public TileEntityAlembic() {
         super(ModEntities.ALEMBIC_TYPE.get());
@@ -26,6 +29,8 @@ public class TileEntityAlembic extends TileEntityBase {
 
         if (childDir != null)
             compound.putString("childDir", childDir.getName());
+
+        compound.putBoolean("powered", powered);
         return compound;
     }
 
@@ -40,6 +45,14 @@ public class TileEntityAlembic extends TileEntityBase {
         this.childDir = null;
         if (compound.contains("childDir"))
             this.childDir = Direction.byName(compound.getString("childDir"));
+
+        powered = compound.getBoolean("powered");
+    }
+
+    @Override
+    public void tick() {
+        if(getAlembicType() != AlembicType.FUNNEL) return;
+
     }
 
     public void removeChild() {
@@ -62,6 +75,10 @@ public class TileEntityAlembic extends TileEntityBase {
 
     public void setParent(Direction direction) {
         this.parentDir = direction;
+    }
+
+    public void setPowered(boolean powered) {
+        this.powered = powered;
     }
 
     public TileEntityAlembic getParent() {
@@ -90,6 +107,10 @@ public class TileEntityAlembic extends TileEntityBase {
 
     public AlembicType getAlembicType() {
         return ((AlembicBlock) getBlockState().getBlock()).getAlembicType();
+    }
+
+    public boolean isPowered() {
+        return powered;
     }
 
     public void validatePath() {

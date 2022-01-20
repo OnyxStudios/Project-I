@@ -87,11 +87,13 @@ public class BoneCageBlock extends Block {
 
         BoneCageType cageType = state.getValue(CAGE_TYPE);
         BlockPos cagePos = cageType == BoneCageType.BOTTOM ? pos : pos.below();
-        boolean flag = world.hasNeighborSignal(pos) || world.hasNeighborSignal(pos.relative(cageType.getCageDirection()));
+        Direction facing = state.getValue(HorizontalBlock.FACING);
+        boolean flag = world.getSignal(pos.relative(facing), facing) >= 13;
+
         if (neighborBlock != this && world.getBlockEntity(cagePos) instanceof TileEntityBoneCage) {
             TileEntityBoneCage boneCage = (TileEntityBoneCage) world.getBlockEntity(cagePos);
 
-            if (boneCage.isPowered() != flag) {
+            if (boneCage != null && boneCage.isPowered() != flag) {
                 if (!boneCage.isPowered()) {
                     toggleCage(world, pos, state);
                 }
@@ -137,7 +139,6 @@ public class BoneCageBlock extends Block {
             LivingEntity entity = world.getNearestEntity(LivingEntity.class, EntityPredicate.DEFAULT, null, basePos.getX(), basePos.getY(), basePos.getZ(), boundingBox);
             if (entity != null && !(entity instanceof PlayerEntity) && boneCage.canTrap(entity)) {
                 boneCage.trapEntity(entity);
-                entity.remove(true);
             }
         } else {
             boneCage.releaseEntity();
@@ -146,11 +147,19 @@ public class BoneCageBlock extends Block {
 
     @Override
     public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
-        super.onRemove(state, world, pos, newState, isMoving);
+        BoneCageType cageType = state.getValue(CAGE_TYPE);
 
         if (!world.isClientSide() && state.getBlock() != newState.getBlock()) {
-            BoneCageType cageType = state.getValue(CAGE_TYPE);
+            TileEntity tile = world.getBlockEntity(cageType == BoneCageType.BOTTOM ? pos : pos.below());
 
+            if (tile instanceof TileEntityBoneCage) {
+                TileEntityBoneCage boneCage = (TileEntityBoneCage) tile;
+                boneCage.releaseEntity();
+            }
+        }
+
+        super.onRemove(state, world, pos, newState, isMoving);
+        if (!world.isClientSide() && state.getBlock() != newState.getBlock()) {
             if (cageType == BoneCageType.TOP) {
                 world.destroyBlock(pos.relative(Direction.DOWN), false);
             } else {

@@ -86,6 +86,25 @@ public class AlembicBlock extends ContainerBlock {
     }
 
     @Override
+    public void neighborChanged(BlockState state, World world, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean isMoving) {
+        super.neighborChanged(state, world, pos, neighborBlock, neighborPos, isMoving);
+        if (world.isClientSide()) return;
+
+        if (neighborBlock != this) {
+            TileEntity tile = world.getBlockEntity(pos);
+
+            if (tile instanceof TileEntityAlembic) {
+                TileEntityAlembic alembic = (TileEntityAlembic) tile;
+                boolean flag = world.hasNeighborSignal(pos);
+
+                if (alembic.isPowered() != flag) {
+                    alembic.setPowered(flag);
+                }
+            }
+        }
+    }
+
+    @Override
     public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
         if (!world.isClientSide() && world.getBlockEntity(pos) instanceof TileEntityAlembic) {
             TileEntityAlembic alembic = (TileEntityAlembic) world.getBlockEntity(pos);

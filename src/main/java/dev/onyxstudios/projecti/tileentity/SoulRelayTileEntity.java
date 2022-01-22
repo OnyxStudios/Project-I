@@ -16,6 +16,7 @@ public class SoulRelayTileEntity extends BaseTileEntity implements IAnimatable {
 
     private final AnimationFactory animationFactory = new AnimationFactory(this);
     private boolean powered = false;
+    private boolean canVisit = true;
 
     public SoulRelayTileEntity() {
         super(ModEntities.SOUL_RELAY_TYPE.get());
@@ -25,6 +26,7 @@ public class SoulRelayTileEntity extends BaseTileEntity implements IAnimatable {
     public CompoundNBT save(CompoundNBT tag) {
         super.save(tag);
         tag.putBoolean("powered", powered);
+        tag.putBoolean("canVisit", canVisit);
         return tag;
     }
 
@@ -32,6 +34,7 @@ public class SoulRelayTileEntity extends BaseTileEntity implements IAnimatable {
     public void load(BlockState state, CompoundNBT tag) {
         super.load(state, tag);
         powered = tag.getBoolean("powered");
+        canVisit = tag.getBoolean("canVisit");
     }
 
     public void setPowered(boolean powered) {
@@ -40,8 +43,16 @@ public class SoulRelayTileEntity extends BaseTileEntity implements IAnimatable {
         level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Constants.BlockFlags.DEFAULT);
     }
 
+    public void setCanVisit(boolean canVisit) {
+        this.canVisit = canVisit;
+    }
+
     public boolean isPowered() {
         return powered;
+    }
+
+    public boolean canVisit() {
+        return canVisit;
     }
 
     @Override

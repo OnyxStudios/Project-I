@@ -1,5 +1,6 @@
 package dev.onyxstudios.projecti.tileentity;
 
+import dev.onyxstudios.projecti.entity.SoulEntity;
 import dev.onyxstudios.projecti.registry.ModBlocks;
 import dev.onyxstudios.projecti.registry.ModEntities;
 import net.minecraft.block.BlockState;
@@ -83,7 +84,7 @@ public class BoneCageTileEntity extends BaseTileEntity {
     }
 
     public boolean canTrap(LivingEntity entity) {
-        return !(entity instanceof MonsterEntity) && entity.canChangeDimensions();
+        return !(entity instanceof MonsterEntity) && entity.canChangeDimensions() && !(entity instanceof SoulEntity);
     }
 
     public boolean hasEntity() {

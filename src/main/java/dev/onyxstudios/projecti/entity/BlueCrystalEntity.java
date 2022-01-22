@@ -19,7 +19,7 @@ public class BlueCrystalEntity extends ItemEntity {
     }
 
     public BlueCrystalEntity(World world, ItemStack stack, ItemEntity originalEntity) {
-        super(ModEntities.ENTITY_BLUE_CRYSTAL.get(), world);
+        super(ModEntities.BLUE_CRYSTAL_ENTITY.get(), world);
         load(originalEntity.saveWithoutId(new CompoundNBT()));
         setItem(stack);
     }

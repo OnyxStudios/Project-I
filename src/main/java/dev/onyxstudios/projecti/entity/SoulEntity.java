@@ -78,8 +78,8 @@ public class SoulEntity extends AnimalEntity {
     public void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(0, new TemptGoal(this, 0.45, Ingredient.of(ModItems.SOUL_BONE.get()), false));
-        //this.goalSelector.addGoal(1, new LookAtGoal(this, PlayerEntity.class, 6.0f));
-        //this.goalSelector.addGoal(2, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(1, new LookAtGoal(this, PlayerEntity.class, 6.0f));
+        this.goalSelector.addGoal(2, new LookRandomlyGoal(this));
     }
 
     @Override
@@ -87,11 +87,9 @@ public class SoulEntity extends AnimalEntity {
         Brain<SoulEntity> brain = brainProvider().makeBrain(dynamic);
 
         brain.addActivity(Activity.CORE, ImmutableList.of(
-                //Pair.of(0, new FollowRelayTask()),
-                Pair.of(0, new FirstShuffledTask<>(ImmutableList.of(Pair.of(new WalkRandomlyTask(0.4F), 2), Pair.of(new WalkTowardsLookTargetTask(0.4F, 3), 2), Pair.of(new DummyTask(30, 60), 1))))
-                //Pair.of(0, new DummyTask(30, 60)),
-                //Pair.of(1, new WalkRandomlyTask(1.0f))
-                //Pair.of(2, new SwimTask(1.0f))
+                Pair.of(0, new FollowRelayTask()),
+                Pair.of(1, new WalkRandomlyTask(1.0f)),
+                Pair.of(2, new SwimTask(1.0f))
         ));
 
 

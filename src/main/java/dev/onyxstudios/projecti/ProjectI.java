@@ -1,10 +1,7 @@
 package dev.onyxstudios.projecti;
 
 import dev.onyxstudios.projecti.client.ModClient;
-import dev.onyxstudios.projecti.registry.ModBlocks;
-import dev.onyxstudios.projecti.registry.ModEntities;
-import dev.onyxstudios.projecti.registry.ModItems;
-import dev.onyxstudios.projecti.registry.ModRecipes;
+import dev.onyxstudios.projecti.registry.*;
 import net.minecraft.item.ItemGroup;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -32,6 +29,7 @@ public class ProjectI {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::init);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::initClient);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ModEntities::attributeEvent);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(ModClient::particleEvent);
 
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModBlocks.BLOCKS.register(modBus);
@@ -44,6 +42,7 @@ public class ProjectI {
         ModEntities.MEMORY_MODULES.register(modBus);
         ModEntities.POI.register(modBus);
         ModRecipes.RECIPES.register(modBus);
+        ModParticles.PARTICLES.register(modBus);
         GeckoLib.initialize();
     }
 

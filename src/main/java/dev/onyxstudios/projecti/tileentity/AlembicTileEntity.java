@@ -3,11 +3,15 @@ package dev.onyxstudios.projecti.tileentity;
 import dev.onyxstudios.projecti.api.block.AlembicType;
 import dev.onyxstudios.projecti.blocks.AlembicBlock;
 import dev.onyxstudios.projecti.registry.ModEntities;
+import dev.onyxstudios.projecti.registry.ModParticles;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.server.ServerWorld;
 import net.minecraftforge.common.util.Constants;
 
 public class AlembicTileEntity extends BaseTileEntity implements ITickableTileEntity {
@@ -16,6 +20,7 @@ public class AlembicTileEntity extends BaseTileEntity implements ITickableTileEn
     private Direction childDir;
 
     private boolean powered;
+    private int age;
 
     public AlembicTileEntity() {
         super(ModEntities.ALEMBIC_TYPE.get());
@@ -51,8 +56,18 @@ public class AlembicTileEntity extends BaseTileEntity implements ITickableTileEn
 
     @Override
     public void tick() {
-        if(getAlembicType() != AlembicType.FUNNEL) return;
+        age++;
+        if(!level.isClientSide()) {
+            ServerWorld serverLevel = (ServerWorld) level;
+            if (powered && age % 10 == 0) {
+                BlockPos pos = getBlockPos();
 
+                //TODO: Write custom particle packets
+                serverLevel.sendParticles(ModParticles.GLOW.get(), pos.getX() + 0.5f, pos.getY() + 0.9f, pos.getZ() + 0.5f, 1, 0, 0.03f, 0, 0);
+            }
+        }
+
+        if (getAlembicType() != AlembicType.FUNNEL) return;
     }
 
     public void removeChild() {
@@ -79,6 +94,8 @@ public class AlembicTileEntity extends BaseTileEntity implements ITickableTileEn
 
     public void setPowered(boolean powered) {
         this.powered = powered;
+        this.setChanged();
+        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Constants.BlockFlags.DEFAULT);
     }
 
     public AlembicTileEntity getParent() {

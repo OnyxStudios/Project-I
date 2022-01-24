@@ -3,8 +3,10 @@ package dev.onyxstudios.projecti.client;
 import dev.onyxstudios.projecti.ProjectI;
 import dev.onyxstudios.projecti.client.render.entity.SoulEntityRenderer;
 import dev.onyxstudios.projecti.client.render.tile.*;
+import dev.onyxstudios.projecti.particle.GlowParticle;
 import dev.onyxstudios.projecti.registry.ModBlocks;
 import dev.onyxstudios.projecti.registry.ModEntities;
+import dev.onyxstudios.projecti.registry.ModParticles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.RenderTypeLookup;
@@ -13,6 +15,7 @@ import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
+import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -34,6 +37,10 @@ public class ModClient {
         initEntityRenders();
         initLayers();
         initTESRS();
+    }
+
+    public static void particleEvent(ParticleFactoryRegisterEvent event) {
+        Minecraft.getInstance().particleEngine.register(ModParticles.GLOW.get(), GlowParticle.Factory::new);
     }
 
     private static void initTESRS() {

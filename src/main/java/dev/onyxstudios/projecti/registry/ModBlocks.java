@@ -59,6 +59,9 @@ public class ModBlocks {
     public static RegistryObject<Block> SOUL_RELAY = BLOCKS.register("soul_relay", SoulRelayBlock::new);
     public static RegistryObject<Item> SOUL_RELAY_ITEM = ITEMS.register("soul_relay", () -> new BlockItem(SOUL_RELAY.get(), ITEM_BLOCK_PROPS));
 
+    public static RegistryObject<Block> BENIGN_STONE = BLOCKS.register("benign_stone", () -> new Block(AbstractBlock.Properties.of(Material.STONE)));
+    public static RegistryObject<Item> BENIGN_STONE_ITEM = ITEMS.register("benign_stone", () -> new BlockItem(BENIGN_STONE.get(), ITEM_BLOCK_PROPS));
+
     //Fluids
     private static final AbstractBlock.Properties HOT_FLUID_PROPS = AbstractBlock.Properties.of(Material.LAVA).randomTicks().lightLevel(value -> 100).noDrops();
     private static final Item.Properties BUCKET_PROPS = new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(ProjectI.TAB);

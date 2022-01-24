@@ -4,14 +4,20 @@ import com.google.common.collect.ImmutableList;
 import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Dynamic;
+import dev.onyxstudios.projecti.api.block.DiagonalDirection;
 import dev.onyxstudios.projecti.entity.goals.FollowRelayTask;
+import dev.onyxstudios.projecti.registry.ModBlocks;
 import dev.onyxstudios.projecti.registry.ModEntities;
 import dev.onyxstudios.projecti.registry.ModItems;
+import dev.onyxstudios.projecti.registry.ModParticles;
+import dev.onyxstudios.projecti.tileentity.SoulRelayTileEntity;
 import net.minecraft.entity.*;
 import net.minecraft.entity.ai.brain.Brain;
 import net.minecraft.entity.ai.brain.memory.MemoryModuleType;
 import net.minecraft.entity.ai.brain.schedule.Activity;
-import net.minecraft.entity.ai.brain.task.*;
+import net.minecraft.entity.ai.brain.task.SwimTask;
+import net.minecraft.entity.ai.brain.task.WalkRandomlyTask;
+import net.minecraft.entity.ai.brain.task.WalkToTargetTask;
 import net.minecraft.entity.ai.goal.LookAtGoal;
 import net.minecraft.entity.ai.goal.LookRandomlyGoal;
 import net.minecraft.entity.ai.goal.TemptGoal;
@@ -29,16 +35,19 @@ import net.minecraft.network.IPacket;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.Direction;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
 import net.minecraft.world.server.ServerWorld;
+import net.minecraftforge.common.Tags;
 import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.fml.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class SoulEntity extends AnimalEntity {
@@ -86,12 +95,19 @@ public class SoulEntity extends AnimalEntity {
     public Brain<SoulEntity> makeBrain(Dynamic<?> dynamic) {
         Brain<SoulEntity> brain = brainProvider().makeBrain(dynamic);
 
+        float speed = 0.35f;
+        Calendar calendar = Calendar.getInstance();
+        //Shhhh don't tell anyone
+        if (calendar.get(Calendar.MONTH) == Calendar.APRIL && calendar.get(Calendar.DAY_OF_MONTH) == 1) {
+            speed = 0.8f;
+        }
+
         brain.addActivity(Activity.CORE, ImmutableList.of(
                 Pair.of(0, new FollowRelayTask()),
-                Pair.of(1, new WalkRandomlyTask(1.0f)),
-                Pair.of(2, new SwimTask(1.0f))
+                Pair.of(1, new WalkRandomlyTask(speed)),
+                Pair.of(2, new WalkToTargetTask()),
+                Pair.of(3, new SwimTask(0.35f))
         ));
-
 
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
         brain.setActiveActivityIfPossible(Activity.CORE);
@@ -106,7 +122,9 @@ public class SoulEntity extends AnimalEntity {
         return Brain.provider(ImmutableList.of(
                 ModEntities.RELAY_WALK_TARGET.get(),
                 MemoryModuleType.WALK_TARGET,
-                MemoryModuleType.LOOK_TARGET
+                MemoryModuleType.LOOK_TARGET,
+                MemoryModuleType.PATH,
+                MemoryModuleType.CANT_REACH_WALK_TARGET_SINCE
         ), ImmutableList.of());
     }
 
@@ -170,6 +188,34 @@ public class SoulEntity extends AnimalEntity {
                 }
             }
         }
+
+        if (!level.isClientSide() && checkDiagonals(blockPosition()) && checkDiagonals(blockPosition().above())) {
+            ServerWorld serverLevel = (ServerWorld) level;
+            boolean changed = false;
+
+            for (Direction direction : Direction.values()) {
+                BlockPos offset = blockPosition().below().relative(direction);
+                if (level.getBlockState(offset).is(Tags.Blocks.STONE)) {
+                    serverLevel.sendParticles(ModParticles.GLOW.get(), getX(), getY() + 2, getZ(), 1, 0, 0, 0, 0);
+
+                    changed = true;
+                    level.setBlockAndUpdate(offset, ModBlocks.BENIGN_STONE.get().defaultBlockState());
+                }
+            }
+
+            if (changed) {
+                this.remove();
+            }
+        }
+    }
+
+    public boolean checkDiagonals(BlockPos startPos) {
+        for (DiagonalDirection value : DiagonalDirection.VALUES) {
+            SoulRelayTileEntity relay = ModEntities.SOUL_RELAY_TYPE.get().getBlockEntity(level, value.offset(startPos));
+            if (relay == null || !relay.isPowered()) return false;
+        }
+
+        return true;
     }
 
     public void blacklistPos(BlockPos pos) {

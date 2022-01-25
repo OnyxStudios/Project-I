@@ -3,7 +3,6 @@ package dev.onyxstudios.projecti.particle;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.world.ClientWorld;
 import net.minecraft.particles.BasicParticleType;
-import net.minecraft.util.math.vector.Vector3d;
 
 import javax.annotation.Nullable;
 
@@ -13,30 +12,28 @@ public class GlowParticle extends SpriteTexturedParticle {
     public GlowParticle(ClientWorld world, double x, double y, double z, double targetX, double targetY, double targetZ) {
         super(world, x, y, z);
 
-        this.xd = targetX;//targetX - x;
-        this.yd = targetY;//targetY == 0 ? targetY - y : 0.03f;
-        this.zd = targetZ;//targetZ - z;
+        double speed = 2 + 0.6 * world.random.nextDouble();
+        double distance = Math.sqrt(targetX * targetX + targetY * targetY + targetZ * targetZ);
+        double factor = speed / distance;
+
+        double dirX = targetX > 0 ? targetX - x : 0;
+        double dirY = targetY > 0 ? targetY - y : 0;
+        double dirZ = targetZ > 0 ? targetZ - z : 0;
+
+        this.xd = dirX * factor;
+        this.yd = dirY * factor;
+        this.zd = dirZ * factor;
         this.lifetime = Math.max(10, world.random.nextInt(30));
         scale(1);
         quadSize = 0.15f;
-    }
-
-    public GlowParticle(ClientWorld world, double x, double y, double z) {
-        super(world, x, y, z);
-
-        this.xd = 0;
-        this.yd = 0.03f;
-        this.zd = 0;
-        this.lifetime = Math.max(20, world.random.nextInt(50));
-        scale(1);
-        quadSize = 0.15f;
+        hasPhysics = false;
     }
 
     @Override
     public void tick() {
-/*        float scale = Math.max(0.25f, 1 - (age / (float) lifetime));
+        float scale = Math.max(0.25f, 1 - (age / (float) lifetime));
         scale(scale);
-        quadSize = scale * 0.15f;*/
+        quadSize = scale * 0.15f;
         super.tick();
     }
 
@@ -60,7 +57,7 @@ public class GlowParticle extends SpriteTexturedParticle {
             float xOffset = (world.random.nextInt(40) - 20) / 100.0f;
             float zOffset = (world.random.nextInt(40) - 20) / 100.0f;
 
-            GlowParticle particle = new GlowParticle(world, pX + xOffset, pY, pZ + zOffset);
+            GlowParticle particle = new GlowParticle(world, pX + xOffset, pY, pZ + zOffset, pXSpeed, pYSpeed, pZSpeed);
             particle.pickSprite(sprites);
             particle.setSize(size, size);
             particle.setColor(world.random.nextFloat() * 1.8f, world.random.nextFloat() * 1.8f, world.random.nextFloat() * 1.8f);

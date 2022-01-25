@@ -5,6 +5,7 @@ import dev.onyxstudios.projecti.blocks.AlembicBlock;
 import dev.onyxstudios.projecti.registry.ModEntities;
 import dev.onyxstudios.projecti.registry.ModParticles;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.world.ClientWorld;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.particles.ParticleTypes;
 import net.minecraft.tileentity.ITickableTileEntity;
@@ -61,9 +62,7 @@ public class AlembicTileEntity extends BaseTileEntity implements ITickableTileEn
             ServerWorld serverLevel = (ServerWorld) level;
             if (powered && age % 10 == 0) {
                 BlockPos pos = getBlockPos();
-
-                //TODO: Write custom particle packets
-                serverLevel.sendParticles(ModParticles.GLOW.get(), pos.getX() + 0.5f, pos.getY() + 0.9f, pos.getZ() + 0.5f, 1, 0, 0.03f, 0, 0);
+                serverLevel.sendParticles(ModParticles.GLOW.get(), pos.getX() + 0.5f, pos.getY() + 0.9f, pos.getZ() + 0.5f, 0, 0, pos.getY() + 2, 0, 1);
             }
         }
 

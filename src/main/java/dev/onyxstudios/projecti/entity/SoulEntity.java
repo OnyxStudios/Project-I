@@ -103,7 +103,10 @@ public class SoulEntity extends AnimalEntity {
         }
 
         brain.addActivity(Activity.CORE, ImmutableList.of(
-                Pair.of(0, new FollowRelayTask()),
+                Pair.of(0, new FollowRelayTask())
+        ));
+
+        brain.addActivity(Activity.IDLE, ImmutableList.of(
                 Pair.of(1, new WalkRandomlyTask(speed)),
                 Pair.of(2, new WalkToTargetTask()),
                 Pair.of(3, new SwimTask(0.35f))
@@ -196,7 +199,7 @@ public class SoulEntity extends AnimalEntity {
             for (Direction direction : Direction.values()) {
                 BlockPos offset = blockPosition().below().relative(direction);
                 if (level.getBlockState(offset).is(Tags.Blocks.STONE)) {
-                    serverLevel.sendParticles(ModParticles.GLOW.get(), getX(), getY() + 2, getZ(), 1, 0, 0, 0, 0);
+                    serverLevel.sendParticles(ModParticles.GLOW.get(), getX(), getY() + 1, getZ(), 0, offset.getX() + 0.5, offset.getY() - 1, offset.getZ() + 0.5, 1);
 
                     changed = true;
                     level.setBlockAndUpdate(offset, ModBlocks.BENIGN_STONE.get().defaultBlockState());

@@ -62,6 +62,9 @@ public class ModBlocks {
     public static RegistryObject<Block> BENIGN_STONE = BLOCKS.register("benign_stone", () -> new Block(AbstractBlock.Properties.of(Material.STONE)));
     public static RegistryObject<Item> BENIGN_STONE_ITEM = ITEMS.register("benign_stone", () -> new BlockItem(BENIGN_STONE.get(), ITEM_BLOCK_PROPS));
 
+    public static RegistryObject<Block> BLOW_MOLD = BLOCKS.register("blow_mold", BlowMoldBlock::new);
+    public static RegistryObject<Item> BLOW_MOLD_ITEM = ITEMS.register("blow_mold", () -> new BlockItem(BLOW_MOLD.get(), ITEM_BLOCK_PROPS));
+
     //Fluids
     private static final AbstractBlock.Properties HOT_FLUID_PROPS = AbstractBlock.Properties.of(Material.LAVA).randomTicks().lightLevel(value -> 100).noDrops();
     private static final Item.Properties BUCKET_PROPS = new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(ProjectI.TAB);

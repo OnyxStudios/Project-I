@@ -2,6 +2,7 @@ package dev.onyxstudios.projecti.registry;
 
 import com.google.common.collect.ImmutableSet;
 import dev.onyxstudios.projecti.ProjectI;
+import dev.onyxstudios.projecti.blocks.BlowMoldBlock;
 import dev.onyxstudios.projecti.entity.BlueCrystalEntity;
 import dev.onyxstudios.projecti.entity.KnowledgeEntity;
 import dev.onyxstudios.projecti.entity.SoulEntity;
@@ -37,6 +38,7 @@ public class ModEntities {
             ModBlocks.FUNNEL.get(), ModBlocks.SPIRAL.get(), ModBlocks.SPLITTER.get(), ModBlocks.GOURD.get(), ModBlocks.DECANTER.get()).build(null));
     public static RegistryObject<TileEntityType<BoneCageTileEntity>> BONE_CAGE_TYPE = TILES.register("bone_cage_tile_type", () -> TileEntityType.Builder.of(BoneCageTileEntity::new, ModBlocks.BONE_CAGE.get()).build(null));
     public static RegistryObject<TileEntityType<SoulRelayTileEntity>> SOUL_RELAY_TYPE = TILES.register("soul_relay_tile_type", () -> TileEntityType.Builder.of(SoulRelayTileEntity::new, ModBlocks.SOUL_RELAY.get()).build(null));
+    public static RegistryObject<TileEntityType<BlowMoldTileEntity>> BLOW_MOLD_TYPE = TILES.register("blow_mold_tile_type", () -> TileEntityType.Builder.of(BlowMoldTileEntity::new, ModBlocks.BLOW_MOLD.get()).build(null));
 
     //Entities
     private static final EntityType<KnowledgeEntity> KNOWLEDGE_TYPE = EntityType.Builder.<KnowledgeEntity>of(KnowledgeEntity::new, EntityClassification.MISC).sized(2, 2).build("knowledge");

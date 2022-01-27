@@ -58,6 +58,7 @@ public class ModClient {
         RenderTypeLookup.setRenderLayer(ModBlocks.BELLOWS.get(), RenderType.cutout());
         RenderTypeLookup.setRenderLayer(ModBlocks.BONE_CAGE.get(), RenderType.cutout());
         RenderTypeLookup.setRenderLayer(ModBlocks.SOUL_RELAY.get(), RenderType.cutout());
+        RenderTypeLookup.setRenderLayer(ModBlocks.BLOW_MOLD.get(), RenderType.cutout());
 
         RenderTypeLookup.setRenderLayer(ModBlocks.FUNNEL.get(), RenderType.translucent());
         RenderTypeLookup.setRenderLayer(ModBlocks.DECANTER.get(), RenderType.translucent());

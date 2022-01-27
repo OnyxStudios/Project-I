@@ -1,6 +1,8 @@
 package dev.onyxstudios.projecti.blocks;
 
 import dev.onyxstudios.projecti.api.block.AlembicType;
+import dev.onyxstudios.projecti.registry.ModBlocks;
+import dev.onyxstudios.projecti.registry.ModEntities;
 import dev.onyxstudios.projecti.tileentity.AlembicTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
@@ -71,6 +73,7 @@ public class AlembicBlock extends ContainerBlock {
         super.onPlace(state, world, pos, oldState, moving);
         if (world.isClientSide()) return;
 
+        findCage(world, pos);
         TileEntity tileEntity = world.getBlockEntity(pos);
         if (tileEntity instanceof AlembicTileEntity) {
 
@@ -91,10 +94,10 @@ public class AlembicBlock extends ContainerBlock {
         if (world.isClientSide()) return;
 
         if (neighborBlock != this) {
-            TileEntity tile = world.getBlockEntity(pos);
+            findCage(world, pos);
 
-            if (tile instanceof AlembicTileEntity) {
-                AlembicTileEntity alembic = (AlembicTileEntity) tile;
+            AlembicTileEntity alembic = ModEntities.ALEMBIC_TYPE.get().getBlockEntity(world, pos);
+            if (alembic != null) {
                 boolean flag = world.hasNeighborSignal(pos);
 
                 if (alembic.isPowered() != flag) {
@@ -120,6 +123,21 @@ public class AlembicBlock extends ContainerBlock {
         }
 
         super.onRemove(state, world, pos, newState, moved);
+    }
+
+    public void findCage(World world, BlockPos pos) {
+        if (world.isClientSide() || getAlembicType() != AlembicType.FUNNEL) return;
+        AlembicTileEntity alembic = ModEntities.ALEMBIC_TYPE.get().getBlockEntity(world, pos);
+
+        if (alembic != null) {
+            for (Direction direction : Direction.values()) {
+                BlockPos offsetPos = pos.relative(direction);
+                if (world.getBlockState(offsetPos).is(ModBlocks.BONE_CAGE.get())) {
+                    alembic.setCage(offsetPos);
+                    break;
+                }
+            }
+        }
     }
 
     public boolean connectAlembics(World world, BlockPos pos, BlockPos neighborPos, Direction neighborDirection) {

@@ -20,6 +20,7 @@ public class BoneCageTileEntity extends BaseTileEntity {
 
     private EntityType<?> storedEntity;
     private CompoundNBT entityData;
+    private boolean hasSoul = true;
 
     private boolean powered;
 
@@ -37,6 +38,8 @@ public class BoneCageTileEntity extends BaseTileEntity {
         if (entityData != null)
             compound.put("entityData", entityData);
 
+        compound.putBoolean("hasSoul", hasSoul);
+
         return compound;
     }
 
@@ -52,6 +55,8 @@ public class BoneCageTileEntity extends BaseTileEntity {
 
         if (compound.contains("entityData"))
             entityData = compound.getCompound("entityData");
+
+        hasSoul = compound.getBoolean("hasSoul");
     }
 
     public void releaseEntity() {
@@ -64,6 +69,7 @@ public class BoneCageTileEntity extends BaseTileEntity {
 
             entity.load(entityData);
             entity.setPos(spawnPos.getX(), spawnPos.getY(), spawnPos.getZ());
+            //TODO: Remove soul and kill entity slowly
             level.addFreshEntity(entity);
         }
 
@@ -78,9 +84,18 @@ public class BoneCageTileEntity extends BaseTileEntity {
 
         storedEntity = entity.getType();
         entityData = entity.saveWithoutId(new CompoundNBT());
+        hasSoul = true;
         entity.remove(true);
         this.setChanged();
         level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Constants.BlockFlags.DEFAULT);
+    }
+
+    public void createSoul(BlockPos pos) {
+        if (level != null && !level.isClientSide() && storedEntity != null) {
+            SoulEntity soulEntity = new SoulEntity(level, (EntityType<? extends LivingEntity>) storedEntity);
+            soulEntity.setPos(pos.getX() + 0.5, pos.getY(), pos.getZ() + 0.5);
+            level.addFreshEntity(soulEntity);
+        }
     }
 
     public boolean canTrap(LivingEntity entity) {

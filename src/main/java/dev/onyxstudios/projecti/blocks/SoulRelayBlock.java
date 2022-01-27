@@ -1,5 +1,7 @@
 package dev.onyxstudios.projecti.blocks;
 
+import dev.onyxstudios.projecti.registry.ModBlocks;
+import dev.onyxstudios.projecti.registry.ModEntities;
 import dev.onyxstudios.projecti.tileentity.SoulRelayTileEntity;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -31,12 +33,29 @@ public class SoulRelayBlock extends ContainerBlock {
     public void onPlace(BlockState state, World world, BlockPos pos, BlockState oldState, boolean isMoving) {
         super.onPlace(state, world, pos, oldState, isMoving);
         checkPower(world, pos);
+        checkVisitable(world, pos);
     }
 
     @Override
     public void neighborChanged(BlockState state, World world, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean isMoving) {
         super.neighborChanged(state, world, pos, neighborBlock, neighborPos, isMoving);
         checkPower(world, pos);
+
+        if (neighborBlock != this) {
+            checkVisitable(world, pos);
+        }
+    }
+
+    private void checkVisitable(World world, BlockPos pos) {
+        if (world.isClientSide()) return;
+        SoulRelayTileEntity soulRelay = ModEntities.SOUL_RELAY_TYPE.get().getBlockEntity(world, pos);
+
+        if (soulRelay != null) {
+            for (Direction direction : Direction.values()) {
+                if (world.getBlockState(pos.relative(direction)).is(ModBlocks.BONE_CAGE.get()))
+                    soulRelay.setCanVisit(false);
+            }
+        }
     }
 
     private void updatePower(World world, BlockPos pos, boolean powered) {

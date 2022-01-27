@@ -45,6 +45,8 @@ public class SoulRelayTileEntity extends BaseTileEntity implements IAnimatable {
 
     public void setCanVisit(boolean canVisit) {
         this.canVisit = canVisit;
+        this.setChanged();
+        level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Constants.BlockFlags.DEFAULT);
     }
 
     public boolean isPowered() {

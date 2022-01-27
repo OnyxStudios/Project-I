@@ -230,6 +230,14 @@ public class SoulEntity extends AnimalEntity {
         blacklistAge = 0;
     }
 
+    @Override
+    public void onSyncedDataUpdated(DataParameter<?> dataParameter) {
+        super.onSyncedDataUpdated(dataParameter);
+        if (TARGET_DATA.equals(dataParameter)) {
+            targetEntityType = (EntityType<? extends LivingEntity>) ForgeRegistries.ENTITIES.getValue(new ResourceLocation(getEntityData().get(TARGET_DATA)));
+        }
+    }
+
     public boolean isBlacklisted(BlockPos pos) {
         return blackList.contains(pos);
     }

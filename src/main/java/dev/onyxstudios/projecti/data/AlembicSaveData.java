@@ -10,10 +10,7 @@ import net.minecraft.world.server.ServerWorld;
 import net.minecraft.world.storage.WorldSavedData;
 import net.minecraftforge.common.util.Constants;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 import static dev.onyxstudios.projecti.api.block.AlembicType.*;
 
@@ -51,7 +48,7 @@ public class AlembicSaveData extends WorldSavedData {
     public void load(CompoundNBT tag) {
         ListNBT list = tag.getList("alembics", Constants.NBT.TAG_STRING);
 
-        alembicList.clear();
+        alembicList = new ArrayList<>();
         for (INBT nbt : list) {
             StringNBT stringNBT = (StringNBT) nbt;
             alembicList.add(AlembicType.valueOf(stringNBT.getAsString()));

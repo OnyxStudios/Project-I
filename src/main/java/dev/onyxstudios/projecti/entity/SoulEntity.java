@@ -199,7 +199,9 @@ public class SoulEntity extends AnimalEntity {
             for (Direction direction : Direction.values()) {
                 BlockPos offset = blockPosition().below().relative(direction);
                 if (level.getBlockState(offset).is(Tags.Blocks.STONE)) {
-                    serverLevel.sendParticles(ModParticles.GLOW.get(), getX(), getY() + 1, getZ(), 0, offset.getX() + 0.5, offset.getY() - 1, offset.getZ() + 0.5, 1);
+                    serverLevel.sendParticles(ModParticles.GLOW.get(), getX(), getY() + 1.5, getZ(), 0, offset.getX() + 0.5, offset.getY() - 1, offset.getZ() + 0.5, 1);
+                    serverLevel.sendParticles(ModParticles.GLOW.get(), getX(), getY() + 1.6, getZ(), 0, offset.getX() + 0.5, offset.getY() - 1, offset.getZ() + 0.5, 1);
+                    serverLevel.sendParticles(ModParticles.GLOW.get(), getX(), getY() + 1.7, getZ(), 0, offset.getX() + 0.5, offset.getY() - 1, offset.getZ() + 0.5, 1);
 
                     changed = true;
                     level.setBlockAndUpdate(offset, ModBlocks.BENIGN_STONE.get().defaultBlockState());

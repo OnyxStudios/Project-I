@@ -87,7 +87,7 @@ public class AlembicTileEntity extends BaseTileEntity implements ITickableTileEn
             ServerWorld serverLevel = (ServerWorld) level;
             if (age % 10 == 0) {
                 BlockPos pos = getBlockPos();
-                serverLevel.sendParticles(ModParticles.GLOW.get(), pos.getX() + 0.5f, pos.getY() + 0.9f, pos.getZ() + 0.5f, 0, 0, pos.getY() + 2, 0, 1);
+                serverLevel.sendParticles(ModParticles.GLOW.get(), pos.getX() + 0.5f, pos.getY() + 0.9f, pos.getZ() + 0.5f, 0, pos.getX() + 0.5, pos.getY() + 2, pos.getZ() + 0.5, 1);
             }
         }
 

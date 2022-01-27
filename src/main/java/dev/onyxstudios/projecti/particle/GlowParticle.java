@@ -12,18 +12,18 @@ public class GlowParticle extends SpriteTexturedParticle {
     public GlowParticle(ClientWorld world, double x, double y, double z, double targetX, double targetY, double targetZ) {
         super(world, x, y, z);
 
-        double speed = 2 + 0.6 * world.random.nextDouble();
+        double speed = 10 + 2 * world.random.nextDouble();
         double distance = Math.sqrt(targetX * targetX + targetY * targetY + targetZ * targetZ);
         double factor = speed / distance;
 
-        double dirX = targetX > 0 ? targetX - x : 0;
-        double dirY = targetY > 0 ? targetY - y : 0;
-        double dirZ = targetZ > 0 ? targetZ - z : 0;
+        double dirX = targetX - x;
+        double dirY = targetY - y;
+        double dirZ = targetZ - z;
 
         this.xd = dirX * factor;
         this.yd = dirY * factor;
         this.zd = dirZ * factor;
-        this.lifetime = Math.max(10, world.random.nextInt(30));
+        this.lifetime = (int) Math.ceil(distance / speed);//Math.max(10, world.random.nextInt(30));
         scale(1);
         quadSize = 0.15f;
         hasPhysics = false;

@@ -1,0 +1,10 @@
+{
+  "type": "projecti:blow_mold",
+  "mold": {
+    "item": "projecti:splitter_mold"
+  },
+  "fluid": "projecti:molten_blue_crystal",
+  "result": {
+    "item": "projecti:splitter"
+  }
+}

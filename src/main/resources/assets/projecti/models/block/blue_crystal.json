@@ -1,6 +1,6 @@
 {
   "parent": "block/air",
   "textures": {
-    "particle": "projecti:items/blue_crystal"
+    "particle": "block/cyan_stained_glass"
   }
 }

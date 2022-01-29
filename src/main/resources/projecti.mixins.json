@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "dev.onyxstudios.projecti.mixins",
+  "compatibilityLevel": "JAVA_8",
+  "refmap": "projecti.refmap.json",
+  "mixins": [
+  ],
+  "client": [
+    "client.ModelRendererAccessor"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

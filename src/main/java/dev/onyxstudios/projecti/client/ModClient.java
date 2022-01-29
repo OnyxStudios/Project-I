@@ -50,6 +50,7 @@ public class ModClient {
         ClientRegistry.bindTileEntityRenderer(ModEntities.ALEMBIC_TYPE.get(), AlembicRenderer::new);
         ClientRegistry.bindTileEntityRenderer(ModEntities.BONE_CAGE_TYPE.get(), BoneCageRenderer::new);
         ClientRegistry.bindTileEntityRenderer(ModEntities.SOUL_RELAY_TYPE.get(), SoulRelayRenderer::new);
+        ClientRegistry.bindTileEntityRenderer(ModEntities.BLOW_MOLD_TYPE.get(), BlowMoldRenderer::new);
     }
 
     private static void initLayers() {

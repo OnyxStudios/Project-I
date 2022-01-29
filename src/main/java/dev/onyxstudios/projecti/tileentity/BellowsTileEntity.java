@@ -25,8 +25,8 @@ public class BellowsTileEntity extends BaseTileEntity implements ITickableTileEn
 
     @Override
     public void tick() {
-        if (level.hasNeighborSignal(getBlockPos())) {
-            Direction facing = getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).getCounterClockWise();
+        if (level != null && level.hasNeighborSignal(getBlockPos())) {
+            Direction facing = getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
             BlockPos offsetPos = getBlockPos().relative(facing);
             TileEntity tile = level.getBlockEntity(offsetPos);
 

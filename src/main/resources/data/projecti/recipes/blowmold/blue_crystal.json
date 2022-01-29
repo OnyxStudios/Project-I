@@ -1,10 +1,10 @@
 {
   "type": "projecti:blow_mold",
   "mold": {
-    "item": "projecti:decanter_mold"
+    "item": "projecti:gem_mold"
   },
   "fluid": "projecti:molten_blue_crystal",
   "result": {
-    "item": "projecti:decanter"
+    "item": "projecti:blue_crystal"
   }
 }

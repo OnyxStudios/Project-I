@@ -9,7 +9,7 @@ import net.minecraftforge.items.ItemStackHandler;
  */
 public class InvFluidWrapper extends InvCapWrapper {
 
-    private FluidTank tank;
+    private final FluidTank tank;
 
     public InvFluidWrapper(ItemStackHandler cap, FluidTank tank) {
         super(cap);

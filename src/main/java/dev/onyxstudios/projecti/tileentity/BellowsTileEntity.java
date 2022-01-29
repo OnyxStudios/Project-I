@@ -15,18 +15,18 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class TileEntityBellows extends TileEntityBase implements ITickableTileEntity, IAnimatable {
+public class BellowsTileEntity extends BaseTileEntity implements ITickableTileEntity, IAnimatable {
 
     private final AnimationFactory animationFactory = new AnimationFactory(this);
 
-    public TileEntityBellows() {
+    public BellowsTileEntity() {
         super(ModEntities.BELLOWS_TYPE.get());
     }
 
     @Override
     public void tick() {
-        if (level.hasNeighborSignal(getBlockPos())) {
-            Direction facing = getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).getCounterClockWise();
+        if (level != null && level.hasNeighborSignal(getBlockPos())) {
+            Direction facing = getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
             BlockPos offsetPos = getBlockPos().relative(facing);
             TileEntity tile = level.getBlockEntity(offsetPos);
 
@@ -37,7 +37,7 @@ public class TileEntityBellows extends TileEntityBase implements ITickableTileEn
 
     @Override
     public void registerControllers(AnimationData data) {
-        data.addAnimationController(new AnimationController(this, "controller", 0, this::predicate));
+        data.addAnimationController(new AnimationController<>(this, "controller", 0, this::predicate));
     }
 
     @Override
@@ -45,8 +45,8 @@ public class TileEntityBellows extends TileEntityBase implements ITickableTileEn
         return this.animationFactory;
     }
 
-    private <E extends TileEntity & IAnimatable> PlayState predicate(AnimationEvent<E> event) {
-        AnimationController controller = event.getController();
+    private PlayState predicate(AnimationEvent<BellowsTileEntity> event) {
+        AnimationController<BellowsTileEntity> controller = event.getController();
         controller.transitionLengthTicks = 0;
         if (event.getAnimatable().getLevel().hasNeighborSignal(event.getAnimatable().getBlockPos())) {
             controller.setAnimation(new AnimationBuilder().addAnimation("animation.bellows.deploy", true));

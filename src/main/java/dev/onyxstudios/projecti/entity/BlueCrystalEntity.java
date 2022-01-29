@@ -10,16 +10,16 @@ import net.minecraft.network.IPacket;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.network.NetworkHooks;
 
-public class EntityBlueCrystal extends ItemEntity {
+public class BlueCrystalEntity extends ItemEntity {
 
     private int inLavaTicks;
 
-    public EntityBlueCrystal(EntityType<? extends ItemEntity> entityType, World world) {
+    public BlueCrystalEntity(EntityType<? extends ItemEntity> entityType, World world) {
         super(entityType, world);
     }
 
-    public EntityBlueCrystal(World world, ItemStack stack, ItemEntity originalEntity) {
-        super(ModEntities.ENTITY_BLUE_CRYSTAL.get(), world);
+    public BlueCrystalEntity(World world, ItemStack stack, ItemEntity originalEntity) {
+        super(ModEntities.BLUE_CRYSTAL_ENTITY.get(), world);
         load(originalEntity.saveWithoutId(new CompoundNBT()));
         setItem(stack);
     }

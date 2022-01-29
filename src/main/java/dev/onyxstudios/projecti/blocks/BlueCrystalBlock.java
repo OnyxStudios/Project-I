@@ -2,7 +2,7 @@ package dev.onyxstudios.projecti.blocks;
 
 import dev.onyxstudios.projecti.registry.ModBlocks;
 import dev.onyxstudios.projecti.registry.ModItems;
-import dev.onyxstudios.projecti.tileentity.TileEntityCrystal;
+import dev.onyxstudios.projecti.tileentity.CrystalTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.LivingEntity;
@@ -49,7 +49,7 @@ public class BlueCrystalBlock extends ContainerBlock {
     @Override
     public ActionResultType use(BlockState blockState, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
         TileEntity tile = world.getBlockEntity(pos);
-        if (tile instanceof TileEntityCrystal && ((TileEntityCrystal) tile).fullyGrown) {
+        if (tile instanceof CrystalTileEntity && ((CrystalTileEntity) tile).fullyGrown) {
             if (!world.isClientSide)
                 world.playSound(null, pos, SoundEvents.GLASS_BREAK, SoundCategory.MASTER, 0.4f, 0.1f);
 
@@ -62,24 +62,24 @@ public class BlueCrystalBlock extends ContainerBlock {
     @Override
     public void onPlace(BlockState state, World world, BlockPos pos, BlockState state2, boolean isMoving) {
         TileEntity tile = world.getBlockEntity(pos);
-        if (!world.isClientSide && tile instanceof TileEntityCrystal && !((TileEntityCrystal) tile).propsSet)
-            ((TileEntityCrystal) tile).setProps(false);
+        if (!world.isClientSide && tile instanceof CrystalTileEntity && !((CrystalTileEntity) tile).propsSet)
+            ((CrystalTileEntity) tile).setProps(false);
     }
 
     @Override
     public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         TileEntity tile = world.getBlockEntity(pos);
-        if (!world.isClientSide && tile instanceof TileEntityCrystal)
-            ((TileEntityCrystal) tile).setProps(true);
+        if (!world.isClientSide && tile instanceof CrystalTileEntity)
+            ((CrystalTileEntity) tile).setProps(true);
     }
 
     @Override
     public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos neighbor, boolean p_220069_6_) {
         TileEntity tile = world.getBlockEntity(pos);
-        if (!world.isClientSide() && !canSurvive(state, world, pos) && tile instanceof TileEntityCrystal) {
+        if (!world.isClientSide() && !canSurvive(state, world, pos) && tile instanceof CrystalTileEntity) {
             //TODO When in 1.17 clean up code to java 16
             //Make it so fully grown only drop 1, so that players don't get around it and just break bottom  block
-            if (((TileEntityCrystal) tile).fullyGrown || ((TileEntityCrystal) tile).returnItem)
+            if (((CrystalTileEntity) tile).fullyGrown || ((CrystalTileEntity) tile).returnItem)
                 world.addFreshEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModBlocks.BLUE_CRYSTAL_ITEM.get())));
 
             world.removeBlock(pos, false);
@@ -91,7 +91,7 @@ public class BlueCrystalBlock extends ContainerBlock {
     @Override
     public void playerWillDestroy(World world, BlockPos pos, BlockState state, PlayerEntity player) {
         TileEntity tile = world.getBlockEntity(pos);
-        if (!world.isClientSide() && tile instanceof TileEntityCrystal && !player.isCreative()) {
+        if (!world.isClientSide() && tile instanceof CrystalTileEntity && !player.isCreative()) {
             state.spawnAfterBreak((ServerWorld) world, pos, new ItemStack(ModBlocks.BLUE_CRYSTAL_ITEM.get()));
             dropResources(state, world, pos);
         }
@@ -105,8 +105,8 @@ public class BlueCrystalBlock extends ContainerBlock {
         Random random = lootBuilder.getLevel().random;
 
         TileEntity tile = lootBuilder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
-        if (tile instanceof TileEntityCrystal) {
-            TileEntityCrystal crystal = (TileEntityCrystal) tile;
+        if (tile instanceof CrystalTileEntity) {
+            CrystalTileEntity crystal = (CrystalTileEntity) tile;
 
             if (crystal.fullyGrown) {
                 int returnAmt = crystal.returnItem ? 2 : 1;
@@ -135,6 +135,6 @@ public class BlueCrystalBlock extends ContainerBlock {
     @Nullable
     @Override
     public TileEntity newBlockEntity(IBlockReader world) {
-        return new TileEntityCrystal();
+        return new CrystalTileEntity();
     }
 }

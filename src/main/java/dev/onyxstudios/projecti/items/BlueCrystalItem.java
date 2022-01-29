@@ -1,7 +1,7 @@
 package dev.onyxstudios.projecti.items;
 
 import dev.onyxstudios.projecti.ProjectI;
-import dev.onyxstudios.projecti.entity.EntityBlueCrystal;
+import dev.onyxstudios.projecti.entity.BlueCrystalEntity;
 import dev.onyxstudios.projecti.registry.ModBlocks;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.item.ItemEntity;
@@ -26,6 +26,6 @@ public class BlueCrystalItem extends BlockItem {
     @Override
     public Entity createEntity(World world, Entity location, ItemStack itemstack) {
         if(!(location instanceof ItemEntity)) return null;
-        return new EntityBlueCrystal(world, itemstack, (ItemEntity) location);
+        return new BlueCrystalEntity(world, itemstack, (ItemEntity) location);
     }
 }

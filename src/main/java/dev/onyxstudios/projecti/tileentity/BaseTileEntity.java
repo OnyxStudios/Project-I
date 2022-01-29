@@ -8,9 +8,9 @@ import net.minecraft.tileentity.TileEntityType;
 
 import javax.annotation.Nullable;
 
-public class TileEntityBase extends TileEntity {
+public class BaseTileEntity extends TileEntity {
 
-    public TileEntityBase(TileEntityType<?> tileEntityType) {
+    public BaseTileEntity(TileEntityType<?> tileEntityType) {
         super(tileEntityType);
     }
 
@@ -28,7 +28,6 @@ public class TileEntityBase extends TileEntity {
     @Override
     public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket packet) {
         super.onDataPacket(net, packet);
-        this.load(level.getBlockState(packet.getPos()), packet.getTag());
-        this.level.sendBlockUpdated(this.getBlockPos(), level.getBlockState(this.getBlockPos()), level.getBlockState(this.getBlockPos()), 3);
+        handleUpdateTag(level.getBlockState(packet.getPos()), packet.getTag());
     }
 }

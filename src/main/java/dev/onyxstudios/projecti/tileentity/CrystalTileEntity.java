@@ -10,7 +10,7 @@ import net.minecraftforge.common.util.Constants;
 
 import java.util.Random;
 
-public class TileEntityCrystal extends TileEntityBase implements ITickableTileEntity {
+public class CrystalTileEntity extends BaseTileEntity implements ITickableTileEntity {
 
     private static final Random random = new Random();
     public static final int MAX_TICKS_PER_STAGE = 2400;
@@ -29,7 +29,7 @@ public class TileEntityCrystal extends TileEntityBase implements ITickableTileEn
     public boolean returnItem;
     public Direction randomDir;
 
-    public TileEntityCrystal() {
+    public CrystalTileEntity() {
         super(ModEntities.CRYSTAL_TYPE.get());
         randomDir = Direction.getRandom(random);
     }

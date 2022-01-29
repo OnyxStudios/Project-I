@@ -1,7 +1,7 @@
 package dev.onyxstudios.projecti.client.render.tile;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import dev.onyxstudios.projecti.tileentity.TileEntityStamper;
+import dev.onyxstudios.projecti.tileentity.StamperTileEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.model.ItemCameraTransforms;
@@ -11,14 +11,14 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.util.math.vector.Vector3f;
 
-public class CircuitStamperRenderer extends TileEntityRenderer<TileEntityStamper> {
+public class CircuitStamperRenderer extends TileEntityRenderer<StamperTileEntity> {
 
     public CircuitStamperRenderer(TileEntityRendererDispatcher rendererDispatcher) {
         super(rendererDispatcher);
     }
 
     @Override
-    public void render(TileEntityStamper stamper, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int combinedLight, int combinedOverlay) {
+    public void render(StamperTileEntity stamper, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int combinedLight, int combinedOverlay) {
         matrixStack.pushPose();
         matrixStack.translate(0.5, 0.15, 0.5);
         matrixStack.mulPose(Vector3f.YP.rotationDegrees(-(stamper.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite().get2DDataValue() * 90)));
@@ -42,7 +42,7 @@ public class CircuitStamperRenderer extends TileEntityRenderer<TileEntityStamper
     }
 
     @Override
-    public boolean shouldRenderOffScreen(TileEntityStamper tile) {
+    public boolean shouldRenderOffScreen(StamperTileEntity tile) {
         return true;
     }
 }

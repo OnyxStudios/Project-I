@@ -2,12 +2,12 @@ package dev.onyxstudios.projecti.client.render.tile;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
 import dev.onyxstudios.projecti.client.models.BellowsModel;
-import dev.onyxstudios.projecti.tileentity.TileEntityBellows;
+import dev.onyxstudios.projecti.tileentity.BellowsTileEntity;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.util.Direction;
 import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 
-public class BellowsRenderer extends GeoBlockRenderer<TileEntityBellows> {
+public class BellowsRenderer extends GeoBlockRenderer<BellowsTileEntity> {
 
     public BellowsRenderer(TileEntityRendererDispatcher rendererDispatcher) {
         super(rendererDispatcher, new BellowsModel());

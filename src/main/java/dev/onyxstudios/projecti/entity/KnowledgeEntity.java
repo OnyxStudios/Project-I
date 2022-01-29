@@ -7,26 +7,28 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.EquipmentSlotType;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.IPacket;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.network.NetworkHooks;
 
-public class EntityKnowledge extends LivingEntity {
+public class KnowledgeEntity extends LivingEntity {
 
     private PlayerEntity owner;
     private int blocksMoved;
     private double moveX, moveY, moveZ;
 
-    public EntityKnowledge(World world) {
-        super(ModEntities.ENTITY_KNOWLEDGE.get(), world);
+    public KnowledgeEntity(World world) {
+        super(ModEntities.KNOWLEDGE_ENTITY.get(), world);
     }
 
-    public EntityKnowledge(EntityType<?> type, World world) {
-        super(ModEntities.ENTITY_KNOWLEDGE.get(), world);
+    public KnowledgeEntity(EntityType<?> type, World world) {
+        super(ModEntities.KNOWLEDGE_ENTITY.get(), world);
     }
 
-    public EntityKnowledge(World world, PlayerEntity player) {
-        super(ModEntities.ENTITY_KNOWLEDGE.get(), world);
+    public KnowledgeEntity(World world, PlayerEntity player) {
+        super(ModEntities.KNOWLEDGE_ENTITY.get(), world);
         this.owner = player;
         this.blocksMoved = 0;
         this.setPos(player.getX(), player.getY() + 1, player.getZ());
@@ -115,5 +117,10 @@ public class EntityKnowledge extends LivingEntity {
 
     @Override
     public void setItemSlot(EquipmentSlotType p_184201_1_, ItemStack p_184201_2_) {
+    }
+
+    @Override
+    public IPacket<?> getAddEntityPacket() {
+        return NetworkHooks.getEntitySpawningPacket(this);
     }
 }

@@ -2,19 +2,19 @@ package dev.onyxstudios.projecti.registry.recipes;
 
 import dev.onyxstudios.projecti.registry.ModRecipes;
 import dev.onyxstudios.projecti.utils.InvFluidWrapper;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.fluids.FluidStack;
 
-public class BlowMoldRecipe implements IRecipe<InvFluidWrapper> {
+public class BlowMoldRecipe implements Recipe<InvFluidWrapper> {
 
-    protected IRecipeType<?> recipeType;
+    protected RecipeType<?> recipeType;
     protected ResourceLocation ID;
     protected String group;
     protected Ingredient mold;
@@ -31,12 +31,8 @@ public class BlowMoldRecipe implements IRecipe<InvFluidWrapper> {
     }
 
     @Override
-    public boolean matches(InvFluidWrapper inv, World world) {
-        if (inv.getTank() != null && inv.getTank().getFluid().isFluidEqual(new FluidStack(fluid, 1000)) && mold.test(inv.getItem(0))) {
-            return true;
-        }
-
-        return false;
+    public boolean matches(InvFluidWrapper inv, Level level) {
+        return inv.getTank() != null && inv.getTank().getFluid().isFluidEqual(new FluidStack(fluid, 1000)) && mold.test(inv.getItem(0));
     }
 
     @Override
@@ -60,12 +56,12 @@ public class BlowMoldRecipe implements IRecipe<InvFluidWrapper> {
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return ModRecipes.BLOW_MOLD_SERIALIZER.get();
     }
 
     @Override
-    public IRecipeType<?> getType() {
+    public RecipeType<?> getType() {
         return this.recipeType;
     }
 

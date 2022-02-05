@@ -1,9 +1,9 @@
 package dev.onyxstudios.projecti.registry;
 
 import dev.onyxstudios.projecti.ProjectI;
-import net.minecraft.fluid.Fluid;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraftforge.common.Tags;
 
 public class ModTags {

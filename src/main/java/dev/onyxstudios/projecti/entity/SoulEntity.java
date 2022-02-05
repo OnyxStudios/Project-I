@@ -10,39 +10,35 @@ import dev.onyxstudios.projecti.registry.ModBlocks;
 import dev.onyxstudios.projecti.registry.ModEntities;
 import dev.onyxstudios.projecti.registry.ModItems;
 import dev.onyxstudios.projecti.registry.ModParticles;
-import dev.onyxstudios.projecti.tileentity.SoulRelayTileEntity;
-import net.minecraft.entity.*;
-import net.minecraft.entity.ai.brain.Brain;
-import net.minecraft.entity.ai.brain.memory.MemoryModuleType;
-import net.minecraft.entity.ai.brain.schedule.Activity;
-import net.minecraft.entity.ai.brain.task.SwimTask;
-import net.minecraft.entity.ai.brain.task.WalkRandomlyTask;
-import net.minecraft.entity.ai.brain.task.WalkToTargetTask;
-import net.minecraft.entity.ai.goal.LookAtGoal;
-import net.minecraft.entity.ai.goal.LookRandomlyGoal;
-import net.minecraft.entity.ai.goal.TemptGoal;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.passive.AnimalEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.NBTUtil;
-import net.minecraft.network.IPacket;
-import net.minecraft.network.datasync.DataParameter;
-import net.minecraft.network.datasync.DataSerializers;
-import net.minecraft.network.datasync.EntityDataManager;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import dev.onyxstudios.projecti.tileentity.SoulRelayBlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.*;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.syncher.EntityDataAccessor;
+import net.minecraft.network.syncher.EntityDataSerializers;
+import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.ai.Brain;
+import net.minecraft.world.entity.ai.behavior.MoveToTargetSink;
+import net.minecraft.world.entity.ai.behavior.RandomStroll;
+import net.minecraft.world.entity.ai.behavior.Swim;
+import net.minecraft.world.entity.ai.goal.LookAtPlayerGoal;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.ai.goal.TemptGoal;
+import net.minecraft.world.entity.ai.memory.MemoryModuleType;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.schedule.Activity;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.level.Level;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraftforge.network.NetworkHooks;
 import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
@@ -50,22 +46,22 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
-public class SoulEntity extends AnimalEntity {
+public class SoulEntity extends Animal {
 
-    public static final DataParameter<String> TARGET_DATA = EntityDataManager.defineId(SoulEntity.class, DataSerializers.STRING);
+    public static final EntityDataAccessor<String> TARGET_DATA = SynchedEntityData.defineId(SoulEntity.class, EntityDataSerializers.STRING);
     private EntityType<? extends LivingEntity> targetEntityType = EntityType.SHEEP;
 
     private final List<BlockPos> blackList = new ArrayList<>();
     private int blacklistAge;
 
-    public SoulEntity(EntityType<? extends AnimalEntity> entityType, World world) {
-        super(entityType, world);
+    public SoulEntity(EntityType<? extends Animal> entityType, Level level) {
+        super(entityType, level);
         setInvulnerable(true);
         this.maxUpStep = 1;
     }
 
-    public SoulEntity(World world, EntityType<? extends LivingEntity> targetEntityType) {
-        super(ModEntities.SOUL_ENTITY.get(), world);
+    public SoulEntity(Level level, EntityType<? extends LivingEntity> targetEntityType) {
+        super(ModEntities.SOUL_ENTITY.get(), level);
 
         if (targetEntityType.getRegistryName() != null) {
             getEntityData().set(TARGET_DATA, targetEntityType.getRegistryName().toString());
@@ -87,8 +83,8 @@ public class SoulEntity extends AnimalEntity {
     public void registerGoals() {
         super.registerGoals();
         this.goalSelector.addGoal(0, new TemptGoal(this, 0.45, Ingredient.of(ModItems.SOUL_BONE.get()), false));
-        this.goalSelector.addGoal(1, new LookAtGoal(this, PlayerEntity.class, 6.0f));
-        this.goalSelector.addGoal(2, new LookRandomlyGoal(this));
+        this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 6.0f));
+        this.goalSelector.addGoal(2, new RandomLookAroundGoal(this));
     }
 
     @Override
@@ -107,9 +103,9 @@ public class SoulEntity extends AnimalEntity {
         ));
 
         brain.addActivity(Activity.IDLE, ImmutableList.of(
-                Pair.of(1, new WalkRandomlyTask(speed)),
-                Pair.of(2, new WalkToTargetTask()),
-                Pair.of(3, new SwimTask(0.35f))
+                Pair.of(1, new RandomStroll(speed)),
+                Pair.of(2, new MoveToTargetSink()),
+                Pair.of(3, new Swim(0.35f))
         ));
 
         brain.setCoreActivities(ImmutableSet.of(Activity.CORE));
@@ -121,7 +117,7 @@ public class SoulEntity extends AnimalEntity {
     }
 
     @Override
-    public Brain.BrainCodec<SoulEntity> brainProvider() {
+    public Brain.Provider<SoulEntity> brainProvider() {
         return Brain.provider(ImmutableList.of(
                 ModEntities.RELAY_WALK_TARGET.get(),
                 MemoryModuleType.WALK_TARGET,
@@ -137,29 +133,29 @@ public class SoulEntity extends AnimalEntity {
     }
 
     @Override
-    public void readAdditionalSaveData(CompoundNBT tag) {
+    public void readAdditionalSaveData(CompoundTag tag) {
         super.readAdditionalSaveData(tag);
         String idString = tag.getString("targetType");
         ResourceLocation id = new ResourceLocation(idString);
         targetEntityType = (EntityType<? extends LivingEntity>) ForgeRegistries.ENTITIES.getValue(id);
         getEntityData().set(TARGET_DATA, idString);
 
-        ListNBT blacklistTag = tag.getList("blacklist", Constants.NBT.TAG_COMPOUND);
-        for (INBT nbt : blacklistTag) {
-            blackList.add(NBTUtil.readBlockPos((CompoundNBT) nbt));
+        ListTag blacklistTag = tag.getList("blacklist", Tag.TAG_COMPOUND);
+        for (Tag nbt : blacklistTag) {
+            blackList.add(NbtUtils.readBlockPos((CompoundTag) nbt));
         }
 
         blacklistAge = tag.getInt("blacklistAge");
     }
 
     @Override
-    public void addAdditionalSaveData(CompoundNBT tag) {
+    public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putString("targetType", getEntityData().get(TARGET_DATA));
 
-        ListNBT blacklistTag = new ListNBT();
+        ListTag blacklistTag = new ListTag();
         for (BlockPos pos : blackList) {
-            blacklistTag.add(NBTUtil.writeBlockPos(pos));
+            blacklistTag.add(NbtUtils.writeBlockPos(pos));
         }
 
         tag.put("blacklist", blacklistTag);
@@ -167,7 +163,7 @@ public class SoulEntity extends AnimalEntity {
     }
 
     @Override
-    public EntitySize getDimensions(Pose pose) {
+    public EntityDimensions getDimensions(Pose pose) {
         return targetEntityType.getDimensions();
     }
 
@@ -187,13 +183,13 @@ public class SoulEntity extends AnimalEntity {
             for (ItemEntity item : items) {
                 if (item.getItem().getItem() == Items.BONE) {
                     level.addFreshEntity(new ItemEntity(level, item.getX(), item.getY(), item.getZ(), new ItemStack(ModItems.SOUL_BONE.get(), item.getItem().getCount())));
-                    item.remove();
+                    item.remove(RemovalReason.DISCARDED);
                 }
             }
         }
 
         if (!level.isClientSide() && checkDiagonals(blockPosition()) && checkDiagonals(blockPosition().above())) {
-            ServerWorld serverLevel = (ServerWorld) level;
+            ServerLevel serverLevel = (ServerLevel) level;
             boolean changed = false;
 
             for (Direction direction : Direction.values()) {
@@ -209,14 +205,14 @@ public class SoulEntity extends AnimalEntity {
             }
 
             if (changed) {
-                this.remove();
+                this.remove(RemovalReason.DISCARDED);
             }
         }
     }
 
     public boolean checkDiagonals(BlockPos startPos) {
         for (DiagonalDirection value : DiagonalDirection.VALUES) {
-            SoulRelayTileEntity relay = ModEntities.SOUL_RELAY_TYPE.get().getBlockEntity(level, value.offset(startPos));
+            SoulRelayBlockEntity relay = ModEntities.SOUL_RELAY_TYPE.get().getBlockEntity(level, value.offset(startPos));
             if (relay == null || !relay.isPowered()) return false;
         }
 
@@ -233,7 +229,7 @@ public class SoulEntity extends AnimalEntity {
     }
 
     @Override
-    public void onSyncedDataUpdated(DataParameter<?> dataParameter) {
+    public void onSyncedDataUpdated(EntityDataAccessor<?> dataParameter) {
         super.onSyncedDataUpdated(dataParameter);
         if (TARGET_DATA.equals(dataParameter)) {
             targetEntityType = (EntityType<? extends LivingEntity>) ForgeRegistries.ENTITIES.getValue(new ResourceLocation(getEntityData().get(TARGET_DATA)));
@@ -246,12 +242,12 @@ public class SoulEntity extends AnimalEntity {
 
     @Override
     public void customServerAiStep() {
-        this.getBrain().tick((ServerWorld) this.level, this);
+        this.getBrain().tick((ServerLevel) this.level, this);
         super.customServerAiStep();
     }
 
     @Override
-    public boolean canBeLeashed(PlayerEntity player) {
+    public boolean canBeLeashed(Player player) {
         return false;
     }
 
@@ -261,7 +257,7 @@ public class SoulEntity extends AnimalEntity {
 
     @Nullable
     @Override
-    public AgeableEntity getBreedOffspring(ServerWorld p_241840_1_, AgeableEntity p_241840_2_) {
+    public AgeableMob getBreedOffspring(ServerLevel level, AgeableMob mob) {
         return null;
     }
 
@@ -271,7 +267,7 @@ public class SoulEntity extends AnimalEntity {
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 }

@@ -1,18 +1,18 @@
 package dev.onyxstudios.projecti.particle;
 
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
-import net.minecraft.client.world.ClientWorld;
-import net.minecraft.particles.BasicParticleType;
+import net.minecraft.core.particles.SimpleParticleType;
 
 import javax.annotation.Nullable;
 
-public class GlowParticle extends SpriteTexturedParticle {
+public class GlowParticle extends TextureSheetParticle {
 
 
-    public GlowParticle(ClientWorld world, double x, double y, double z, double targetX, double targetY, double targetZ) {
-        super(world, x, y, z);
+    public GlowParticle(ClientLevel level, double x, double y, double z, double targetX, double targetY, double targetZ) {
+        super(level, x, y, z);
 
-        double speed = 10 + 2 * world.random.nextDouble();
+        double speed = 10 + 2 * level.random.nextDouble();
         double distance = Math.sqrt(targetX * targetX + targetY * targetY + targetZ * targetZ);
         double factor = speed / distance;
 
@@ -23,7 +23,7 @@ public class GlowParticle extends SpriteTexturedParticle {
         this.xd = dirX * factor;
         this.yd = dirY * factor;
         this.zd = dirZ * factor;
-        this.lifetime = (int) Math.ceil(distance / speed);//Math.max(10, world.random.nextInt(30));
+        this.lifetime = (int) Math.ceil(distance / speed);//Math.max(10, level.random.nextInt(30));
         scale(1);
         quadSize = 0.15f;
         hasPhysics = false;
@@ -38,29 +38,29 @@ public class GlowParticle extends SpriteTexturedParticle {
     }
 
     @Override
-    public IParticleRenderType getRenderType() {
-        return IParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+    public ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
     }
 
-    public static class Factory implements IParticleFactory<BasicParticleType> {
+    public static class Factory implements ParticleProvider<SimpleParticleType> {
 
-        private final IAnimatedSprite sprites;
+        private final SpriteSet sprites;
 
-        public Factory(IAnimatedSprite sprites) {
+        public Factory(SpriteSet sprites) {
             this.sprites = sprites;
         }
 
         @Nullable
         @Override
-        public Particle createParticle(BasicParticleType type, ClientWorld world, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
-            float size = Math.max(0.35f, world.random.nextFloat());
-            float xOffset = (world.random.nextInt(40) - 20) / 100.0f;
-            float zOffset = (world.random.nextInt(40) - 20) / 100.0f;
+        public Particle createParticle(SimpleParticleType type, ClientLevel level, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
+            float size = Math.max(0.35f, level.random.nextFloat());
+            float xOffset = (level.random.nextInt(40) - 20) / 100.0f;
+            float zOffset = (level.random.nextInt(40) - 20) / 100.0f;
 
-            GlowParticle particle = new GlowParticle(world, pX + xOffset, pY, pZ + zOffset, pXSpeed, pYSpeed, pZSpeed);
+            GlowParticle particle = new GlowParticle(level, pX + xOffset, pY, pZ + zOffset, pXSpeed, pYSpeed, pZSpeed);
             particle.pickSprite(sprites);
             particle.setSize(size, size);
-            particle.setColor(world.random.nextFloat() * 1.8f, world.random.nextFloat() * 1.8f, world.random.nextFloat() * 1.8f);
+            particle.setColor(level.random.nextFloat() * 1.8f, level.random.nextFloat() * 1.8f, level.random.nextFloat() * 1.8f);
             return particle;
         }
     }

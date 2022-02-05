@@ -7,18 +7,17 @@ import dev.onyxstudios.projecti.blocks.fluid.BaseFluidBlock;
 import dev.onyxstudios.projecti.blocks.fluid.FluidMoltenBlueCrystal;
 import dev.onyxstudios.projecti.items.BlueCrystalItem;
 import dev.onyxstudios.projecti.items.BoneCageItem;
-import net.minecraft.block.AbstractBlock;
-import net.minecraft.block.Block;
-import net.minecraft.block.material.Material;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.BucketItem;
-import net.minecraft.item.Item;
-import net.minecraft.item.Items;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.BucketItem;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockBehaviour;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.Material;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class ModBlocks {
 
@@ -59,14 +58,14 @@ public class ModBlocks {
     public static RegistryObject<Block> SOUL_RELAY = BLOCKS.register("soul_relay", SoulRelayBlock::new);
     public static RegistryObject<Item> SOUL_RELAY_ITEM = ITEMS.register("soul_relay", () -> new BlockItem(SOUL_RELAY.get(), ITEM_BLOCK_PROPS));
 
-    public static RegistryObject<Block> BENIGN_STONE = BLOCKS.register("benign_stone", () -> new Block(AbstractBlock.Properties.of(Material.STONE)));
+    public static RegistryObject<Block> BENIGN_STONE = BLOCKS.register("benign_stone", () -> new Block(BlockBehaviour.Properties.of(Material.STONE)));
     public static RegistryObject<Item> BENIGN_STONE_ITEM = ITEMS.register("benign_stone", () -> new BlockItem(BENIGN_STONE.get(), ITEM_BLOCK_PROPS));
 
     public static RegistryObject<Block> BLOW_MOLD = BLOCKS.register("blow_mold", BlowMoldBlock::new);
     public static RegistryObject<Item> BLOW_MOLD_ITEM = ITEMS.register("blow_mold", () -> new BlockItem(BLOW_MOLD.get(), ITEM_BLOCK_PROPS));
 
     //Fluids
-    private static final AbstractBlock.Properties HOT_FLUID_PROPS = AbstractBlock.Properties.of(Material.LAVA).randomTicks().lightLevel(value -> 100).noDrops();
+    private static final BlockBehaviour.Properties HOT_FLUID_PROPS = BlockBehaviour.Properties.of(Material.LAVA).randomTicks().lightLevel(value -> 100).noDrops();
     private static final Item.Properties BUCKET_PROPS = new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(ProjectI.TAB);
 
     public static FluidMoltenBlueCrystal MOLTEN_BLUE_CRYSTAL = new FluidMoltenBlueCrystal.Source();
@@ -75,6 +74,6 @@ public class ModBlocks {
     public static RegistryObject<FluidMoltenBlueCrystal> MOLTEN_BLUE_CRYSTAL_REG = FLUIDS.register("molten_blue_crystal", () -> MOLTEN_BLUE_CRYSTAL);
     public static RegistryObject<FluidMoltenBlueCrystal> FLOWING_BLUE_CRYSTAL_REG = FLUIDS.register("flowing_molten_blue_crystal", () -> FLOWING_MOLTEN_BLUE_CRYSTAL);
 
-    public static RegistryObject<BaseFluidBlock> MOLTEN_BLUE_CRYSTAL_BLOCK = BLOCKS.register("molten_blue_crystal", () -> new BaseFluidBlock(MOLTEN_BLUE_CRYSTAL_REG::get, HOT_FLUID_PROPS, new Vector3d(0.294, 0.4, 0.827)));
+    public static RegistryObject<BaseFluidBlock> MOLTEN_BLUE_CRYSTAL_BLOCK = BLOCKS.register("molten_blue_crystal", () -> new BaseFluidBlock(MOLTEN_BLUE_CRYSTAL_REG::get, HOT_FLUID_PROPS));
     public static RegistryObject<Item> BLUE_CRYSTAL_BUCKET = ITEMS.register("blue_crystal_bucket", () -> new BucketItem(() -> MOLTEN_BLUE_CRYSTAL, BUCKET_PROPS));
 }

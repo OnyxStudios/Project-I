@@ -2,8 +2,8 @@ package dev.onyxstudios.projecti;
 
 import dev.onyxstudios.projecti.client.ModClient;
 import dev.onyxstudios.projecti.registry.*;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
@@ -18,7 +18,7 @@ public class ProjectI {
 
     public static final String MODID = "projecti";
     public static final Logger LOGGER = LogManager.getLogger(ProjectI.class);
-    public static ItemGroup TAB = new ItemGroup(MODID) {
+    public static CreativeModeTab TAB = new CreativeModeTab(MODID) {
         @Override
         public ItemStack makeIcon() {
             return ModItems.SOUL_BONE.get().getDefaultInstance();

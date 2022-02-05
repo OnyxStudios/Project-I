@@ -1,0 +1,17 @@
+{
+  "replace": false,
+  "values": [
+    "projecti:bellows",
+    "projecti:blow_mold",
+    "projecti:blue_crystal",
+    "projecti:bone_cage",
+    "projecti:circuit_stamper",
+    "projecti:soul_relay",
+    "projecti:funnel",
+    "projecti:decanter",
+    "projecti:gourd",
+    "projecti:spiral",
+    "projecti:splitter",
+    "projecti:benign_stone"
+  ]
+}

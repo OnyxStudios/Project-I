@@ -2,11 +2,12 @@ package dev.onyxstudios.projecti.tileentity;
 
 import dev.onyxstudios.projecti.api.block.IBellowsTickable;
 import dev.onyxstudios.projecti.registry.ModEntities;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.tileentity.ITickableTileEntity;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import software.bernie.geckolib3.core.IAnimatable;
 import software.bernie.geckolib3.core.PlayState;
 import software.bernie.geckolib3.core.builder.AnimationBuilder;
@@ -15,20 +16,19 @@ import software.bernie.geckolib3.core.event.predicate.AnimationEvent;
 import software.bernie.geckolib3.core.manager.AnimationData;
 import software.bernie.geckolib3.core.manager.AnimationFactory;
 
-public class BellowsTileEntity extends BaseTileEntity implements ITickableTileEntity, IAnimatable {
+public class BellowsBlockEntity extends BaseBlockEntity implements IAnimatable {
 
     private final AnimationFactory animationFactory = new AnimationFactory(this);
 
-    public BellowsTileEntity() {
-        super(ModEntities.BELLOWS_TYPE.get());
+    public BellowsBlockEntity(BlockPos pos, BlockState state) {
+        super(ModEntities.BELLOWS_TYPE.get(), pos, state);
     }
 
-    @Override
-    public void tick() {
-        if (level != null && level.hasNeighborSignal(getBlockPos())) {
-            Direction facing = getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING);
-            BlockPos offsetPos = getBlockPos().relative(facing);
-            TileEntity tile = level.getBlockEntity(offsetPos);
+    public static void tick(Level level, BlockPos pos, BlockState state, BellowsBlockEntity blockEntity) {
+        if (level.hasNeighborSignal(pos)) {
+            Direction facing = state.getValue(BlockStateProperties.HORIZONTAL_FACING);
+            BlockPos offsetPos = pos.relative(facing);
+            BlockEntity tile = level.getBlockEntity(offsetPos);
 
             if (tile instanceof IBellowsTickable)
                 ((IBellowsTickable) tile).addProgress(1);
@@ -45,8 +45,8 @@ public class BellowsTileEntity extends BaseTileEntity implements ITickableTileEn
         return this.animationFactory;
     }
 
-    private PlayState predicate(AnimationEvent<BellowsTileEntity> event) {
-        AnimationController<BellowsTileEntity> controller = event.getController();
+    private PlayState predicate(AnimationEvent<BellowsBlockEntity> event) {
+        AnimationController<BellowsBlockEntity> controller = event.getController();
         controller.transitionLengthTicks = 0;
         if (event.getAnimatable().getLevel().hasNeighborSignal(event.getAnimatable().getBlockPos())) {
             controller.setAnimation(new AnimationBuilder().addAnimation("animation.bellows.deploy", true));

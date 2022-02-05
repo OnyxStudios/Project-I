@@ -1,47 +1,42 @@
 package dev.onyxstudios.projecti.client.render.tile;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
 import dev.onyxstudios.projecti.api.block.AlembicType;
 import dev.onyxstudios.projecti.client.ModClient;
-import dev.onyxstudios.projecti.tileentity.AlembicTileEntity;
+import dev.onyxstudios.projecti.tileentity.AlembicBlockEntity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.Atlases;
-import net.minecraft.client.renderer.BlockModelRenderer;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.Sheets;
+import net.minecraft.client.renderer.block.ModelBlockRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.core.Direction;
 import net.minecraftforge.client.model.data.EmptyModelData;
 
-public class AlembicRenderer extends TileEntityRenderer<AlembicTileEntity> {
-
-    public AlembicRenderer(TileEntityRendererDispatcher rendererDispatcher) {
-        super(rendererDispatcher);
-    }
+public class AlembicRenderer implements BlockEntityRenderer<AlembicBlockEntity> {
 
     @Override
-    public void render(AlembicTileEntity tile, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
-        BlockModelRenderer renderer = Minecraft.getInstance().getBlockRenderer().getModelRenderer();
+    public void render(AlembicBlockEntity tile, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+        ModelBlockRenderer renderer = Minecraft.getInstance().getBlockRenderer().getModelRenderer();
 
         boolean isFunnel = tile.getAlembicType() == AlembicType.FUNNEL;
         if (tile.hasChild()) {
             matrixStack.pushPose();
             rotateConnector(matrixStack, tile.getChildDir(), !isFunnel);
-            renderer.renderModel(matrixStack.last(), buffer.getBuffer(Atlases.translucentCullBlockSheet()), null, getModel(!isFunnel), 1, 1, 1, combinedLight, combinedOverlay, EmptyModelData.INSTANCE);
+            renderer.renderModel(matrixStack.last(), buffer.getBuffer(Sheets.translucentCullBlockSheet()), null, getModel(!isFunnel), 1, 1, 1, combinedLight, combinedOverlay, EmptyModelData.INSTANCE);
             matrixStack.popPose();
         }
 
         if (tile.hasParent()) {
             matrixStack.pushPose();
             rotateConnector(matrixStack, tile.getParentDir(), false);
-            renderer.renderModel(matrixStack.last(), buffer.getBuffer(Atlases.translucentCullBlockSheet()), null, getModel(!isFunnel), 1, 1, 1, combinedLight, combinedOverlay, EmptyModelData.INSTANCE);
+            renderer.renderModel(matrixStack.last(), buffer.getBuffer(Sheets.translucentCullBlockSheet()), null, getModel(!isFunnel), 1, 1, 1, combinedLight, combinedOverlay, EmptyModelData.INSTANCE);
             matrixStack.popPose();
         }
     }
 
-    private void rotateConnector(MatrixStack stack, Direction direction, boolean output) {
+    private void rotateConnector(PoseStack stack, Direction direction, boolean output) {
         rotateHorizontal(stack, direction);
         if (output) {
             stack.translate(1, 1, 0);
@@ -49,32 +44,30 @@ public class AlembicRenderer extends TileEntityRenderer<AlembicTileEntity> {
         }
     }
 
-    protected void rotateHorizontal(MatrixStack stack, Direction direction) {
+    protected void rotateHorizontal(PoseStack stack, Direction direction) {
         switch (direction) {
-            case SOUTH:
+            case SOUTH -> {
                 stack.mulPose(Vector3f.YP.rotationDegrees(180));
                 stack.translate(-1, 0, -1);
-                break;
-            case WEST:
+            }
+            case WEST -> {
                 stack.mulPose(Vector3f.YP.rotationDegrees(90));
                 stack.translate(-1, 0, 0);
-                break;
-            case NORTH:
-                stack.mulPose(Vector3f.YP.rotationDegrees(0));
-                break;
-            case EAST:
+            }
+            case NORTH -> stack.mulPose(Vector3f.YP.rotationDegrees(0));
+            case EAST -> {
                 stack.mulPose(Vector3f.YP.rotationDegrees(270));
                 stack.translate(0, 0, -1);
-                break;
+            }
         }
     }
 
-    private IBakedModel getModel(boolean shortModel) {
+    private BakedModel getModel(boolean shortModel) {
         return shortModel ? ModClient.SHORT_CONNECTOR : ModClient.LONG_CONNECTOR;
     }
 
     @Override
-    public boolean shouldRenderOffScreen(AlembicTileEntity tile) {
+    public boolean shouldRenderOffScreen(AlembicBlockEntity tile) {
         return true;
     }
 }

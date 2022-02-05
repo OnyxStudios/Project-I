@@ -2,20 +2,20 @@ package dev.onyxstudios.projecti.blocks.fluid;
 
 import dev.onyxstudios.projecti.ProjectI;
 import dev.onyxstudios.projecti.registry.ModBlocks;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.FlowingFluidBlock;
-import net.minecraft.fluid.Fluid;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.LavaFluid;
-import net.minecraft.item.Item;
-import net.minecraft.state.StateContainer;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
-import net.minecraft.util.Direction;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.IWorldReader;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.LiquidBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.level.material.LavaFluid;
 import net.minecraftforge.fluids.FluidAttributes;
 
 public abstract class FluidMoltenBlueCrystal extends LavaFluid {
@@ -36,35 +36,36 @@ public abstract class FluidMoltenBlueCrystal extends LavaFluid {
     }
 
     @Override
-    protected void beforeDestroyingBlock(IWorld world, BlockPos blockPos, BlockState blockState) {
+    protected void beforeDestroyingBlock(LevelAccessor level, BlockPos pos, BlockState state) {
+        super.beforeDestroyingBlock(level, pos, state);
     }
 
     @Override
-    public int getSlopeFindDistance(IWorldReader worldReader) {
+    public int getSlopeFindDistance(LevelReader level) {
         return 4;
     }
 
     @Override
-    public int getDropOff(IWorldReader worldReader) {
+    public int getDropOff(LevelReader level) {
         return 1;
     }
 
     @Override
-    public boolean canBeReplacedWith(FluidState fluidState, IBlockReader blockReader, BlockPos blockPos, Fluid fluid, Direction direction) {
+    public boolean canBeReplacedWith(FluidState fluidState, BlockGetter blockGetter, BlockPos blockPos, Fluid fluid, Direction direction) {
         return direction == Direction.DOWN && fluid.is(FluidTags.WATER);
     }
 
     @Override
     public BlockState createLegacyBlock(FluidState fluidState) {
-        return ModBlocks.MOLTEN_BLUE_CRYSTAL_BLOCK.get().defaultBlockState().setValue(FlowingFluidBlock.LEVEL, Integer.valueOf(getLegacyLevel(fluidState)));
+        return ModBlocks.MOLTEN_BLUE_CRYSTAL_BLOCK.get().defaultBlockState().setValue(LiquidBlock.LEVEL, getLegacyLevel(fluidState));
     }
 
     @Override
     protected FluidAttributes createAttributes() {
         return FluidAttributes.builder(
-                new ResourceLocation(ProjectI.MODID, "blocks/fluid/blue_crystal_still"),
-                new ResourceLocation(ProjectI.MODID, "blocks/fluid/blue_crystal_flow")
-        ).translationKey("block.projecti.molten_blue_crystal")
+                        new ResourceLocation(ProjectI.MODID, "blocks/fluid/blue_crystal_still"),
+                        new ResourceLocation(ProjectI.MODID, "blocks/fluid/blue_crystal_flow")
+                ).translationKey("block.projecti.molten_blue_crystal")
                 .luminosity(10).density(500).viscosity(3000).temperature(1000).build(ModBlocks.MOLTEN_BLUE_CRYSTAL);
     }
 
@@ -76,7 +77,7 @@ public abstract class FluidMoltenBlueCrystal extends LavaFluid {
     public static class Flowing extends FluidMoltenBlueCrystal {
 
         @Override
-        protected void createFluidStateDefinition(StateContainer.Builder<Fluid, FluidState> builder) {
+        protected void createFluidStateDefinition(StateDefinition.Builder<Fluid, FluidState> builder) {
             super.createFluidStateDefinition(builder);
             builder.add(LEVEL);
         }

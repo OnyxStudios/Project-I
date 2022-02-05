@@ -1,24 +1,19 @@
 package dev.onyxstudios.projecti.client.render.tile;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.mojang.math.Vector3f;
 import dev.onyxstudios.projecti.client.models.BlueCrystalModel;
-import dev.onyxstudios.projecti.tileentity.CrystalTileEntity;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import dev.onyxstudios.projecti.tileentity.CrystalBlockEntity;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 
-public class BlueCrystalRenderer extends TileEntityRenderer<CrystalTileEntity> {
-
-    public BlueCrystalRenderer(TileEntityRendererDispatcher dispatcher) {
-        super(dispatcher);
-    }
+public class BlueCrystalRenderer implements BlockEntityRenderer<CrystalBlockEntity> {
 
     @Override
-    public void render(CrystalTileEntity tile, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
-        IVertexBuilder vertexBuilder = BlueCrystalModel.CRYSTAL_RESOURCE_LOCATION.buffer(buffer, RenderType::entityTranslucent);
+    public void render(CrystalBlockEntity tile, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+        VertexConsumer vertexBuilder = BlueCrystalModel.CRYSTAL_RESOURCE_LOCATION.buffer(buffer, RenderType::entityTranslucent);
 
         matrixStack.pushPose();
         //Translate extra 0.01 to prevent z-fighting
@@ -29,15 +24,15 @@ public class BlueCrystalRenderer extends TileEntityRenderer<CrystalTileEntity> {
         matrixStack.popPose();
 
         matrixStack.pushPose();
-        matrixStack.translate(0.5, 0, 0.5);
+        matrixStack.translate(0.5, 0.001, 0.5);
         matrixStack.mulPose(Vector3f.XP.rotationDegrees(180));
         matrixStack.mulPose(Vector3f.YP.rotationDegrees(tile.randomDir.get2DDataValue() * 90));
-        BlueCrystalModel.INSTANCE.renderCrystals(tile, matrixStack, vertexBuilder, combinedLight, combinedOverlay);
+        BlueCrystalModel.INSTANCE.renderPillars(tile, matrixStack, vertexBuilder, combinedLight, combinedOverlay);
         matrixStack.popPose();
     }
 
     @Override
-    public boolean shouldRenderOffScreen(CrystalTileEntity tile) {
+    public boolean shouldRenderOffScreen(CrystalBlockEntity tile) {
         return true;
     }
 }

@@ -6,10 +6,11 @@ import dev.onyxstudios.projecti.registry.ModEntities;
 import dev.onyxstudios.projecti.registry.ModRecipes;
 import dev.onyxstudios.projecti.registry.recipes.StamperRecipe;
 import dev.onyxstudios.projecti.utils.InvCapWrapper;
-import net.minecraft.block.BlockState;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.items.CapabilityItemHandler;
@@ -20,33 +21,32 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class StamperTileEntity extends BaseTileEntity {
+public class StamperBlockEntity extends BaseBlockEntity {
 
     private final ItemStackHandler inventory = new ItemStackHandler(5) {
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
-            StamperTileEntity.this.setChanged();
+            StamperBlockEntity.this.setChanged();
         }
     };
 
     private final LazyOptional<IItemHandler> capabilityInventory = LazyOptional.of(() -> inventory);
 
-    public StamperTileEntity() {
-        super(ModEntities.STAMPER_TYPE.get());
+    public StamperBlockEntity(BlockPos pos, BlockState state) {
+        super(ModEntities.STAMPER_TYPE.get(), pos, state);
     }
 
     @Override
-    public void load(BlockState blockState, CompoundNBT nbt) {
-        super.load(blockState, nbt);
-        inventory.deserializeNBT(nbt.getCompound("items"));
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
+        tag.put("items", inventory.serializeNBT());
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT nbt) {
-        super.save(nbt);
-        nbt.put("items", inventory.serializeNBT());
-        return nbt;
+    public void load(CompoundTag tag) {
+        super.load(tag);
+        inventory.deserializeNBT(tag.getCompound("items"));
     }
 
     public void run() {

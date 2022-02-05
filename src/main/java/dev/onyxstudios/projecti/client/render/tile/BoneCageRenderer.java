@@ -1,34 +1,29 @@
 package dev.onyxstudios.projecti.client.render.tile;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import dev.onyxstudios.projecti.tileentity.BoneCageTileEntity;
-import net.minecraft.block.HorizontalBlock;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
+import dev.onyxstudios.projecti.tileentity.BoneCageBlockEntity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class BoneCageRenderer extends TileEntityRenderer<BoneCageTileEntity> {
+public class BoneCageRenderer implements BlockEntityRenderer<BoneCageBlockEntity> {
 
     private static final Map<EntityType<?>, Entity> FAKES = new HashMap<>();
     private static final float MAX_WIDTH = 0.75f;
     private static final float MAX_HEIGHT = 1.75f;
 
-    public BoneCageRenderer(TileEntityRendererDispatcher rendererDispatcher) {
-        super(rendererDispatcher);
-    }
-
     @Override
-    public void render(BoneCageTileEntity tile, float partialTicks, MatrixStack stack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay) {
+    public void render(BoneCageBlockEntity tile, float partialTicks, PoseStack stack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
         if (tile.getStoredEntity() != null) {
-            Direction facing = tile.getBlockState().getValue(HorizontalBlock.FACING);
+            Direction facing = tile.getBlockState().getValue(HorizontalDirectionalBlock.FACING);
 
             Minecraft mc = Minecraft.getInstance();
             Entity entity = FAKES.computeIfAbsent(tile.getStoredEntity(), entityType -> entityType.create(mc.level));
@@ -48,20 +43,12 @@ public class BoneCageRenderer extends TileEntityRenderer<BoneCageTileEntity> {
         }
     }
 
-    private void rotateTo(Direction facing, MatrixStack stack) {
+    private void rotateTo(Direction facing, PoseStack stack) {
         switch (facing) {
-            case SOUTH:
-                stack.mulPose(Vector3f.YP.rotationDegrees(0));
-                break;
-            case WEST:
-                stack.mulPose(Vector3f.YP.rotationDegrees(90));
-                break;
-            case NORTH:
-                stack.mulPose(Vector3f.YP.rotationDegrees(180));
-                break;
-            case EAST:
-                stack.mulPose(Vector3f.YP.rotationDegrees(-90));
-                break;
+            case SOUTH -> stack.mulPose(Vector3f.YP.rotationDegrees(0));
+            case WEST -> stack.mulPose(Vector3f.YP.rotationDegrees(90));
+            case NORTH -> stack.mulPose(Vector3f.YP.rotationDegrees(180));
+            case EAST -> stack.mulPose(Vector3f.YP.rotationDegrees(-90));
         }
     }
 }

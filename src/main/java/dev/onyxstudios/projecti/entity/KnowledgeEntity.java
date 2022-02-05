@@ -1,34 +1,29 @@
 package dev.onyxstudios.projecti.entity;
 
 import dev.onyxstudios.projecti.registry.ModEntities;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.EquipmentSlotType;
-import net.minecraft.item.ItemStack;
-import net.minecraft.network.IPacket;
-import net.minecraft.util.HandSide;
-import net.minecraft.util.math.MathHelper;
-import net.minecraft.world.World;
-import net.minecraftforge.fml.network.NetworkHooks;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.world.entity.*;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraftforge.network.NetworkHooks;
 
 public class KnowledgeEntity extends LivingEntity {
 
-    private PlayerEntity owner;
+    private Player owner;
     private int blocksMoved;
     private double moveX, moveY, moveZ;
 
-    public KnowledgeEntity(World world) {
-        super(ModEntities.KNOWLEDGE_ENTITY.get(), world);
+    public KnowledgeEntity(Level level) {
+        super(ModEntities.KNOWLEDGE_ENTITY.get(), level);
     }
 
-    public KnowledgeEntity(EntityType<?> type, World world) {
-        super(ModEntities.KNOWLEDGE_ENTITY.get(), world);
+    public KnowledgeEntity(EntityType<?> type, Level level) {
+        super(ModEntities.KNOWLEDGE_ENTITY.get(), level);
     }
 
-    public KnowledgeEntity(World world, PlayerEntity player) {
-        super(ModEntities.KNOWLEDGE_ENTITY.get(), world);
+    public KnowledgeEntity(Level level, Player player) {
+        super(ModEntities.KNOWLEDGE_ENTITY.get(), level);
         this.owner = player;
         this.blocksMoved = 0;
         this.setPos(player.getX(), player.getY() + 1, player.getZ());
@@ -38,10 +33,10 @@ public class KnowledgeEntity extends LivingEntity {
         double accelX = 1;
         double accelY = 1;
         double accelZ = 1;
-        accelX = accelX + world.random.nextGaussian() * 0.4;
-        accelY = accelY + world.random.nextGaussian() * 0.4;
-        accelZ = accelZ + world.random.nextGaussian() * 0.4;
-        double sqrt = MathHelper.sqrt(accelX * accelX + accelY * accelY + accelZ * accelZ);
+        accelX = accelX + level.random.nextGaussian() * 0.4;
+        accelY = accelY + level.random.nextGaussian() * 0.4;
+        accelZ = accelZ + level.random.nextGaussian() * 0.4;
+        double sqrt = Math.sqrt(accelX * accelX + accelY * accelY + accelZ * accelZ);
 
         this.moveX = accelX / sqrt * 0.1;
         this.moveY = accelY / sqrt * 0.1;
@@ -61,16 +56,16 @@ public class KnowledgeEntity extends LivingEntity {
 
         if (tickCount >= (20 * 15)) {
             tickCount = 0;
-            this.remove();
+            this.discard();
         }
 
         if (owner != null && distanceToSqr(owner) > 80) {
-            this.remove();
+            this.discard();
         }
     }
 
     @Override
-    public HandSide getMainArm() {
+    public HumanoidArm getMainArm() {
         return null;
     }
 
@@ -111,16 +106,16 @@ public class KnowledgeEntity extends LivingEntity {
     }
 
     @Override
-    public ItemStack getItemBySlot(EquipmentSlotType p_184582_1_) {
+    public ItemStack getItemBySlot(EquipmentSlot slot) {
         return ItemStack.EMPTY;
     }
 
     @Override
-    public void setItemSlot(EquipmentSlotType p_184201_1_, ItemStack p_184201_2_) {
+    public void setItemSlot(EquipmentSlot slot, ItemStack stack) {
     }
 
     @Override
-    public IPacket<?> getAddEntityPacket() {
+    public Packet<?> getAddEntityPacket() {
         return NetworkHooks.getEntitySpawningPacket(this);
     }
 }

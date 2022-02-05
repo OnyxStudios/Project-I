@@ -4,41 +4,41 @@ import com.google.common.collect.ImmutableMap;
 import dev.onyxstudios.projecti.entity.SoulEntity;
 import dev.onyxstudios.projecti.registry.ModBlocks;
 import dev.onyxstudios.projecti.registry.ModEntities;
-import dev.onyxstudios.projecti.tileentity.SoulRelayTileEntity;
-import net.minecraft.entity.ai.brain.memory.MemoryModuleStatus;
-import net.minecraft.entity.ai.brain.task.Task;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.GlobalPos;
-import net.minecraft.village.PointOfInterestManager;
-import net.minecraft.world.server.ServerWorld;
+import dev.onyxstudios.projecti.tileentity.SoulRelayBlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.GlobalPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.entity.ai.behavior.Behavior;
+import net.minecraft.world.entity.ai.memory.MemoryStatus;
+import net.minecraft.world.entity.ai.village.poi.PoiManager;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
-public class FollowRelayTask extends Task<SoulEntity> {
+public class FollowRelayTask extends Behavior<SoulEntity> {
 
     private BlockPos targetPos;
     private int cooldown;
 
     public FollowRelayTask() {
-        super(ImmutableMap.of(ModEntities.RELAY_WALK_TARGET.get(), MemoryModuleStatus.VALUE_ABSENT));
+        super(ImmutableMap.of(ModEntities.RELAY_WALK_TARGET.get(), MemoryStatus.VALUE_ABSENT));
     }
 
     @Override
-    public boolean checkExtraStartConditions(ServerWorld world, SoulEntity entity) {
+    public boolean checkExtraStartConditions(ServerLevel level, SoulEntity entity) {
         if (cooldown > 0) {
             cooldown--;
             return false;
         }
 
-        world.getPoiManager().findAllClosestFirst(
+        level.getPoiManager().findAllClosestFirst(
                 ModEntities.SOUL_RELAY_INTEREST.get().getPredicate(),
                 pos -> {
                     if (entity.isBlacklisted(pos)) return false;
 
-                    TileEntity tile = world.getBlockEntity(pos);
-                    if (tile instanceof SoulRelayTileEntity) {
-                        if (world.getBlockState(pos.below()).is(ModBlocks.SOUL_RELAY.get())) return false;
+                    BlockEntity tile = level.getBlockEntity(pos);
+                    if (tile instanceof SoulRelayBlockEntity) {
+                        if (level.getBlockState(pos.below()).is(ModBlocks.SOUL_RELAY.get())) return false;
 
-                        SoulRelayTileEntity soulRelay = (SoulRelayTileEntity) tile;
+                        SoulRelayBlockEntity soulRelay = (SoulRelayBlockEntity) tile;
                         return soulRelay.isPowered() && soulRelay.canVisit();
                     }
 
@@ -46,7 +46,7 @@ public class FollowRelayTask extends Task<SoulEntity> {
                 },
                 entity.blockPosition(),
                 16,
-                PointOfInterestManager.Status.ANY
+                PoiManager.Occupancy.ANY
         ).limit(5).findFirst().ifPresent(pos -> targetPos = pos.immutable());
 
         cooldown = 20 * 2;
@@ -54,13 +54,13 @@ public class FollowRelayTask extends Task<SoulEntity> {
     }
 
     @Override
-    public void start(ServerWorld world, SoulEntity entity, long time) {
+    public void start(ServerLevel level, SoulEntity entity, long time) {
         entity.getNavigation().moveTo(targetPos.getX() + 0.5, targetPos.getY() + 1, targetPos.getZ() + 0.5, 0.35);
-        entity.getBrain().setMemory(ModEntities.RELAY_WALK_TARGET.get(), GlobalPos.of(world.dimension(), targetPos));
+        entity.getBrain().setMemory(ModEntities.RELAY_WALK_TARGET.get(), GlobalPos.of(level.dimension(), targetPos));
     }
 
     @Override
-    public boolean canStillUse(ServerWorld world, SoulEntity entity, long time) {
+    public boolean canStillUse(ServerLevel level, SoulEntity entity, long time) {
         boolean isClose = entity.distanceToSqr(targetPos.getX() + 0.5, targetPos.getY(), targetPos.getZ() + 0.5) <= 2;
         if (isClose) {
             entity.blacklistPos(targetPos);
@@ -70,7 +70,7 @@ public class FollowRelayTask extends Task<SoulEntity> {
     }
 
     @Override
-    public void stop(ServerWorld world, SoulEntity entity, long time) {
+    public void stop(ServerLevel level, SoulEntity entity, long time) {
         if (targetPos != null) {
             entity.getNavigation().stop();
             targetPos = null;

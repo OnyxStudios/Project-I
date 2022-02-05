@@ -1,17 +1,17 @@
 package dev.onyxstudios.projecti.utils;
 
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.inventory.ItemStackHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.NonNullList;
+import net.minecraft.core.NonNullList;
+import net.minecraft.world.Container;
+import net.minecraft.world.ContainerHelper;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.items.ItemStackHandler;
 
 /**
  * An inventory Capability Wrapper
  * Used for tiles that utilize ItemStackHandler inventory instead of IInventory
  */
-public class InvCapWrapper implements IInventory {
+public class InvCapWrapper implements Container {
 
     public NonNullList<ItemStack> inventory;
 
@@ -39,12 +39,12 @@ public class InvCapWrapper implements IInventory {
 
     @Override
     public ItemStack removeItem(int i, int i1) {
-        return ItemStackHelper.removeItem(inventory, i, i1);
+        return ContainerHelper.removeItem(inventory, i, i1);
     }
 
     @Override
     public ItemStack removeItemNoUpdate(int slot) {
-        return ItemStackHelper.takeItem(inventory, slot);
+        return ContainerHelper.takeItem(inventory, slot);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class InvCapWrapper implements IInventory {
     }
 
     @Override
-    public boolean stillValid(PlayerEntity player) {
+    public boolean stillValid(Player player) {
         return true;
     }
 

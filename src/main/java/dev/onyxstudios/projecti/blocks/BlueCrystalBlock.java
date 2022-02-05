@@ -1,102 +1,105 @@
 package dev.onyxstudios.projecti.blocks;
 
 import dev.onyxstudios.projecti.registry.ModBlocks;
+import dev.onyxstudios.projecti.registry.ModEntities;
 import dev.onyxstudios.projecti.registry.ModItems;
-import dev.onyxstudios.projecti.tileentity.CrystalTileEntity;
-import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.loot.LootContext;
-import net.minecraft.loot.LootParameters;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.ActionResultType;
-import net.minecraft.util.Hand;
-import net.minecraft.util.SoundCategory;
-import net.minecraft.util.SoundEvents;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorldReader;
-import net.minecraft.world.World;
-import net.minecraft.world.server.ServerWorld;
+import dev.onyxstudios.projecti.tileentity.CrystalBlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.storage.loot.LootContext;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 import net.minecraftforge.common.Tags;
-import net.minecraftforge.common.ToolType;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class BlueCrystalBlock extends ContainerBlock {
+public class BlueCrystalBlock extends BaseEntityBlock {
 
     public BlueCrystalBlock() {
-        super(AbstractBlock.Properties
+        super(Properties
                 .of(Material.GLASS)
                 .sound(SoundType.GLASS)
                 .strength(2, 2)
                 .noOcclusion()
-                .harvestTool(ToolType.PICKAXE)
-                .harvestLevel(2)
                 .requiresCorrectToolForDrops()
         );
     }
 
     @Override
-    public ActionResultType use(BlockState blockState, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
-        TileEntity tile = world.getBlockEntity(pos);
-        if (tile instanceof CrystalTileEntity && ((CrystalTileEntity) tile).fullyGrown) {
-            if (!world.isClientSide)
-                world.playSound(null, pos, SoundEvents.GLASS_BREAK, SoundCategory.MASTER, 0.4f, 0.1f);
+    public InteractionResult use(BlockState blockState, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult rayTraceResult) {
+        BlockEntity tile = level.getBlockEntity(pos);
+        if (tile instanceof CrystalBlockEntity && ((CrystalBlockEntity) tile).fullyGrown) {
+            if (!level.isClientSide)
+                level.playSound(null, pos, SoundEvents.GLASS_BREAK, SoundSource.MASTER, 0.4f, 0.1f);
 
-            return ActionResultType.SUCCESS;
+            return InteractionResult.SUCCESS;
         }
 
-        return super.use(blockState, world, pos, player, hand, rayTraceResult);
+        return super.use(blockState, level, pos, player, hand, rayTraceResult);
     }
 
     @Override
-    public void onPlace(BlockState state, World world, BlockPos pos, BlockState state2, boolean isMoving) {
-        TileEntity tile = world.getBlockEntity(pos);
-        if (!world.isClientSide && tile instanceof CrystalTileEntity && !((CrystalTileEntity) tile).propsSet)
-            ((CrystalTileEntity) tile).setProps(false);
+    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState state2, boolean isMoving) {
+        BlockEntity tile = level.getBlockEntity(pos);
+        if (!level.isClientSide && tile instanceof CrystalBlockEntity && !((CrystalBlockEntity) tile).propsSet)
+            ((CrystalBlockEntity) tile).setProps(false);
     }
 
     @Override
-    public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
-        TileEntity tile = world.getBlockEntity(pos);
-        if (!world.isClientSide && tile instanceof CrystalTileEntity)
-            ((CrystalTileEntity) tile).setProps(true);
+    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        BlockEntity tile = level.getBlockEntity(pos);
+        if (!level.isClientSide && tile instanceof CrystalBlockEntity)
+            ((CrystalBlockEntity) tile).setProps(true);
     }
 
     @Override
-    public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos neighbor, boolean p_220069_6_) {
-        TileEntity tile = world.getBlockEntity(pos);
-        if (!world.isClientSide() && !canSurvive(state, world, pos) && tile instanceof CrystalTileEntity) {
-            //TODO When in 1.17 clean up code to java 16
-            //Make it so fully grown only drop 1, so that players don't get around it and just break bottom  block
-            if (((CrystalTileEntity) tile).fullyGrown || ((CrystalTileEntity) tile).returnItem)
-                world.addFreshEntity(new ItemEntity(world, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModBlocks.BLUE_CRYSTAL_ITEM.get())));
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos neighbor, boolean p_220069_6_) {
+        BlockEntity tile = level.getBlockEntity(pos);
+        if (!level.isClientSide() && !canSurvive(state, level, pos) && tile instanceof CrystalBlockEntity crystalEntity) {
+            //Make it so only fully grown drop 1, so that players don't get around it and just break bottom  block
+            //Ex. Make crystal with water+lapis+bone and break bottom block instantly to drop
+            if (crystalEntity.fullyGrown || crystalEntity.returnItem)
+                level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModBlocks.BLUE_CRYSTAL_ITEM.get())));
 
-            world.removeBlock(pos, false);
+            level.removeBlock(pos, false);
         }
 
-        super.neighborChanged(state, world, pos, block, neighbor, p_220069_6_);
+        super.neighborChanged(state, level, pos, block, neighbor, p_220069_6_);
     }
 
     @Override
-    public void playerWillDestroy(World world, BlockPos pos, BlockState state, PlayerEntity player) {
-        TileEntity tile = world.getBlockEntity(pos);
-        if (!world.isClientSide() && tile instanceof CrystalTileEntity && !player.isCreative()) {
-            state.spawnAfterBreak((ServerWorld) world, pos, new ItemStack(ModBlocks.BLUE_CRYSTAL_ITEM.get()));
-            dropResources(state, world, pos);
+    public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
+        BlockEntity tile = level.getBlockEntity(pos);
+        if (!level.isClientSide() && tile instanceof CrystalBlockEntity && !player.isCreative()) {
+            state.spawnAfterBreak((ServerLevel) level, pos, new ItemStack(ModBlocks.BLUE_CRYSTAL_ITEM.get()));
+            dropResources(state, level, pos);
         }
 
-        super.playerWillDestroy(world, pos, state, player);
+        super.playerWillDestroy(level, pos, state, player);
     }
 
     @Override
@@ -104,9 +107,9 @@ public class BlueCrystalBlock extends ContainerBlock {
         List<ItemStack> drops = new ArrayList<>();
         Random random = lootBuilder.getLevel().random;
 
-        TileEntity tile = lootBuilder.getOptionalParameter(LootParameters.BLOCK_ENTITY);
-        if (tile instanceof CrystalTileEntity) {
-            CrystalTileEntity crystal = (CrystalTileEntity) tile;
+        BlockEntity tile = lootBuilder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
+        if (tile instanceof CrystalBlockEntity) {
+            CrystalBlockEntity crystal = (CrystalBlockEntity) tile;
 
             if (crystal.fullyGrown) {
                 int returnAmt = crystal.returnItem ? 2 : 1;
@@ -122,19 +125,25 @@ public class BlueCrystalBlock extends ContainerBlock {
     }
 
     @Override
-    public boolean canSurvive(BlockState state, IWorldReader world, BlockPos pos) {
-        BlockState below = world.getBlockState(pos.below());
-        return below.is(Tags.Blocks.STONE) || below.is(Tags.Blocks.DIRT) || below.is(Tags.Blocks.GLASS);
+    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        BlockState below = level.getBlockState(pos.below());
+        return below.is(Tags.Blocks.STONE) || below.is(Tags.Blocks.GLASS);
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext selectionContext) {
+    public VoxelShape getShape(BlockState state, BlockGetter reader, BlockPos pos, CollisionContext selectionContext) {
         return Block.box(4, 0, 4, 12, 12, 12);
+    }
+
+    @org.jetbrains.annotations.Nullable
+    @Override
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+        return level.isClientSide() ? null : createTickerHelper(blockEntityType, ModEntities.CRYSTAL_TYPE.get(), CrystalBlockEntity::tick);
     }
 
     @Nullable
     @Override
-    public TileEntity newBlockEntity(IBlockReader world) {
-        return new CrystalTileEntity();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new CrystalBlockEntity(pos, state);
     }
 }

@@ -3,25 +3,29 @@ package dev.onyxstudios.projecti.blocks;
 import dev.onyxstudios.projecti.api.block.AlembicType;
 import dev.onyxstudios.projecti.registry.ModBlocks;
 import dev.onyxstudios.projecti.registry.ModEntities;
-import dev.onyxstudios.projecti.tileentity.AlembicTileEntity;
-import net.minecraft.block.*;
-import net.minecraft.block.material.Material;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.shapes.IBooleanFunction;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.World;
-import net.minecraftforge.common.ToolType;
-import net.minecraftforge.common.util.Constants;
+import dev.onyxstudios.projecti.tileentity.AlembicBlockEntity;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.SoundType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityTicker;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.shapes.BooleanOp;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.stream.Stream;
 
-public class AlembicBlock extends ContainerBlock {
+public class AlembicBlock extends BaseEntityBlock {
 
     public static VoxelShape SPIRAL_SHAPE = Block.box(3, 1, 3, 13, 13, 13);
 
@@ -32,13 +36,13 @@ public class AlembicBlock extends ContainerBlock {
             Block.box(4, 5, 4, 12, 6, 12),
             Block.box(3, 0, 3, 13, 5, 13),
             Block.box(6.5, 8, 6.5, 9.5, 10, 9.5)
-    ).reduce((v1, v2) -> VoxelShapes.join(v1, v2, IBooleanFunction.OR)).get();
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
     public static VoxelShape GOURD_SHAPE = Stream.of(
             Block.box(4, 2, 4, 12, 7, 12),
             Block.box(4, 9, 4, 12, 14, 12),
             Block.box(6, 7, 6, 10, 9, 10)
-    ).reduce((v1, v2) -> VoxelShapes.join(v1, v2, IBooleanFunction.OR)).get();
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
     public static VoxelShape SPLITTER_SHAPE = Stream.of(
             Block.box(0, 0, 0, 5, 7, 6),
@@ -52,14 +56,13 @@ public class AlembicBlock extends ContainerBlock {
             Block.box(2, 3, 5.5, 3, 4, 10.5),
             Block.box(2, 4, 7.5, 3, 9, 8.5),
             Block.box(3, 8, 7.5, 5.5, 9, 8.5)
-    ).reduce((v1, v2) -> VoxelShapes.join(v1, v2, IBooleanFunction.OR)).get();
+    ).reduce((v1, v2) -> Shapes.join(v1, v2, BooleanOp.OR)).get();
 
     private final AlembicType type;
 
     public AlembicBlock(AlembicType type) {
         super(Properties.of(Material.GLASS)
                 .strength(1.5f, 1.5f)
-                .harvestTool(ToolType.PICKAXE)
                 .noOcclusion()
                 .lightLevel(value -> 1)
                 .sound(SoundType.GLASS)
@@ -69,19 +72,19 @@ public class AlembicBlock extends ContainerBlock {
     }
 
     @Override
-    public void onPlace(BlockState state, World world, BlockPos pos, BlockState oldState, boolean moving) {
-        super.onPlace(state, world, pos, oldState, moving);
-        if (world.isClientSide()) return;
+    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean moving) {
+        super.onPlace(state, level, pos, oldState, moving);
+        if (level.isClientSide()) return;
 
-        findCage(world, pos);
-        TileEntity tileEntity = world.getBlockEntity(pos);
-        if (tileEntity instanceof AlembicTileEntity) {
+        findCage(level, pos);
+        BlockEntity tileEntity = level.getBlockEntity(pos);
+        if (tileEntity instanceof AlembicBlockEntity) {
 
             for (Direction direction : Direction.values()) {
                 BlockPos offsetPos = pos.relative(direction);
-                if (connectAlembics(world, pos, offsetPos, direction)) {
-                    world.sendBlockUpdated(pos, state, world.getBlockState(pos), Constants.BlockFlags.DEFAULT_AND_RERENDER);
-                    world.sendBlockUpdated(offsetPos, world.getBlockState(offsetPos), world.getBlockState(offsetPos), Constants.BlockFlags.DEFAULT_AND_RERENDER);
+                if (connectAlembics(level, pos, offsetPos, direction)) {
+                    level.sendBlockUpdated(pos, state, level.getBlockState(pos), Block.UPDATE_ALL);
+                    level.sendBlockUpdated(offsetPos, level.getBlockState(offsetPos), level.getBlockState(offsetPos), Block.UPDATE_ALL);
                     break;
                 }
             }
@@ -89,16 +92,16 @@ public class AlembicBlock extends ContainerBlock {
     }
 
     @Override
-    public void neighborChanged(BlockState state, World world, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean isMoving) {
-        super.neighborChanged(state, world, pos, neighborBlock, neighborPos, isMoving);
-        if (world.isClientSide()) return;
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block neighborBlock, BlockPos neighborPos, boolean isMoving) {
+        super.neighborChanged(state, level, pos, neighborBlock, neighborPos, isMoving);
+        if (level.isClientSide()) return;
 
         if (neighborBlock != this) {
-            findCage(world, pos);
+            findCage(level, pos);
 
-            AlembicTileEntity alembic = ModEntities.ALEMBIC_TYPE.get().getBlockEntity(world, pos);
+            AlembicBlockEntity alembic = ModEntities.ALEMBIC_TYPE.get().getBlockEntity(level, pos);
             if (alembic != null) {
-                boolean flag = world.hasNeighborSignal(pos);
+                boolean flag = level.hasNeighborSignal(pos);
 
                 if (alembic.isPowered() != flag) {
                     alembic.setPowered(flag);
@@ -108,9 +111,9 @@ public class AlembicBlock extends ContainerBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean moved) {
-        if (!world.isClientSide() && world.getBlockEntity(pos) instanceof AlembicTileEntity) {
-            AlembicTileEntity alembic = (AlembicTileEntity) world.getBlockEntity(pos);
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
+        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof AlembicBlockEntity) {
+            AlembicBlockEntity alembic = (AlembicBlockEntity) level.getBlockEntity(pos);
 
             if (alembic.hasParent()) {
                 alembic.getParent().removeChild();
@@ -122,17 +125,17 @@ public class AlembicBlock extends ContainerBlock {
             }
         }
 
-        super.onRemove(state, world, pos, newState, moved);
+        super.onRemove(state, level, pos, newState, moved);
     }
 
-    public void findCage(World world, BlockPos pos) {
-        if (world.isClientSide() || getAlembicType() != AlembicType.FUNNEL) return;
-        AlembicTileEntity alembic = ModEntities.ALEMBIC_TYPE.get().getBlockEntity(world, pos);
+    public void findCage(Level level, BlockPos pos) {
+        if (level.isClientSide() || getAlembicType() != AlembicType.FUNNEL) return;
+        AlembicBlockEntity alembic = ModEntities.ALEMBIC_TYPE.get().getBlockEntity(level, pos);
 
         if (alembic != null) {
             for (Direction direction : Direction.values()) {
                 BlockPos offsetPos = pos.relative(direction);
-                if (world.getBlockState(offsetPos).is(ModBlocks.BONE_CAGE.get())) {
+                if (level.getBlockState(offsetPos).is(ModBlocks.BONE_CAGE.get())) {
                     alembic.setCage(offsetPos);
                     break;
                 }
@@ -140,11 +143,11 @@ public class AlembicBlock extends ContainerBlock {
         }
     }
 
-    public boolean connectAlembics(World world, BlockPos pos, BlockPos neighborPos, Direction neighborDirection) {
-        AlembicTileEntity alembic = (AlembicTileEntity) world.getBlockEntity(pos);
-        TileEntity neighborEntity = world.getBlockEntity(neighborPos);
-        if (alembic != null && neighborEntity instanceof AlembicTileEntity) {
-            AlembicTileEntity neighborAlembic = (AlembicTileEntity) neighborEntity;
+    public boolean connectAlembics(Level level, BlockPos pos, BlockPos neighborPos, Direction neighborDirection) {
+        AlembicBlockEntity alembic = (AlembicBlockEntity) level.getBlockEntity(pos);
+        BlockEntity neighborEntity = level.getBlockEntity(neighborPos);
+        if (alembic != null && neighborEntity instanceof AlembicBlockEntity) {
+            AlembicBlockEntity neighborAlembic = (AlembicBlockEntity) neighborEntity;
             boolean isFunnel = getAlembicType() == AlembicType.FUNNEL;
             boolean neighborFunnel = neighborAlembic.getAlembicType() == AlembicType.FUNNEL;
 
@@ -167,7 +170,7 @@ public class AlembicBlock extends ContainerBlock {
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader world, BlockPos pos, ISelectionContext selectionContext) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext selectionContext) {
         switch (type) {
             case FUNNEL:
                 return FUNNEL_SHAPE;
@@ -181,7 +184,7 @@ public class AlembicBlock extends ContainerBlock {
                 return DECANTER_SHAPE;
         }
 
-        return super.getShape(state, world, pos, selectionContext);
+        return super.getShape(state, level, pos, selectionContext);
     }
 
     public AlembicType getAlembicType() {
@@ -189,18 +192,23 @@ public class AlembicBlock extends ContainerBlock {
     }
 
     @Override
-    public float getShadeBrightness(BlockState state, IBlockReader world, BlockPos pos) {
+    public float getShadeBrightness(BlockState state, BlockGetter level, BlockPos pos) {
         return 1;
     }
 
     @Override
-    public BlockRenderType getRenderShape(BlockState state) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState state) {
+        return RenderShape.MODEL;
     }
 
     @Nullable
     @Override
-    public TileEntity newBlockEntity(IBlockReader world) {
-        return new AlembicTileEntity();
+    public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
+        return level.isClientSide() ? null : createTickerHelper(blockEntityType, ModEntities.ALEMBIC_TYPE.get(), AlembicBlockEntity::tick);
+    }
+
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new AlembicBlockEntity(pos, state);
     }
 }

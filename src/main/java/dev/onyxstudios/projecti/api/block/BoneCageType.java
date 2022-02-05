@@ -1,9 +1,9 @@
 package dev.onyxstudios.projecti.api.block;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.core.Direction;
+import net.minecraft.util.StringRepresentable;
 
-public enum BoneCageType implements IStringSerializable {
+public enum BoneCageType implements StringRepresentable {
     TOP(Direction.DOWN),
     BOTTOM(Direction.UP);
 

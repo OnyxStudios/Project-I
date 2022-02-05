@@ -2,27 +2,21 @@ package dev.onyxstudios.projecti.data;
 
 import dev.onyxstudios.projecti.ProjectI;
 import dev.onyxstudios.projecti.api.block.AlembicType;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.nbt.INBT;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.StringNBT;
-import net.minecraft.world.server.ServerWorld;
-import net.minecraft.world.storage.WorldSavedData;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.StringTag;
+import net.minecraft.nbt.Tag;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.saveddata.SavedData;
 
 import java.util.*;
 
 import static dev.onyxstudios.projecti.api.block.AlembicType.*;
 
-public class AlembicSaveData extends WorldSavedData {
+public class AlembicSaveData extends SavedData {
 
     public static final String ID = ProjectI.MODID + ":alembics";
-
     private List<AlembicType> alembicList = Arrays.asList(GOURD, SPLITTER, SPIRAL, DECANTER);
-
-    public AlembicSaveData() {
-        super(ID);
-    }
 
     public void setAlembicList(List<AlembicType> list) {
         this.alembicList = list;
@@ -33,33 +27,40 @@ public class AlembicSaveData extends WorldSavedData {
         return alembicList;
     }
 
-    public static AlembicSaveData get(ServerWorld world) {
-        return world.getDataStorage().computeIfAbsent(() -> {
-            AlembicSaveData saveData = new AlembicSaveData();
-            List<AlembicType> list = Arrays.asList(GOURD, SPLITTER, SPIRAL, DECANTER);
-            Random random = new Random(world.getSeed());
-            Collections.shuffle(list, random);
-            saveData.setAlembicList(list);
-            return saveData;
-        }, ID);
+    public static AlembicSaveData get(ServerLevel level) {
+        return level.getServer()
+                .overworld()
+                .getDataStorage()
+                .computeIfAbsent(AlembicSaveData::load, () -> {
+                    AlembicSaveData saveData = new AlembicSaveData();
+                    List<AlembicType> list = Arrays.asList(GOURD, SPLITTER, SPIRAL, DECANTER);
+                    Random random = new Random(level.getSeed());
+                    Collections.shuffle(list, random);
+                    saveData.setAlembicList(list);
+
+                    return saveData;
+                }, ID);
     }
 
-    @Override
-    public void load(CompoundNBT tag) {
-        ListNBT list = tag.getList("alembics", Constants.NBT.TAG_STRING);
+    public static AlembicSaveData load(CompoundTag tag) {
+        AlembicSaveData saveData = new AlembicSaveData();
+        ListTag list = tag.getList("alembics", Tag.TAG_STRING);
 
-        alembicList = new ArrayList<>();
-        for (INBT nbt : list) {
-            StringNBT stringNBT = (StringNBT) nbt;
+        List<AlembicType> alembicList = new ArrayList<>();
+        for (Tag nbt : list) {
+            StringTag stringNBT = (StringTag) nbt;
             alembicList.add(AlembicType.valueOf(stringNBT.getAsString()));
         }
+
+        saveData.setAlembicList(alembicList);
+        return saveData;
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
-        ListNBT list = new ListNBT();
+    public CompoundTag save(CompoundTag tag) {
+        ListTag list = new ListTag();
         for (AlembicType type : alembicList) {
-            list.add(StringNBT.valueOf(type.toString()));
+            list.add(StringTag.valueOf(type.toString()));
         }
 
         tag.put("alembics", list);

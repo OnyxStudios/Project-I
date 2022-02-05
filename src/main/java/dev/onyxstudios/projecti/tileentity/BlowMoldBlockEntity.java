@@ -5,11 +5,12 @@ import dev.onyxstudios.projecti.registry.ModEntities;
 import dev.onyxstudios.projecti.registry.ModRecipes;
 import dev.onyxstudios.projecti.registry.recipes.BlowMoldRecipe;
 import dev.onyxstudios.projecti.utils.InvFluidWrapper;
-import net.minecraft.block.BlockState;
-import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.util.Direction;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.util.Constants;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.energy.CapabilityEnergy;
 import net.minecraftforge.fluids.FluidAttributes;
@@ -22,7 +23,7 @@ import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 import java.util.Optional;
 
-public class BlowMoldTileEntity extends BaseTileEntity implements IBellowsTickable {
+public class BlowMoldBlockEntity extends BaseBlockEntity implements IBellowsTickable {
 
     private final FluidTank tank = new FluidTank(FluidAttributes.BUCKET_VOLUME);
     private final ItemStackHandler inventory = new ItemStackHandler(2) {
@@ -34,7 +35,7 @@ public class BlowMoldTileEntity extends BaseTileEntity implements IBellowsTickab
         @Override
         protected void onContentsChanged(int slot) {
             super.onContentsChanged(slot);
-            BlowMoldTileEntity.this.setChanged();
+            BlowMoldBlockEntity.this.setChanged();
         }
     };
 
@@ -42,22 +43,21 @@ public class BlowMoldTileEntity extends BaseTileEntity implements IBellowsTickab
     private final LazyOptional<?> fluidOptional = LazyOptional.of(() -> tank);
     private int progress;
 
-    public BlowMoldTileEntity() {
-        super(ModEntities.BLOW_MOLD_TYPE.get());
+    public BlowMoldBlockEntity(BlockPos pos, BlockState state) {
+        super(ModEntities.BLOW_MOLD_TYPE.get(), pos, state);
     }
 
     @Override
-    public CompoundNBT save(CompoundNBT tag) {
-        super.save(tag);
+    protected void saveAdditional(CompoundTag tag) {
+        super.saveAdditional(tag);
         tag.putInt("progress", progress);
         tag.put("inventory", inventory.serializeNBT());
-        tag.put("fluid", tank.writeToNBT(new CompoundNBT()));
-        return tag;
+        tag.put("fluid", tank.writeToNBT(new CompoundTag()));
     }
 
     @Override
-    public void load(BlockState state, CompoundNBT tag) {
-        super.load(state, tag);
+    public void load(CompoundTag tag) {
+        super.load(tag);
         progress = tag.getInt("progress");
         inventory.deserializeNBT(tag.getCompound("inventory"));
         tank.readFromNBT(tag.getCompound("fluid"));
@@ -79,7 +79,7 @@ public class BlowMoldTileEntity extends BaseTileEntity implements IBellowsTickab
 
             progress = 0;
             this.setChanged();
-            level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Constants.BlockFlags.DEFAULT);
+            level.sendBlockUpdated(getBlockPos(), getBlockState(), getBlockState(), Block.UPDATE_ALL);
         }
     }
 

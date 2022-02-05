@@ -1,11 +1,11 @@
 package dev.onyxstudios.projecti.items;
 
 import dev.onyxstudios.projecti.ProjectI;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.ActionResult;
-import net.minecraft.util.Hand;
-import net.minecraft.world.World;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 public class KnowledgeGemItem extends BaseItem {
 
@@ -14,12 +14,12 @@ public class KnowledgeGemItem extends BaseItem {
     }
 
     @Override
-    public ActionResult<ItemStack> use(World world, PlayerEntity player, Hand hand) {
-        if (!world.isClientSide()) {
+    public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        if (!level.isClientSide()) {
             //TODO Re-Add once Entity Knowledge is a thing
-            //world.addFreshEntity(new EntityKnowledge(world, player));
+            //level.addFreshEntity(new EntityKnowledge(level, player));
         }
 
-        return super.use(world, player, hand);
+        return super.use(level, player, hand);
     }
 }

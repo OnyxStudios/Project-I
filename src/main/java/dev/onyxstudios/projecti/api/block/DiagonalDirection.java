@@ -1,7 +1,7 @@
 package dev.onyxstudios.projecti.api.block;
 
-import net.minecraft.util.Direction;
-import net.minecraft.util.math.BlockPos;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 
 public enum DiagonalDirection {
     NORTH_EAST(Direction.EAST, Direction.NORTH),

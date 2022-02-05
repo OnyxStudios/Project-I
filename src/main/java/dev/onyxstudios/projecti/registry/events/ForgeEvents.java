@@ -3,12 +3,12 @@ package dev.onyxstudios.projecti.registry.events;
 import dev.onyxstudios.projecti.ProjectI;
 import dev.onyxstudios.projecti.registry.ModItems;
 import dev.onyxstudios.projecti.registry.ModTags;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.Items;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.client.event.EntityViewRenderEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -23,11 +23,9 @@ public class ForgeEvents {
         LivingEntity entity = event.getEntityLiving();
         Entity source = event.getSource().getDirectEntity();
 
-        if (!(entity instanceof PlayerEntity) && source instanceof PlayerEntity) {
-            PlayerEntity player = (PlayerEntity) source;
-
+        if (!(entity instanceof Player) && source instanceof Player player) {
             if (player.getMainHandItem().sameItem(Items.BONE.getDefaultInstance())) {
-                if (!player.inventory.add(new ItemStack(ModItems.SOUL_BONE.get()))) {
+                if (!player.getInventory().add(new ItemStack(ModItems.SOUL_BONE.get()))) {
                     if (!player.level.isClientSide()) {
                         player.level.addFreshEntity(new ItemEntity(player.level, player.getX(), player.getY(), player.getZ(), new ItemStack(ModItems.SOUL_BONE.get())));
                     }
@@ -41,7 +39,7 @@ public class ForgeEvents {
     //For custom fluid fog colors
     @SubscribeEvent
     public static void onFogColor(EntityViewRenderEvent.FogColors event) {
-        if (event.getInfo().getFluidInCamera().is(ModTags.MOLTEN_BLUE_CRYSTAL)) {
+        if (event.getCamera().getBlockAtCamera().getFluidState().is(ModTags.MOLTEN_BLUE_CRYSTAL)) {
             event.setRed(0.294f);
             event.setGreen(0.384f);
             event.setBlue(0.823f);

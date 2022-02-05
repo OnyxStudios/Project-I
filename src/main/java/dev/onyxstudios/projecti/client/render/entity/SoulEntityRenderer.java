@@ -1,14 +1,14 @@
 package dev.onyxstudios.projecti.client.render.entity;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.onyxstudios.projecti.entity.SoulEntity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
-import net.minecraft.client.renderer.entity.EntityRendererManager;
-import net.minecraft.entity.EntityType;
-import net.minecraft.entity.LivingEntity;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.LivingEntity;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -17,12 +17,12 @@ public class SoulEntityRenderer extends EntityRenderer<SoulEntity> {
 
     private static final Map<EntityType<? extends LivingEntity>, LivingEntity> FAKES = new HashMap<>();
 
-    public SoulEntityRenderer(EntityRendererManager rendererManager) {
-        super(rendererManager);
+    public SoulEntityRenderer(EntityRendererProvider.Context context) {
+        super(context);
     }
 
     @Override
-    public void render(SoulEntity soulEntity, float yaw, float partialTicks, MatrixStack stack, IRenderTypeBuffer buffer, int light) {
+    public void render(SoulEntity soulEntity, float yaw, float partialTicks, PoseStack stack, MultiBufferSource buffer, int light) {
         super.render(soulEntity, yaw, partialTicks, stack, buffer, light);
 
         Minecraft mc = Minecraft.getInstance();
@@ -50,8 +50,8 @@ public class SoulEntityRenderer extends EntityRenderer<SoulEntity> {
             entity.zo = soulEntity.zo;
             entity.setDeltaMovement(soulEntity.getDeltaMovement());
             entity.setOnGround(soulEntity.isOnGround());
-            entity.xRot = soulEntity.xRot;
-            entity.yRot = soulEntity.yRot;
+            entity.setXRot(soulEntity.getXRot());
+            entity.setYRot(soulEntity.getYRot());
             entity.xRotO = soulEntity.xRotO;
             entity.yRotO = soulEntity.yRotO;
             entity.yHeadRot = soulEntity.yHeadRot;

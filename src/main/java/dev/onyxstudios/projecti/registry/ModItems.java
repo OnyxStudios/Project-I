@@ -4,10 +4,10 @@ import dev.onyxstudios.projecti.ProjectI;
 import dev.onyxstudios.projecti.items.BaseItem;
 import dev.onyxstudios.projecti.items.KnowledgeGemItem;
 import dev.onyxstudios.projecti.items.SoulBoneItem;
-import net.minecraft.item.Item;
-import net.minecraftforge.fml.RegistryObject;
+import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.RegistryObject;
 
 public class ModItems {
 

@@ -1,61 +1,57 @@
 package dev.onyxstudios.projecti.blocks;
 
 import dev.onyxstudios.projecti.api.block.StamperStatus;
-import dev.onyxstudios.projecti.tileentity.StamperTileEntity;
+import dev.onyxstudios.projecti.tileentity.StamperBlockEntity;
 import dev.onyxstudios.projecti.utils.BlockUtils;
 import dev.onyxstudios.projecti.utils.InventoryUtils;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockRenderType;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ContainerBlock;
-import net.minecraft.block.material.Material;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.item.BlockItemUseContext;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.EnumProperty;
-import net.minecraft.state.StateContainer;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.BlockRayTraceResult;
-import net.minecraft.util.math.shapes.ISelectionContext;
-import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.util.math.shapes.VoxelShapes;
-import net.minecraft.util.math.vector.Vector3d;
-import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
-import net.minecraft.world.World;
-import net.minecraftforge.common.ToolType;
-import net.minecraftforge.common.util.Constants;
+import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.*;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.level.material.Material;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.Shapes;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 import javax.annotation.Nullable;
 
-import static net.minecraft.state.properties.BlockStateProperties.HORIZONTAL_FACING;
-
-public class CircuitStamperBlock extends ContainerBlock {
+public class CircuitStamperBlock extends BaseEntityBlock {
 
     public static final EnumProperty<StamperStatus> STATUS = EnumProperty.create("status", StamperStatus.class);
 
     public CircuitStamperBlock() {
         super(Properties.of(Material.STONE)
                 .strength(1.5f, 1.5f)
-                .harvestTool(ToolType.PICKAXE)
                 .noOcclusion());
-        registerDefaultState(getStateDefinition().any().setValue(STATUS, StamperStatus.OPEN).setValue(HORIZONTAL_FACING, Direction.NORTH));
+        registerDefaultState(getStateDefinition().any().setValue(STATUS, StamperStatus.OPEN)
+                .setValue(HorizontalDirectionalBlock.FACING, Direction.NORTH));
     }
 
     @Override
-    public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult) {
-        TileEntity tile = world.getBlockEntity(pos);
+    public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult rayTraceResult) {
+        BlockEntity tile = level.getBlockEntity(pos);
         ItemStack heldStack = player.getItemInHand(hand);
 
-        if (!world.isClientSide && state.getValue(STATUS) == StamperStatus.OPEN && tile instanceof StamperTileEntity && rayTraceResult.getDirection() == Direction.UP) {
-            StamperTileEntity stamper = (StamperTileEntity) tile;
+        if (!level.isClientSide && state.getValue(STATUS) == StamperStatus.OPEN && tile instanceof StamperBlockEntity && rayTraceResult.getDirection() == Direction.UP) {
+            StamperBlockEntity stamper = (StamperBlockEntity) tile;
             if (!heldStack.isEmpty() || (heldStack.isEmpty() && player.isShiftKeyDown())) {
                 int slot;
-                Vector3d hitVec = rayTraceResult.getLocation().subtract(new Vector3d(pos.getX(), pos.getY(), pos.getZ()));
-                Direction direction = state.getValue(HORIZONTAL_FACING);
+                Vec3 hitVec = rayTraceResult.getLocation().subtract(pos.getX(), pos.getY(), pos.getZ());
+                Direction direction = state.getValue(HorizontalDirectionalBlock.FACING);
 
                 double x = 0;
                 double z = 0;
@@ -104,8 +100,8 @@ public class CircuitStamperBlock extends ContainerBlock {
                                 heldStack.shrink(amount);
                             }
                         } else if (!stack.isEmpty() && heldStack.isEmpty()) {
-                            if (!player.inventory.add(stack)) {
-                                world.addFreshEntity(new ItemEntity(world, player.getX(), player.getY(), player.getZ(), stack.copy()));
+                            if (!player.getInventory().add(stack)) {
+                                level.addFreshEntity(new ItemEntity(level, player.getX(), player.getY(), player.getZ(), stack.copy()));
                             }
                         }
                     }
@@ -115,32 +111,32 @@ public class CircuitStamperBlock extends ContainerBlock {
                 stamper.getInventory().setStackInSlot(4, ItemStack.EMPTY);
             }
 
-            world.sendBlockUpdated(pos, world.getBlockState(pos), world.getBlockState(pos), Constants.BlockFlags.BLOCK_UPDATE);
+            level.sendBlockUpdated(pos, level.getBlockState(pos), level.getBlockState(pos), Block.UPDATE_ALL);
         }
 
-        return ActionResultType.SUCCESS;
+        return InteractionResult.SUCCESS;
     }
 
     @Override
-    public void onRemove(BlockState state, World world, BlockPos pos, BlockState newState, boolean isMoving) {
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
             //If the generator has an inventory, drop stacks stored
-            if (world.getBlockEntity(pos) instanceof StamperTileEntity) {
-                InventoryUtils.dropInventoryItems(world, pos, ((StamperTileEntity) world.getBlockEntity(pos)).getInventory());
-                world.updateNeighbourForOutputSignal(pos, this);
+            if (level.getBlockEntity(pos) instanceof StamperBlockEntity stamperEntity) {
+                InventoryUtils.dropInventoryItems(level, pos, stamperEntity.getInventory());
+                level.updateNeighbourForOutputSignal(pos, this);
             }
-
-            super.onRemove(state, world, pos, newState, isMoving);
         }
+
+        super.onRemove(state, level, pos, newState, isMoving);
     }
 
     @Override
-    public void neighborChanged(BlockState state, World world, BlockPos pos, Block block, BlockPos neighborPos, boolean moving) {
-        super.neighborChanged(state, world, pos, block, neighborPos, moving);
-        TileEntity tile = world.getBlockEntity(pos);
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos neighborPos, boolean moving) {
+        super.neighborChanged(state, level, pos, block, neighborPos, moving);
+        BlockEntity tile = level.getBlockEntity(pos);
 
-        if (tile instanceof StamperTileEntity) {
-            ((StamperTileEntity) tile).run();
+        if (tile instanceof StamperBlockEntity) {
+            ((StamperBlockEntity) tile).run();
         }
     }
 
@@ -151,49 +147,49 @@ public class CircuitStamperBlock extends ContainerBlock {
 
     @Nullable
     @Override
-    public BlockState getStateForPlacement(BlockItemUseContext context) {
-        return this.defaultBlockState().setValue(HORIZONTAL_FACING, context.getHorizontalDirection().getOpposite());
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return this.defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, context.getHorizontalDirection().getOpposite());
     }
 
     @Override
-    public BlockRenderType getRenderShape(BlockState blockState) {
-        return BlockRenderType.MODEL;
+    public RenderShape getRenderShape(BlockState blockState) {
+        return RenderShape.MODEL;
     }
 
     @Override
-    public BlockState rotate(BlockState state, IWorld world, BlockPos pos, Rotation direction) {
-        return state.setValue(HORIZONTAL_FACING, direction.rotate(state.getValue(HORIZONTAL_FACING)));
+    public BlockState rotate(BlockState state, LevelAccessor level, BlockPos pos, Rotation direction) {
+        return state.setValue(HorizontalDirectionalBlock.FACING, direction.rotate(state.getValue(HorizontalDirectionalBlock.FACING)));
     }
 
     @Override
     public BlockState mirror(BlockState state, Mirror mirror) {
-        return state.rotate(mirror.getRotation(state.getValue(HORIZONTAL_FACING)));
+        return state.rotate(mirror.getRotation(state.getValue(HorizontalDirectionalBlock.FACING)));
     }
 
     @Override
-    protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(HORIZONTAL_FACING, STATUS);
+        builder.add(HorizontalDirectionalBlock.FACING, STATUS);
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext context) {
+    public VoxelShape getShape(BlockState state, BlockGetter reader, BlockPos pos, CollisionContext context) {
         VoxelShape bottomShape = Block.box(1, 0, 1, 15, 1, 15);
-        VoxelShape baseShape = VoxelShapes.or(bottomShape, Block.box(0, 1, 0, 16, 3, 16));
+        VoxelShape baseShape = Shapes.or(bottomShape, Block.box(0, 1, 0, 16, 3, 16));
         VoxelShape topShape;
         if (state.getValue(STATUS) == StamperStatus.OPEN) {
             topShape = Block.box(0, 0, 13, 16, 16, 16);
-            topShape = BlockUtils.rotateShape(topShape, state.getValue(HORIZONTAL_FACING));
+            topShape = BlockUtils.rotateShape(topShape, state.getValue(HorizontalDirectionalBlock.FACING));
         } else {
             topShape = Block.box(0, 3, 0, 16, 5, 16);
         }
 
-        return VoxelShapes.or(baseShape, topShape);
+        return Shapes.or(baseShape, topShape);
     }
 
     @Nullable
     @Override
-    public TileEntity newBlockEntity(IBlockReader world) {
-        return new StamperTileEntity();
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new StamperBlockEntity(pos, state);
     }
 }

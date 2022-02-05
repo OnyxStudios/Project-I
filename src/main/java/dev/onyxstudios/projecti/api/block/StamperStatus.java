@@ -1,8 +1,8 @@
 package dev.onyxstudios.projecti.api.block;
 
-import net.minecraft.util.IStringSerializable;
+import net.minecraft.util.StringRepresentable;
 
-public enum StamperStatus implements IStringSerializable {
+public enum StamperStatus implements StringRepresentable {
     OPEN,
     CLOSED;
 

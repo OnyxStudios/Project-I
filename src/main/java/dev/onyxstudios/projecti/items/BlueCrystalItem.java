@@ -3,11 +3,11 @@ package dev.onyxstudios.projecti.items;
 import dev.onyxstudios.projecti.ProjectI;
 import dev.onyxstudios.projecti.entity.BlueCrystalEntity;
 import dev.onyxstudios.projecti.registry.ModBlocks;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.item.ItemEntity;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import javax.annotation.Nullable;
 
@@ -24,8 +24,8 @@ public class BlueCrystalItem extends BlockItem {
 
     @Nullable
     @Override
-    public Entity createEntity(World world, Entity location, ItemStack itemstack) {
+    public Entity createEntity(Level level, Entity location, ItemStack itemstack) {
         if(!(location instanceof ItemEntity)) return null;
-        return new BlueCrystalEntity(world, itemstack, (ItemEntity) location);
+        return new BlueCrystalEntity(level, itemstack, (ItemEntity) location);
     }
 }

@@ -1,24 +1,19 @@
 package dev.onyxstudios.projecti.client.render.tile;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import dev.onyxstudios.projecti.tileentity.StamperTileEntity;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.math.Vector3f;
+import dev.onyxstudios.projecti.tileentity.StamperBlockEntity;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.tileentity.TileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.ItemStack;
-import net.minecraft.state.properties.BlockStateProperties;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 
-public class CircuitStamperRenderer extends TileEntityRenderer<StamperTileEntity> {
-
-    public CircuitStamperRenderer(TileEntityRendererDispatcher rendererDispatcher) {
-        super(rendererDispatcher);
-    }
+public class CircuitStamperRenderer implements BlockEntityRenderer<StamperBlockEntity> {
 
     @Override
-    public void render(StamperTileEntity stamper, float partialTicks, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int combinedLight, int combinedOverlay) {
+    public void render(StamperBlockEntity stamper, float partialTicks, PoseStack matrixStack, MultiBufferSource renderTypeBuffer, int combinedLight, int combinedOverlay) {
         matrixStack.pushPose();
         matrixStack.translate(0.5, 0.15, 0.5);
         matrixStack.mulPose(Vector3f.YP.rotationDegrees(-(stamper.getBlockState().getValue(BlockStateProperties.HORIZONTAL_FACING).getOpposite().get2DDataValue() * 90)));
@@ -31,18 +26,18 @@ public class CircuitStamperRenderer extends TileEntityRenderer<StamperTileEntity
         matrixStack.popPose();
     }
 
-    private void drawStack(ItemStack stack, MatrixStack matrixStack, IRenderTypeBuffer renderTypeBuffer, int combinedLight, int combinedOverlay, double x, double y, double z) {
+    private void drawStack(ItemStack stack, PoseStack matrixStack, MultiBufferSource renderTypeBuffer, int combinedLight, int combinedOverlay, double x, double y, double z) {
         if (stack.isEmpty()) return;
         matrixStack.pushPose();
         matrixStack.translate(x, y, z);
         matrixStack.mulPose(Vector3f.XP.rotationDegrees(90));
         matrixStack.scale(0.25f, 0.25f, 0.25f);
-        Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemCameraTransforms.TransformType.NONE, combinedLight, combinedOverlay, matrixStack, renderTypeBuffer);
+        Minecraft.getInstance().getItemRenderer().renderStatic(stack, ItemTransforms.TransformType.NONE, combinedLight, combinedOverlay, matrixStack, renderTypeBuffer, 0);
         matrixStack.popPose();
     }
 
     @Override
-    public boolean shouldRenderOffScreen(StamperTileEntity tile) {
+    public boolean shouldRenderOffScreen(StamperBlockEntity tile) {
         return true;
     }
 }

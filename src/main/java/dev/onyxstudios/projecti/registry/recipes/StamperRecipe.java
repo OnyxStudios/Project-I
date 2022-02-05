@@ -1,19 +1,19 @@
 package dev.onyxstudios.projecti.registry.recipes;
 
 import dev.onyxstudios.projecti.registry.ModRecipes;
-import net.minecraft.inventory.IInventory;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipe;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.item.crafting.IRecipeType;
-import net.minecraft.item.crafting.Ingredient;
-import net.minecraft.util.NonNullList;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.world.World;
+import net.minecraft.core.NonNullList;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.Container;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.level.Level;
 
-public class StamperRecipe implements IRecipe<IInventory> {
+public class StamperRecipe implements Recipe<Container> {
 
-    protected IRecipeType<?> recipeType;
+    protected RecipeType<?> recipeType;
     protected ResourceLocation ID;
     protected String group;
     protected Ingredient[] ingredients;
@@ -28,7 +28,7 @@ public class StamperRecipe implements IRecipe<IInventory> {
     }
 
     @Override
-    public boolean matches(IInventory inv, World world) {
+    public boolean matches(Container inv, Level level) {
         for (int i = 0; i < 4; i++) {
             ItemStack slotStack = inv.getItem(i);
 
@@ -41,7 +41,7 @@ public class StamperRecipe implements IRecipe<IInventory> {
     }
 
     @Override
-    public ItemStack assemble(IInventory inv) {
+    public ItemStack assemble(Container inv) {
         return this.result.copy();
     }
 
@@ -66,12 +66,12 @@ public class StamperRecipe implements IRecipe<IInventory> {
     }
 
     @Override
-    public IRecipeSerializer<?> getSerializer() {
+    public RecipeSerializer<?> getSerializer() {
         return ModRecipes.STAMPER_SERIALIZER.get();
     }
 
     @Override
-    public IRecipeType<?> getType() {
+    public RecipeType<?> getType() {
         return this.recipeType;
     }
 

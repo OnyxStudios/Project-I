@@ -8,19 +8,19 @@ import dev.onyxstudios.projecti.registry.ModBlocks;
 import dev.onyxstudios.projecti.registry.ModEntities;
 import dev.onyxstudios.projecti.registry.ModParticles;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.entity.ItemRenderer;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
+import net.minecraft.client.renderer.entity.EntityRenderers;
+import net.minecraft.client.renderer.entity.ItemEntityRenderer;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.ModelRegistryEvent;
 import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
-import net.minecraftforge.client.model.ModelLoader;
+import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
-import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.Mod;
 
 @Mod.EventBusSubscriber(modid = ProjectI.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
@@ -30,8 +30,8 @@ public class ModClient {
 
     public static ResourceLocation SHORT_CONNECTOR_LOC = new ResourceLocation(ProjectI.MODID, "block/alembic_short_connector");
     public static ResourceLocation LONG_CONNECTOR_LOC = new ResourceLocation(ProjectI.MODID, "block/alembic_long_connector");
-    public static IBakedModel SHORT_CONNECTOR;
-    public static IBakedModel LONG_CONNECTOR;
+    public static BakedModel SHORT_CONNECTOR;
+    public static BakedModel LONG_CONNECTOR;
 
     public static void init() {
         initEntityRenders();
@@ -44,34 +44,33 @@ public class ModClient {
     }
 
     private static void initTESRS() {
-        ClientRegistry.bindTileEntityRenderer(ModEntities.CRYSTAL_TYPE.get(), BlueCrystalRenderer::new);
-        ClientRegistry.bindTileEntityRenderer(ModEntities.STAMPER_TYPE.get(), CircuitStamperRenderer::new);
-        ClientRegistry.bindTileEntityRenderer(ModEntities.BELLOWS_TYPE.get(), BellowsRenderer::new);
-        ClientRegistry.bindTileEntityRenderer(ModEntities.ALEMBIC_TYPE.get(), AlembicRenderer::new);
-        ClientRegistry.bindTileEntityRenderer(ModEntities.BONE_CAGE_TYPE.get(), BoneCageRenderer::new);
-        ClientRegistry.bindTileEntityRenderer(ModEntities.SOUL_RELAY_TYPE.get(), SoulRelayRenderer::new);
-        ClientRegistry.bindTileEntityRenderer(ModEntities.BLOW_MOLD_TYPE.get(), BlowMoldRenderer::new);
+        BlockEntityRenderers.register(ModEntities.CRYSTAL_TYPE.get(), ctx -> new BlueCrystalRenderer());
+        BlockEntityRenderers.register(ModEntities.STAMPER_TYPE.get(), ctx -> new CircuitStamperRenderer());
+        BlockEntityRenderers.register(ModEntities.BELLOWS_TYPE.get(), BellowsRenderer::new);
+        BlockEntityRenderers.register(ModEntities.ALEMBIC_TYPE.get(), ctx -> new AlembicRenderer());
+        BlockEntityRenderers.register(ModEntities.BONE_CAGE_TYPE.get(), ctx -> new BoneCageRenderer());
+        BlockEntityRenderers.register(ModEntities.SOUL_RELAY_TYPE.get(), SoulRelayRenderer::new);
+        BlockEntityRenderers.register(ModEntities.BLOW_MOLD_TYPE.get(), ctx -> new BlowMoldRenderer());
     }
 
     private static void initLayers() {
-        RenderTypeLookup.setRenderLayer(ModBlocks.BLUE_CRYSTAL.get(), RenderType.translucent());
-        RenderTypeLookup.setRenderLayer(ModBlocks.STAMPER.get(), RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.BELLOWS.get(), RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.BONE_CAGE.get(), RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.SOUL_RELAY.get(), RenderType.cutout());
-        RenderTypeLookup.setRenderLayer(ModBlocks.BLOW_MOLD.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.BLUE_CRYSTAL.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.STAMPER.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.BELLOWS.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.BONE_CAGE.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.SOUL_RELAY.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.BLOW_MOLD.get(), RenderType.cutout());
 
-        RenderTypeLookup.setRenderLayer(ModBlocks.FUNNEL.get(), RenderType.translucent());
-        RenderTypeLookup.setRenderLayer(ModBlocks.DECANTER.get(), RenderType.translucent());
-        RenderTypeLookup.setRenderLayer(ModBlocks.GOURD.get(), RenderType.translucent());
-        RenderTypeLookup.setRenderLayer(ModBlocks.SPIRAL.get(), RenderType.translucent());
-        RenderTypeLookup.setRenderLayer(ModBlocks.SPLITTER.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.FUNNEL.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.DECANTER.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.GOURD.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.SPIRAL.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.SPLITTER.get(), RenderType.translucent());
     }
 
     private static void initEntityRenders() {
-        Minecraft mc = Minecraft.getInstance();
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.BLUE_CRYSTAL_ENTITY.get(), manager -> new ItemRenderer(manager, mc.getItemRenderer()));
-        RenderingRegistry.registerEntityRenderingHandler(ModEntities.SOUL_ENTITY.get(), SoulEntityRenderer::new);
+        EntityRenderers.register(ModEntities.BLUE_CRYSTAL_ENTITY.get(), ItemEntityRenderer::new);
+        EntityRenderers.register(ModEntities.SOUL_ENTITY.get(), SoulEntityRenderer::new);
     }
 
     @SubscribeEvent
@@ -81,8 +80,8 @@ public class ModClient {
 
     @SubscribeEvent
     public static void onModelRegistry(ModelRegistryEvent event) {
-        ModelLoader.addSpecialModel(SHORT_CONNECTOR_LOC);
-        ModelLoader.addSpecialModel(LONG_CONNECTOR_LOC);
+        ForgeModelBakery.addSpecialModel(SHORT_CONNECTOR_LOC);
+        ForgeModelBakery.addSpecialModel(LONG_CONNECTOR_LOC);
     }
 
     @SubscribeEvent

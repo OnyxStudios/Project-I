@@ -1,7 +1,7 @@
 package dev.onyxstudios.projecti.blocks;
 
 import dev.onyxstudios.projecti.api.block.StamperStatus;
-import dev.onyxstudios.projecti.tileentity.StamperBlockEntity;
+import dev.onyxstudios.projecti.blockentity.StamperBlockEntity;
 import dev.onyxstudios.projecti.utils.BlockUtils;
 import dev.onyxstudios.projecti.utils.InventoryUtils;
 import net.minecraft.core.BlockPos;
@@ -120,7 +120,7 @@ public class CircuitStamperBlock extends BaseEntityBlock {
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
-            //If the generator has an inventory, drop stacks stored
+            //If the stamper has an inventory, drop stacks stored
             if (level.getBlockEntity(pos) instanceof StamperBlockEntity stamperEntity) {
                 InventoryUtils.dropInventoryItems(level, pos, stamperEntity.getInventory());
                 level.updateNeighbourForOutputSignal(pos, this);

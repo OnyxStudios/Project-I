@@ -1,4 +1,4 @@
-package dev.onyxstudios.projecti.tileentity;
+package dev.onyxstudios.projecti.blockentity;
 
 import dev.onyxstudios.projecti.entity.SoulEntity;
 import dev.onyxstudios.projecti.registry.ModBlocks;
@@ -25,7 +25,7 @@ public class BoneCageBlockEntity extends BaseBlockEntity {
     private boolean powered;
 
     public BoneCageBlockEntity(BlockPos pos, BlockState state) {
-        super(ModEntities.BONE_CAGE_TYPE.get(), pos, state);
+        super(ModEntities.BONE_CAGE, pos, state);
     }
 
     @Override
@@ -62,7 +62,7 @@ public class BoneCageBlockEntity extends BaseBlockEntity {
         Entity entity = storedEntity.create(level);
 
         if (entity != null) {
-            Direction facing = getBlockState().is(ModBlocks.BONE_CAGE.get()) ?
+            Direction facing = getBlockState().is(ModBlocks.BONE_CAGE) ?
                     getBlockState().getValue(HorizontalDirectionalBlock.FACING) : Direction.NORTH;
             BlockPos spawnPos = getBlockPos().relative(facing);
 

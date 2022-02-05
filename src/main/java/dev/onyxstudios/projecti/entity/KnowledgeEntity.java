@@ -15,15 +15,15 @@ public class KnowledgeEntity extends LivingEntity {
     private double moveX, moveY, moveZ;
 
     public KnowledgeEntity(Level level) {
-        super(ModEntities.KNOWLEDGE_ENTITY.get(), level);
+        super(ModEntities.KNOWLEDGE_ENTITY, level);
     }
 
     public KnowledgeEntity(EntityType<?> type, Level level) {
-        super(ModEntities.KNOWLEDGE_ENTITY.get(), level);
+        super(ModEntities.KNOWLEDGE_ENTITY, level);
     }
 
     public KnowledgeEntity(Level level, Player player) {
-        super(ModEntities.KNOWLEDGE_ENTITY.get(), level);
+        super(ModEntities.KNOWLEDGE_ENTITY, level);
         this.owner = player;
         this.blocksMoved = 0;
         this.setPos(player.getX(), player.getY() + 1, player.getZ());

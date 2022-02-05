@@ -1,8 +1,7 @@
 package dev.onyxstudios.projecti.blocks;
 
 import dev.onyxstudios.projecti.registry.ModEntities;
-import dev.onyxstudios.projecti.tileentity.AlembicBlockEntity;
-import dev.onyxstudios.projecti.tileentity.BellowsBlockEntity;
+import dev.onyxstudios.projecti.blockentity.BellowsBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -59,7 +58,7 @@ public class BellowsBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide() ? null : createTickerHelper(blockEntityType, ModEntities.BELLOWS_TYPE.get(), BellowsBlockEntity::tick);
+        return level.isClientSide() ? null : createTickerHelper(blockEntityType, ModEntities.BELLOWS, BellowsBlockEntity::tick);
     }
 
     @Override

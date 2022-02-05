@@ -1,4 +1,4 @@
-package dev.onyxstudios.projecti.tileentity;
+package dev.onyxstudios.projecti.blockentity;
 
 import dev.onyxstudios.projecti.api.block.StamperStatus;
 import dev.onyxstudios.projecti.blocks.CircuitStamperBlock;
@@ -34,7 +34,7 @@ public class StamperBlockEntity extends BaseBlockEntity {
     private final LazyOptional<IItemHandler> capabilityInventory = LazyOptional.of(() -> inventory);
 
     public StamperBlockEntity(BlockPos pos, BlockState state) {
-        super(ModEntities.STAMPER_TYPE.get(), pos, state);
+        super(ModEntities.STAMPER, pos, state);
     }
 
     @Override

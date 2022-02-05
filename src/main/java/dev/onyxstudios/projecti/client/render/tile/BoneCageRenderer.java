@@ -2,7 +2,7 @@ package dev.onyxstudios.projecti.client.render.tile;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import dev.onyxstudios.projecti.tileentity.BoneCageBlockEntity;
+import dev.onyxstudios.projecti.blockentity.BoneCageBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;

@@ -5,15 +5,18 @@ import com.google.common.collect.ImmutableSet;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.Dynamic;
 import dev.onyxstudios.projecti.api.block.DiagonalDirection;
+import dev.onyxstudios.projecti.blockentity.SoulRelayBlockEntity;
 import dev.onyxstudios.projecti.entity.goals.FollowRelayTask;
 import dev.onyxstudios.projecti.registry.ModBlocks;
 import dev.onyxstudios.projecti.registry.ModEntities;
 import dev.onyxstudios.projecti.registry.ModItems;
 import dev.onyxstudios.projecti.registry.ModParticles;
-import dev.onyxstudios.projecti.tileentity.SoulRelayBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.nbt.*;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -61,7 +64,7 @@ public class SoulEntity extends Animal {
     }
 
     public SoulEntity(Level level, EntityType<? extends LivingEntity> targetEntityType) {
-        super(ModEntities.SOUL_ENTITY.get(), level);
+        super(ModEntities.SOUL_ENTITY, level);
 
         if (targetEntityType.getRegistryName() != null) {
             getEntityData().set(TARGET_DATA, targetEntityType.getRegistryName().toString());
@@ -82,7 +85,7 @@ public class SoulEntity extends Animal {
     @Override
     public void registerGoals() {
         super.registerGoals();
-        this.goalSelector.addGoal(0, new TemptGoal(this, 0.45, Ingredient.of(ModItems.SOUL_BONE.get()), false));
+        this.goalSelector.addGoal(0, new TemptGoal(this, 0.45, Ingredient.of(ModItems.SOUL_BONE), false));
         this.goalSelector.addGoal(1, new LookAtPlayerGoal(this, Player.class, 6.0f));
         this.goalSelector.addGoal(2, new RandomLookAroundGoal(this));
     }
@@ -182,7 +185,7 @@ public class SoulEntity extends Animal {
 
             for (ItemEntity item : items) {
                 if (item.getItem().getItem() == Items.BONE) {
-                    level.addFreshEntity(new ItemEntity(level, item.getX(), item.getY(), item.getZ(), new ItemStack(ModItems.SOUL_BONE.get(), item.getItem().getCount())));
+                    level.addFreshEntity(new ItemEntity(level, item.getX(), item.getY(), item.getZ(), new ItemStack(ModItems.SOUL_BONE, item.getItem().getCount())));
                     item.remove(RemovalReason.DISCARDED);
                 }
             }
@@ -200,7 +203,7 @@ public class SoulEntity extends Animal {
                     serverLevel.sendParticles(ModParticles.GLOW.get(), getX(), getY() + 1.7, getZ(), 0, offset.getX() + 0.5, offset.getY() - 1, offset.getZ() + 0.5, 1);
 
                     changed = true;
-                    level.setBlockAndUpdate(offset, ModBlocks.BENIGN_STONE.get().defaultBlockState());
+                    level.setBlockAndUpdate(offset, ModBlocks.BENIGN_STONE.defaultBlockState());
                 }
             }
 
@@ -212,7 +215,7 @@ public class SoulEntity extends Animal {
 
     public boolean checkDiagonals(BlockPos startPos) {
         for (DiagonalDirection value : DiagonalDirection.VALUES) {
-            SoulRelayBlockEntity relay = ModEntities.SOUL_RELAY_TYPE.get().getBlockEntity(level, value.offset(startPos));
+            SoulRelayBlockEntity relay = ModEntities.SOUL_RELAY.getBlockEntity(level, value.offset(startPos));
             if (relay == null || !relay.isPowered()) return false;
         }
 

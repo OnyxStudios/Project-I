@@ -1,4 +1,4 @@
-package dev.onyxstudios.projecti.tileentity;
+package dev.onyxstudios.projecti.blockentity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;

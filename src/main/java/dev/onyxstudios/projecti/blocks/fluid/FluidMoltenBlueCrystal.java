@@ -32,7 +32,7 @@ public abstract class FluidMoltenBlueCrystal extends LavaFluid {
 
     @Override
     public Item getBucket() {
-        return ModBlocks.BLUE_CRYSTAL_BUCKET.get();
+        return ModBlocks.BLUE_CRYSTAL_BUCKET;
     }
 
     @Override
@@ -57,7 +57,7 @@ public abstract class FluidMoltenBlueCrystal extends LavaFluid {
 
     @Override
     public BlockState createLegacyBlock(FluidState fluidState) {
-        return ModBlocks.MOLTEN_BLUE_CRYSTAL_BLOCK.get().defaultBlockState().setValue(LiquidBlock.LEVEL, getLegacyLevel(fluidState));
+        return ModBlocks.MOLTEN_BLUE_CRYSTAL_BLOCK.defaultBlockState().setValue(LiquidBlock.LEVEL, getLegacyLevel(fluidState));
     }
 
     @Override

@@ -22,8 +22,8 @@ public class SoulBoneItem extends BaseItem {
 
             for (ItemEntity item : items) {
                 if (item.getItem().sameItem(Items.LAPIS_LAZULI.getDefaultInstance())) {
-                    BlockState state = ModBlocks.BLUE_CRYSTAL.get().defaultBlockState();
-                    if (entity.getAge() >= MAX_TIME && ModBlocks.BLUE_CRYSTAL.get().canSurvive(state, level, entity.blockPosition())) {
+                    BlockState state = ModBlocks.BLUE_CRYSTAL.defaultBlockState();
+                    if (entity.getAge() >= MAX_TIME && ModBlocks.BLUE_CRYSTAL.canSurvive(state, level, entity.blockPosition())) {
                         entity.remove(Entity.RemovalReason.DISCARDED);
                         item.remove(Entity.RemovalReason.DISCARDED);
                         level.setBlock(entity.blockPosition(), state, 3);

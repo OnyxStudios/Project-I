@@ -16,7 +16,7 @@ import net.minecraft.world.level.block.state.BlockState;
 public class BoneCageItem extends BlockItem {
 
     public BoneCageItem() {
-        super(ModBlocks.BONE_CAGE.get(), new Item.Properties().tab(ProjectI.TAB));
+        super(ModBlocks.BONE_CAGE, new Item.Properties().tab(ProjectI.TAB));
     }
 
     @Override
@@ -24,7 +24,7 @@ public class BoneCageItem extends BlockItem {
         boolean success = super.placeBlock(context, state);
         BlockPos pos = context.getClickedPos();
         if (success) {
-            BlockState aboveState = ModBlocks.BONE_CAGE.get().defaultBlockState()
+            BlockState aboveState = ModBlocks.BONE_CAGE.defaultBlockState()
                     .setValue(BoneCageBlock.CAGE_TYPE, BoneCageType.TOP)
                     .setValue(HorizontalDirectionalBlock.FACING, context.getHorizontalDirection().getOpposite());
             context.getLevel().setBlockAndUpdate(pos.above(), aboveState);

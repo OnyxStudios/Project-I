@@ -21,7 +21,7 @@ public class ProjectI {
     public static CreativeModeTab TAB = new CreativeModeTab(MODID) {
         @Override
         public ItemStack makeIcon() {
-            return ModItems.SOUL_BONE.get().getDefaultInstance();
+            return ModItems.SOUL_BONE.getDefaultInstance();
         }
     };
 
@@ -33,14 +33,20 @@ public class ProjectI {
 
         IEventBus modBus = FMLJavaModLoadingContext.get().getModEventBus();
         ModBlocks.BLOCKS.register(modBus);
-        ModBlocks.ITEMS.register(modBus);
         ModBlocks.FLUIDS.register(modBus);
+        ModBlocks.ITEMS.register(modBus);
+        ModBlocks.init();
+
         ModItems.ITEMS.register(modBus);
+        ModItems.init();
+
         ModEntities.TILES.register(modBus);
         ModEntities.CONTAINERS.register(modBus);
         ModEntities.ENTITIES.register(modBus);
         ModEntities.MEMORY_MODULES.register(modBus);
         ModEntities.POI.register(modBus);
+        ModEntities.init();
+
         ModRecipes.RECIPES.register(modBus);
         ModParticles.PARTICLES.register(modBus);
         GeckoLib.initialize();

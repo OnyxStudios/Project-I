@@ -1,4 +1,4 @@
-package dev.onyxstudios.projecti.tileentity;
+package dev.onyxstudios.projecti.blockentity;
 
 import dev.onyxstudios.projecti.api.block.IBellowsTickable;
 import dev.onyxstudios.projecti.registry.ModEntities;
@@ -21,7 +21,7 @@ public class BellowsBlockEntity extends BaseBlockEntity implements IAnimatable {
     private final AnimationFactory animationFactory = new AnimationFactory(this);
 
     public BellowsBlockEntity(BlockPos pos, BlockState state) {
-        super(ModEntities.BELLOWS_TYPE.get(), pos, state);
+        super(ModEntities.BELLOWS, pos, state);
     }
 
     public static void tick(Level level, BlockPos pos, BlockState state, BellowsBlockEntity blockEntity) {

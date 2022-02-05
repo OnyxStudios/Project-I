@@ -1,7 +1,7 @@
 package dev.onyxstudios.projecti.blocks;
 
 import dev.onyxstudios.projecti.registry.ModEntities;
-import dev.onyxstudios.projecti.tileentity.BlowMoldBlockEntity;
+import dev.onyxstudios.projecti.blockentity.BlowMoldBlockEntity;
 import dev.onyxstudios.projecti.utils.InventoryUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
@@ -55,7 +55,7 @@ public class BlowMoldBlock extends BaseEntityBlock {
     public InteractionResult use(BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult rayTraceResult) {
         if (level.isClientSide()) super.use(state, level, pos, player, hand, rayTraceResult);
         ItemStack heldItem = player.getItemInHand(hand);
-        BlowMoldBlockEntity blowMold = ModEntities.BLOW_MOLD_TYPE.get().getBlockEntity(level, pos);
+        BlowMoldBlockEntity blowMold = ModEntities.BLOW_MOLD.getBlockEntity(level, pos);
 
         if (blowMold != null) {
             int slot = blowMold.getInventory().getStackInSlot(1).isEmpty() ? 0 : 1;
@@ -89,7 +89,7 @@ public class BlowMoldBlock extends BaseEntityBlock {
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
         if (!state.is(newState.getBlock())) {
-            BlowMoldBlockEntity blowMold = ModEntities.BLOW_MOLD_TYPE.get().getBlockEntity(level, pos);
+            BlowMoldBlockEntity blowMold = ModEntities.BLOW_MOLD.getBlockEntity(level, pos);
 
             if (blowMold != null) {
                 InventoryUtils.dropInventoryItems(level, pos, blowMold.getInventory());

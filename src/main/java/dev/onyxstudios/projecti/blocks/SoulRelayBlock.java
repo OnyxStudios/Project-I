@@ -2,7 +2,7 @@ package dev.onyxstudios.projecti.blocks;
 
 import dev.onyxstudios.projecti.registry.ModBlocks;
 import dev.onyxstudios.projecti.registry.ModEntities;
-import dev.onyxstudios.projecti.tileentity.SoulRelayBlockEntity;
+import dev.onyxstudios.projecti.blockentity.SoulRelayBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
@@ -46,11 +46,11 @@ public class SoulRelayBlock extends BaseEntityBlock {
 
     private void checkVisitable(Level level, BlockPos pos) {
         if (level.isClientSide()) return;
-        SoulRelayBlockEntity soulRelay = ModEntities.SOUL_RELAY_TYPE.get().getBlockEntity(level, pos);
+        SoulRelayBlockEntity soulRelay = ModEntities.SOUL_RELAY.getBlockEntity(level, pos);
 
         if (soulRelay != null) {
             for (Direction direction : Direction.values()) {
-                if (level.getBlockState(pos.relative(direction)).is(ModBlocks.BONE_CAGE.get()))
+                if (level.getBlockState(pos.relative(direction)).is(ModBlocks.BONE_CAGE))
                     soulRelay.setCanVisit(false);
             }
         }

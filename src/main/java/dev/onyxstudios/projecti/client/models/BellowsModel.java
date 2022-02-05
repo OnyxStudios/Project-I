@@ -1,7 +1,7 @@
 package dev.onyxstudios.projecti.client.models;
 
 import dev.onyxstudios.projecti.ProjectI;
-import dev.onyxstudios.projecti.tileentity.BellowsBlockEntity;
+import dev.onyxstudios.projecti.blockentity.BellowsBlockEntity;
 import net.minecraft.resources.ResourceLocation;
 import software.bernie.geckolib3.model.AnimatedGeoModel;
 

@@ -14,7 +14,7 @@ import javax.annotation.Nullable;
 public class BlueCrystalItem extends BlockItem {
 
     public BlueCrystalItem() {
-        super(ModBlocks.BLUE_CRYSTAL.get(), new Properties().tab(ProjectI.TAB).fireResistant());
+        super(ModBlocks.BLUE_CRYSTAL, new Properties().tab(ProjectI.TAB).fireResistant());
     }
 
     @Override
@@ -25,7 +25,7 @@ public class BlueCrystalItem extends BlockItem {
     @Nullable
     @Override
     public Entity createEntity(Level level, Entity location, ItemStack itemstack) {
-        if(!(location instanceof ItemEntity)) return null;
+        if (!(location instanceof ItemEntity)) return null;
         return new BlueCrystalEntity(level, itemstack, (ItemEntity) location);
     }
 }

@@ -1,4 +1,4 @@
-package dev.onyxstudios.projecti.tileentity;
+package dev.onyxstudios.projecti.blockentity;
 
 import dev.onyxstudios.projecti.api.block.AlembicType;
 import dev.onyxstudios.projecti.api.block.BoneCageType;
@@ -35,7 +35,7 @@ public class AlembicBlockEntity extends BaseBlockEntity {
     private int index;
 
     public AlembicBlockEntity(BlockPos pos, BlockState state) {
-        super(ModEntities.ALEMBIC_TYPE.get(), pos, state);
+        super(ModEntities.ALEMBIC, pos, state);
     }
 
     @Override
@@ -122,11 +122,11 @@ public class AlembicBlockEntity extends BaseBlockEntity {
                         blockEntity.index++;
                     } else {
                         BlockState cageState = level.getBlockState(blockEntity.cagePos);
-                        if (cageState.is(ModBlocks.BONE_CAGE.get())) {
+                        if (cageState.is(ModBlocks.BONE_CAGE)) {
                             BlockPos cageTilePos = blockEntity.cagePos;
                             BoneCageType type = cageState.getValue(BoneCageBlock.CAGE_TYPE);
                             if (type == BoneCageType.TOP) cageTilePos = blockEntity.cagePos.below();
-                            BoneCageBlockEntity boneCageTile = ModEntities.BONE_CAGE_TYPE.get().getBlockEntity(level, cageTilePos);
+                            BoneCageBlockEntity boneCageTile = ModEntities.BONE_CAGE.getBlockEntity(level, cageTilePos);
 
                             if (boneCageTile != null && boneCageTile.hasEntity()) {
                                 boneCageTile.createSoul(blockEntity.nextAlembic.getBlockPos().relative(blockEntity.nextAlembic.parentDir.getOpposite()));
@@ -146,7 +146,7 @@ public class AlembicBlockEntity extends BaseBlockEntity {
     private boolean validateRelays() {
         if (level == null || level.isClientSide() || cagePos == null) return false;
         BlockState cageState = level.getBlockState(cagePos);
-        if (cageState.is(ModBlocks.BONE_CAGE.get())) {
+        if (cageState.is(ModBlocks.BONE_CAGE)) {
             Direction direction = cageState.getValue(HorizontalDirectionalBlock.FACING);
             BoneCageType type = cageState.getValue(BoneCageBlock.CAGE_TYPE);
 
@@ -162,7 +162,7 @@ public class AlembicBlockEntity extends BaseBlockEntity {
     }
 
     private boolean isValidRelay(BlockPos pos) {
-        SoulRelayBlockEntity relay = ModEntities.SOUL_RELAY_TYPE.get().getBlockEntity(level, pos);
+        SoulRelayBlockEntity relay = ModEntities.SOUL_RELAY.getBlockEntity(level, pos);
         return relay != null && relay.isPowered();
     }
 

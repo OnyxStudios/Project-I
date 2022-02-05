@@ -17,7 +17,6 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Material;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
 
 public class ModBlocks {
 
@@ -25,55 +24,96 @@ public class ModBlocks {
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ProjectI.MODID);
     public static final DeferredRegister<Fluid> FLUIDS = DeferredRegister.create(ForgeRegistries.FLUIDS, ProjectI.MODID);
 
-    //Blocks
     private static final Item.Properties ITEM_BLOCK_PROPS = new Item.Properties().tab(ProjectI.TAB);
 
-    public static RegistryObject<Block> BLUE_CRYSTAL = BLOCKS.register("blue_crystal", BlueCrystalBlock::new);
-    public static RegistryObject<Item> BLUE_CRYSTAL_ITEM = ITEMS.register("blue_crystal", BlueCrystalItem::new);
+    //Blocks
+    public static final BlueCrystalBlock BLUE_CRYSTAL = new BlueCrystalBlock();
+    public static final BlueCrystalItem BLUE_CRYSTAL_ITEM = new BlueCrystalItem();
 
-    public static RegistryObject<Block> STAMPER = BLOCKS.register("circuit_stamper", CircuitStamperBlock::new);
-    public static RegistryObject<Item> STAMPER_ITEM = ITEMS.register("circuit_stamper", () -> new BlockItem(STAMPER.get(), ITEM_BLOCK_PROPS));
+    public static final CircuitStamperBlock CIRCUIT_STAMPER = new CircuitStamperBlock();
+    public static final BlockItem CIRCUIT_STAMPER_ITEM = new BlockItem(CIRCUIT_STAMPER, ITEM_BLOCK_PROPS);
 
-    public static RegistryObject<Block> BELLOWS = BLOCKS.register("bellows", BellowsBlock::new);
-    public static RegistryObject<Item> BELLOWS_ITEM = ITEMS.register("bellows", () -> new BlockItem(BELLOWS.get(), ITEM_BLOCK_PROPS));
+    public static final Block BELLOWS = new BellowsBlock();
+    public static final BlockItem BELLOWS_ITEM = new BlockItem(BELLOWS, ITEM_BLOCK_PROPS);
 
-    public static RegistryObject<Block> FUNNEL = BLOCKS.register("funnel", () -> new AlembicBlock(AlembicType.FUNNEL));
-    public static RegistryObject<Item> FUNNEL_ITEM = ITEMS.register("funnel", () -> new BlockItem(FUNNEL.get(), ITEM_BLOCK_PROPS));
+    public static final AlembicBlock FUNNEL = new AlembicBlock(AlembicType.FUNNEL);
+    public static final BlockItem FUNNEL_ITEM = new BlockItem(FUNNEL, ITEM_BLOCK_PROPS);
 
-    public static RegistryObject<Block> DECANTER = BLOCKS.register("decanter", () -> new AlembicBlock(AlembicType.DECANTER));
-    public static RegistryObject<Item> DECANTER_ITEM = ITEMS.register("decanter", () -> new BlockItem(DECANTER.get(), ITEM_BLOCK_PROPS));
+    public static final AlembicBlock DECANTER = new AlembicBlock(AlembicType.DECANTER);
+    public static final BlockItem DECANTER_ITEM = new BlockItem(DECANTER, ITEM_BLOCK_PROPS);
 
-    public static RegistryObject<Block> GOURD = BLOCKS.register("gourd", () -> new AlembicBlock(AlembicType.GOURD));
-    public static RegistryObject<Item> GOURD_ITEM = ITEMS.register("gourd", () -> new BlockItem(GOURD.get(), ITEM_BLOCK_PROPS));
+    public static final AlembicBlock GOURD = new AlembicBlock(AlembicType.GOURD);
+    public static final BlockItem GOURD_ITEM = new BlockItem(GOURD, ITEM_BLOCK_PROPS);
 
-    public static RegistryObject<Block> SPIRAL = BLOCKS.register("spiral", () -> new AlembicBlock(AlembicType.SPIRAL));
-    public static RegistryObject<Item> SPIRAL_ITEM = ITEMS.register("spiral", () -> new BlockItem(SPIRAL.get(), ITEM_BLOCK_PROPS));
+    public static final AlembicBlock SPIRAL = new AlembicBlock(AlembicType.SPIRAL);
+    public static final BlockItem SPIRAL_ITEM = new BlockItem(SPIRAL, ITEM_BLOCK_PROPS);
 
-    public static RegistryObject<Block> SPLITTER = BLOCKS.register("splitter", () -> new AlembicBlock(AlembicType.SPLITTER));
-    public static RegistryObject<Item> SPLITTER_ITEM = ITEMS.register("splitter", () -> new BlockItem(SPLITTER.get(), ITEM_BLOCK_PROPS));
+    public static final AlembicBlock SPLITTER = new AlembicBlock(AlembicType.SPLITTER);
+    public static final BlockItem SPLITTER_ITEM = new BlockItem(SPLITTER, ITEM_BLOCK_PROPS);
 
-    public static RegistryObject<Block> BONE_CAGE = BLOCKS.register("bone_cage", BoneCageBlock::new);
-    public static RegistryObject<Item> BONE_CAGE_ITEM = ITEMS.register("bone_cage", BoneCageItem::new);
+    public static final BoneCageBlock BONE_CAGE = new BoneCageBlock();
+    public static final BlockItem BONE_CAGE_ITEM = new BoneCageItem();
 
-    public static RegistryObject<Block> SOUL_RELAY = BLOCKS.register("soul_relay", SoulRelayBlock::new);
-    public static RegistryObject<Item> SOUL_RELAY_ITEM = ITEMS.register("soul_relay", () -> new BlockItem(SOUL_RELAY.get(), ITEM_BLOCK_PROPS));
+    public static final SoulRelayBlock SOUL_RELAY = new SoulRelayBlock();
+    public static final BlockItem SOUL_RELAY_ITEM = new BlockItem(SOUL_RELAY, ITEM_BLOCK_PROPS);
 
-    public static RegistryObject<Block> BENIGN_STONE = BLOCKS.register("benign_stone", () -> new Block(BlockBehaviour.Properties.of(Material.STONE)));
-    public static RegistryObject<Item> BENIGN_STONE_ITEM = ITEMS.register("benign_stone", () -> new BlockItem(BENIGN_STONE.get(), ITEM_BLOCK_PROPS));
+    public static final Block BENIGN_STONE = new Block(BlockBehaviour.Properties.of(Material.STONE));
+    public static final BlockItem BENIGN_STONE_ITEM = new BlockItem(BENIGN_STONE, ITEM_BLOCK_PROPS);
 
-    public static RegistryObject<Block> BLOW_MOLD = BLOCKS.register("blow_mold", BlowMoldBlock::new);
-    public static RegistryObject<Item> BLOW_MOLD_ITEM = ITEMS.register("blow_mold", () -> new BlockItem(BLOW_MOLD.get(), ITEM_BLOCK_PROPS));
+    public static final BlowMoldBlock BLOW_MOLD = new BlowMoldBlock();
+    public static final BlockItem BLOW_MOLD_ITEM = new BlockItem(BLOW_MOLD, ITEM_BLOCK_PROPS);
 
     //Fluids
-    private static final BlockBehaviour.Properties HOT_FLUID_PROPS = BlockBehaviour.Properties.of(Material.LAVA).randomTicks().lightLevel(value -> 100).noDrops();
     private static final Item.Properties BUCKET_PROPS = new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1).tab(ProjectI.TAB);
+    private static final BlockBehaviour.Properties HOT_FLUID_PROPS = BlockBehaviour.Properties.of(Material.LAVA).randomTicks().lightLevel(value -> 100).noDrops();
 
     public static FluidMoltenBlueCrystal MOLTEN_BLUE_CRYSTAL = new FluidMoltenBlueCrystal.Source();
     public static FluidMoltenBlueCrystal FLOWING_MOLTEN_BLUE_CRYSTAL = new FluidMoltenBlueCrystal.Flowing();
 
-    public static RegistryObject<FluidMoltenBlueCrystal> MOLTEN_BLUE_CRYSTAL_REG = FLUIDS.register("molten_blue_crystal", () -> MOLTEN_BLUE_CRYSTAL);
-    public static RegistryObject<FluidMoltenBlueCrystal> FLOWING_BLUE_CRYSTAL_REG = FLUIDS.register("flowing_molten_blue_crystal", () -> FLOWING_MOLTEN_BLUE_CRYSTAL);
+    public static BaseFluidBlock MOLTEN_BLUE_CRYSTAL_BLOCK = new BaseFluidBlock(() -> MOLTEN_BLUE_CRYSTAL, HOT_FLUID_PROPS);
+    public static Item BLUE_CRYSTAL_BUCKET = new BucketItem(() -> MOLTEN_BLUE_CRYSTAL, BUCKET_PROPS);
 
-    public static RegistryObject<BaseFluidBlock> MOLTEN_BLUE_CRYSTAL_BLOCK = BLOCKS.register("molten_blue_crystal", () -> new BaseFluidBlock(MOLTEN_BLUE_CRYSTAL_REG::get, HOT_FLUID_PROPS));
-    public static RegistryObject<Item> BLUE_CRYSTAL_BUCKET = ITEMS.register("blue_crystal_bucket", () -> new BucketItem(() -> MOLTEN_BLUE_CRYSTAL, BUCKET_PROPS));
+    public static void init() {
+        BLOCKS.register("blue_crystal", () -> BLUE_CRYSTAL);
+        ITEMS.register("blue_crystal", () -> BLUE_CRYSTAL_ITEM);
+
+        BLOCKS.register("circuit_stamper", () -> CIRCUIT_STAMPER);
+        ITEMS.register("circuit_stamper", () -> CIRCUIT_STAMPER_ITEM);
+
+        BLOCKS.register("bellows", () -> BELLOWS);
+        ITEMS.register("bellows", () -> BELLOWS_ITEM);
+
+        BLOCKS.register("funnel", () -> FUNNEL);
+        ITEMS.register("funnel", () -> FUNNEL_ITEM);
+
+        BLOCKS.register("decanter", () -> DECANTER);
+        ITEMS.register("decanter", () -> DECANTER_ITEM);
+
+        BLOCKS.register("gourd", () -> GOURD);
+        ITEMS.register("gourd", () -> GOURD_ITEM);
+
+        BLOCKS.register("spiral", () -> SPIRAL);
+        ITEMS.register("spiral", () -> SPIRAL_ITEM);
+
+        BLOCKS.register("splitter", () -> SPLITTER);
+        ITEMS.register("splitter", () -> SPLITTER_ITEM);
+
+        BLOCKS.register("bone_cage", () -> BONE_CAGE);
+        ITEMS.register("bone_cage", () -> BONE_CAGE_ITEM);
+
+        BLOCKS.register("soul_relay", () -> SOUL_RELAY);
+        ITEMS.register("soul_relay", () -> SOUL_RELAY_ITEM);
+
+        BLOCKS.register("benign_stone", () -> BENIGN_STONE);
+        ITEMS.register("benign_stone", () -> BENIGN_STONE_ITEM);
+
+        BLOCKS.register("blow_mold", () -> BLOW_MOLD);
+        ITEMS.register("blow_mold", () -> BLOW_MOLD_ITEM);
+
+        FLUIDS.register("molten_blue_crystal", () -> MOLTEN_BLUE_CRYSTAL);
+        FLUIDS.register("flowing_molten_blue_crystal", () -> FLOWING_MOLTEN_BLUE_CRYSTAL);
+
+        BLOCKS.register("molten_blue_crystal", () -> MOLTEN_BLUE_CRYSTAL_BLOCK);
+        ITEMS.register("blue_crystal_bucket", () -> BLUE_CRYSTAL_BUCKET);
+    }
 }

@@ -44,33 +44,33 @@ public class ModClient {
     }
 
     private static void initTESRS() {
-        BlockEntityRenderers.register(ModEntities.CRYSTAL_TYPE.get(), ctx -> new BlueCrystalRenderer());
-        BlockEntityRenderers.register(ModEntities.STAMPER_TYPE.get(), ctx -> new CircuitStamperRenderer());
-        BlockEntityRenderers.register(ModEntities.BELLOWS_TYPE.get(), BellowsRenderer::new);
-        BlockEntityRenderers.register(ModEntities.ALEMBIC_TYPE.get(), ctx -> new AlembicRenderer());
-        BlockEntityRenderers.register(ModEntities.BONE_CAGE_TYPE.get(), ctx -> new BoneCageRenderer());
-        BlockEntityRenderers.register(ModEntities.SOUL_RELAY_TYPE.get(), SoulRelayRenderer::new);
-        BlockEntityRenderers.register(ModEntities.BLOW_MOLD_TYPE.get(), ctx -> new BlowMoldRenderer());
+        BlockEntityRenderers.register(ModEntities.CRYSTAL, ctx -> new BlueCrystalRenderer());
+        BlockEntityRenderers.register(ModEntities.STAMPER, ctx -> new CircuitStamperRenderer());
+        BlockEntityRenderers.register(ModEntities.BELLOWS, BellowsRenderer::new);
+        BlockEntityRenderers.register(ModEntities.ALEMBIC, ctx -> new AlembicRenderer());
+        BlockEntityRenderers.register(ModEntities.BONE_CAGE, ctx -> new BoneCageRenderer());
+        BlockEntityRenderers.register(ModEntities.SOUL_RELAY, SoulRelayRenderer::new);
+        BlockEntityRenderers.register(ModEntities.BLOW_MOLD, ctx -> new BlowMoldRenderer());
     }
 
     private static void initLayers() {
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.BLUE_CRYSTAL.get(), RenderType.translucent());
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.STAMPER.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.BELLOWS.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.BONE_CAGE.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.SOUL_RELAY.get(), RenderType.cutout());
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.BLOW_MOLD.get(), RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.BLUE_CRYSTAL, RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.CIRCUIT_STAMPER, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.BELLOWS, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.BONE_CAGE, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.SOUL_RELAY, RenderType.cutout());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.BLOW_MOLD, RenderType.cutout());
 
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.FUNNEL.get(), RenderType.translucent());
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.DECANTER.get(), RenderType.translucent());
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.GOURD.get(), RenderType.translucent());
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.SPIRAL.get(), RenderType.translucent());
-        ItemBlockRenderTypes.setRenderLayer(ModBlocks.SPLITTER.get(), RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.FUNNEL, RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.DECANTER, RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.GOURD, RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.SPIRAL, RenderType.translucent());
+        ItemBlockRenderTypes.setRenderLayer(ModBlocks.SPLITTER, RenderType.translucent());
     }
 
     private static void initEntityRenders() {
-        EntityRenderers.register(ModEntities.BLUE_CRYSTAL_ENTITY.get(), ItemEntityRenderer::new);
-        EntityRenderers.register(ModEntities.SOUL_ENTITY.get(), SoulEntityRenderer::new);
+        EntityRenderers.register(ModEntities.BLUE_CRYSTAL_ENTITY, ItemEntityRenderer::new);
+        EntityRenderers.register(ModEntities.SOUL_ENTITY, SoulEntityRenderer::new);
     }
 
     @SubscribeEvent

@@ -3,7 +3,7 @@ package dev.onyxstudios.projecti.blocks;
 import dev.onyxstudios.projecti.api.block.AlembicType;
 import dev.onyxstudios.projecti.registry.ModBlocks;
 import dev.onyxstudios.projecti.registry.ModEntities;
-import dev.onyxstudios.projecti.tileentity.AlembicBlockEntity;
+import dev.onyxstudios.projecti.blockentity.AlembicBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
@@ -99,7 +99,7 @@ public class AlembicBlock extends BaseEntityBlock {
         if (neighborBlock != this) {
             findCage(level, pos);
 
-            AlembicBlockEntity alembic = ModEntities.ALEMBIC_TYPE.get().getBlockEntity(level, pos);
+            AlembicBlockEntity alembic = ModEntities.ALEMBIC.getBlockEntity(level, pos);
             if (alembic != null) {
                 boolean flag = level.hasNeighborSignal(pos);
 
@@ -130,12 +130,12 @@ public class AlembicBlock extends BaseEntityBlock {
 
     public void findCage(Level level, BlockPos pos) {
         if (level.isClientSide() || getAlembicType() != AlembicType.FUNNEL) return;
-        AlembicBlockEntity alembic = ModEntities.ALEMBIC_TYPE.get().getBlockEntity(level, pos);
+        AlembicBlockEntity alembic = ModEntities.ALEMBIC.getBlockEntity(level, pos);
 
         if (alembic != null) {
             for (Direction direction : Direction.values()) {
                 BlockPos offsetPos = pos.relative(direction);
-                if (level.getBlockState(offsetPos).is(ModBlocks.BONE_CAGE.get())) {
+                if (level.getBlockState(offsetPos).is(ModBlocks.BONE_CAGE)) {
                     alembic.setCage(offsetPos);
                     break;
                 }
@@ -204,7 +204,7 @@ public class AlembicBlock extends BaseEntityBlock {
     @Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide() ? null : createTickerHelper(blockEntityType, ModEntities.ALEMBIC_TYPE.get(), AlembicBlockEntity::tick);
+        return level.isClientSide() ? null : createTickerHelper(blockEntityType, ModEntities.ALEMBIC, AlembicBlockEntity::tick);
     }
 
     @Override

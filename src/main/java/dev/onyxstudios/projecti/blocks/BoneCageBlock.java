@@ -1,7 +1,7 @@
 package dev.onyxstudios.projecti.blocks;
 
 import dev.onyxstudios.projecti.api.block.BoneCageType;
-import dev.onyxstudios.projecti.tileentity.BoneCageBlockEntity;
+import dev.onyxstudios.projecti.blockentity.BoneCageBlockEntity;
 import dev.onyxstudios.projecti.utils.BlockUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

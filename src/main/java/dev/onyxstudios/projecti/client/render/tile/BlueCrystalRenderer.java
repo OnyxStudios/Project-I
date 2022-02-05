@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector3f;
 import dev.onyxstudios.projecti.client.models.BlueCrystalModel;
-import dev.onyxstudios.projecti.tileentity.CrystalBlockEntity;
+import dev.onyxstudios.projecti.blockentity.CrystalBlockEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;

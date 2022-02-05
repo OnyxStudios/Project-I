@@ -2,7 +2,7 @@ package dev.onyxstudios.projecti.client.render.tile;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
-import dev.onyxstudios.projecti.tileentity.StamperBlockEntity;
+import dev.onyxstudios.projecti.blockentity.StamperBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.block.model.ItemTransforms;

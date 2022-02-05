@@ -1,4 +1,4 @@
-package dev.onyxstudios.projecti.tileentity;
+package dev.onyxstudios.projecti.blockentity;
 
 import dev.onyxstudios.projecti.registry.ModEntities;
 import net.minecraft.core.BlockPos;
@@ -31,7 +31,7 @@ public class CrystalBlockEntity extends BaseBlockEntity {
     public Direction randomDir;
 
     public CrystalBlockEntity(BlockPos pos, BlockState state) {
-        super(ModEntities.CRYSTAL_TYPE.get(), pos, state);
+        super(ModEntities.CRYSTAL, pos, state);
         randomDir = Direction.getRandom(random);
     }
 

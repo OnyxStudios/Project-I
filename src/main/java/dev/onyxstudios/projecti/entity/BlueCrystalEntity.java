@@ -19,7 +19,7 @@ public class BlueCrystalEntity extends ItemEntity {
     }
 
     public BlueCrystalEntity(Level level, ItemStack stack, ItemEntity originalEntity) {
-        super(ModEntities.BLUE_CRYSTAL_ENTITY.get(), level);
+        super(ModEntities.BLUE_CRYSTAL_ENTITY, level);
         load(originalEntity.saveWithoutId(new CompoundTag()));
         setItem(stack);
     }
@@ -32,7 +32,7 @@ public class BlueCrystalEntity extends ItemEntity {
             inLavaTicks++;
 
             if (inLavaTicks >= 60 && !level.isClientSide) {
-                level.setBlock(blockPosition(), ModBlocks.MOLTEN_BLUE_CRYSTAL_BLOCK.get().defaultBlockState(), 3);
+                level.setBlock(blockPosition(), ModBlocks.MOLTEN_BLUE_CRYSTAL_BLOCK.defaultBlockState(), 3);
                 this.remove(RemovalReason.DISCARDED);
             }
         }

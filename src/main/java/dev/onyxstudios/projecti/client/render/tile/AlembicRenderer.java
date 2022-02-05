@@ -4,7 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Vector3f;
 import dev.onyxstudios.projecti.api.block.AlembicType;
 import dev.onyxstudios.projecti.client.ModClient;
-import dev.onyxstudios.projecti.tileentity.AlembicBlockEntity;
+import dev.onyxstudios.projecti.blockentity.AlembicBlockEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.Sheets;

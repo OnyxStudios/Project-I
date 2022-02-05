@@ -7,19 +7,30 @@ import dev.onyxstudios.projecti.items.SoulBoneItem;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
 
 public class ModItems {
 
     public static final DeferredRegister<Item> ITEMS = DeferredRegister.create(ForgeRegistries.ITEMS, ProjectI.MODID);
 
-    public static RegistryObject<KnowledgeGemItem> KNOWLEDGE_GEM = ITEMS.register("knowledge_gem", KnowledgeGemItem::new);
-    public static RegistryObject<SoulBoneItem> SOUL_BONE = ITEMS.register("soul_bone", SoulBoneItem::new);
-    public static RegistryObject<Item> YELLOW_CRYSTAL = ITEMS.register("yellow_crystal", BaseItem::new);
-    public static RegistryObject<Item> FUNNEL_MOLD = ITEMS.register("funnel_mold", BaseItem::new);
-    public static RegistryObject<Item> DECANTER_MOLD = ITEMS.register("decanter_mold", BaseItem::new);
-    public static RegistryObject<Item> SPLITTER_MOLD = ITEMS.register("splitter_mold", BaseItem::new);
-    public static RegistryObject<Item> GOURD_MOLD = ITEMS.register("gourd_mold", BaseItem::new);
-    public static RegistryObject<Item> SPIRAL_MOLD = ITEMS.register("spiral_mold", BaseItem::new);
-    public static RegistryObject<Item> GEM_MOLD = ITEMS.register("gem_mold", BaseItem::new);
+    public static final KnowledgeGemItem KNOWLEDGE_GEM = new KnowledgeGemItem();
+    public static final SoulBoneItem SOUL_BONE = new SoulBoneItem();
+    public static final Item YELLOW_CRYSTAL = new BaseItem();
+    public static final Item FUNNEL_MOLD = new BaseItem();
+    public static final Item DECANTER_MOLD = new BaseItem();
+    public static final Item SPLITTER_MOLD = new BaseItem();
+    public static final Item GOURD_MOLD = new BaseItem();
+    public static final Item SPIRAL_MOLD = new BaseItem();
+    public static final Item GEM_MOLD = new BaseItem();
+
+    public static void init() {
+        ITEMS.register("knowledge_gem", () -> KNOWLEDGE_GEM);
+        ITEMS.register("soul_bone", () -> SOUL_BONE);
+        ITEMS.register("yellow_crystal", () -> YELLOW_CRYSTAL);
+        ITEMS.register("funnel_mold", () -> FUNNEL_MOLD);
+        ITEMS.register("decanter_mold", () -> DECANTER_MOLD);
+        ITEMS.register("splitter_mold", () -> SPLITTER_MOLD);
+        ITEMS.register("gourd_mold", () -> GOURD_MOLD);
+        ITEMS.register("spiral_mold", () -> SPIRAL_MOLD);
+        ITEMS.register("gem_mold", () -> GEM_MOLD);
+    }
 }

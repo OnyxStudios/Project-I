@@ -25,9 +25,9 @@ public class ForgeEvents {
 
         if (!(entity instanceof Player) && source instanceof Player player) {
             if (player.getMainHandItem().sameItem(Items.BONE.getDefaultInstance())) {
-                if (!player.getInventory().add(new ItemStack(ModItems.SOUL_BONE.get()))) {
+                if (!player.getInventory().add(new ItemStack(ModItems.SOUL_BONE))) {
                     if (!player.level.isClientSide()) {
-                        player.level.addFreshEntity(new ItemEntity(player.level, player.getX(), player.getY(), player.getZ(), new ItemStack(ModItems.SOUL_BONE.get())));
+                        player.level.addFreshEntity(new ItemEntity(player.level, player.getX(), player.getY(), player.getZ(), new ItemStack(ModItems.SOUL_BONE)));
                     }
                 }
 

@@ -3,7 +3,7 @@ package dev.onyxstudios.projecti.blocks;
 import dev.onyxstudios.projecti.registry.ModBlocks;
 import dev.onyxstudios.projecti.registry.ModEntities;
 import dev.onyxstudios.projecti.registry.ModItems;
-import dev.onyxstudios.projecti.tileentity.CrystalBlockEntity;
+import dev.onyxstudios.projecti.blockentity.CrystalBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
@@ -83,7 +83,7 @@ public class BlueCrystalBlock extends BaseEntityBlock {
             //Make it so only fully grown drop 1, so that players don't get around it and just break bottom  block
             //Ex. Make crystal with water+lapis+bone and break bottom block instantly to drop
             if (crystalEntity.fullyGrown || crystalEntity.returnItem)
-                level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModBlocks.BLUE_CRYSTAL_ITEM.get())));
+                level.addFreshEntity(new ItemEntity(level, pos.getX(), pos.getY(), pos.getZ(), new ItemStack(ModBlocks.BLUE_CRYSTAL_ITEM)));
 
             level.removeBlock(pos, false);
         }
@@ -95,7 +95,7 @@ public class BlueCrystalBlock extends BaseEntityBlock {
     public void playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player) {
         BlockEntity tile = level.getBlockEntity(pos);
         if (!level.isClientSide() && tile instanceof CrystalBlockEntity && !player.isCreative()) {
-            state.spawnAfterBreak((ServerLevel) level, pos, new ItemStack(ModBlocks.BLUE_CRYSTAL_ITEM.get()));
+            state.spawnAfterBreak((ServerLevel) level, pos, new ItemStack(ModBlocks.BLUE_CRYSTAL_ITEM));
             dropResources(state, level, pos);
         }
 
@@ -116,7 +116,7 @@ public class BlueCrystalBlock extends BaseEntityBlock {
 
                 drops.add(new ItemStack(this, returnAmt + (random.nextDouble() <= 0.15 ? 1 : 0)));
                 if (crystal.rare) {
-                    drops.add(new ItemStack(ModItems.YELLOW_CRYSTAL.get()));
+                    drops.add(new ItemStack(ModItems.YELLOW_CRYSTAL));
                 }
             }
         }
@@ -138,7 +138,7 @@ public class BlueCrystalBlock extends BaseEntityBlock {
     @org.jetbrains.annotations.Nullable
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType) {
-        return level.isClientSide() ? null : createTickerHelper(blockEntityType, ModEntities.CRYSTAL_TYPE.get(), CrystalBlockEntity::tick);
+        return level.isClientSide() ? null : createTickerHelper(blockEntityType, ModEntities.CRYSTAL, CrystalBlockEntity::tick);
     }
 
     @Nullable

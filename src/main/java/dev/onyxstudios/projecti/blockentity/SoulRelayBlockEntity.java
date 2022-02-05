@@ -1,4 +1,4 @@
-package dev.onyxstudios.projecti.tileentity;
+package dev.onyxstudios.projecti.blockentity;
 
 import dev.onyxstudios.projecti.registry.ModEntities;
 import net.minecraft.core.BlockPos;
@@ -20,7 +20,7 @@ public class SoulRelayBlockEntity extends BaseBlockEntity implements IAnimatable
     private boolean canVisit = true;
 
     public SoulRelayBlockEntity(BlockPos pos, BlockState state) {
-        super(ModEntities.SOUL_RELAY_TYPE.get(), pos, state);
+        super(ModEntities.SOUL_RELAY, pos, state);
     }
 
     @Override

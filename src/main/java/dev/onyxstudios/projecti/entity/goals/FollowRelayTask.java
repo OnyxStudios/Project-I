@@ -1,10 +1,10 @@
 package dev.onyxstudios.projecti.entity.goals;
 
 import com.google.common.collect.ImmutableMap;
+import dev.onyxstudios.projecti.blockentity.SoulRelayBlockEntity;
 import dev.onyxstudios.projecti.entity.SoulEntity;
 import dev.onyxstudios.projecti.registry.ModBlocks;
 import dev.onyxstudios.projecti.registry.ModEntities;
-import dev.onyxstudios.projecti.tileentity.SoulRelayBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.server.level.ServerLevel;
@@ -30,13 +30,13 @@ public class FollowRelayTask extends Behavior<SoulEntity> {
         }
 
         level.getPoiManager().findAllClosestFirst(
-                ModEntities.SOUL_RELAY_INTEREST.get().getPredicate(),
+                ModEntities.SOUL_RELAY_INTEREST.getPredicate(),
                 pos -> {
                     if (entity.isBlacklisted(pos)) return false;
 
                     BlockEntity tile = level.getBlockEntity(pos);
                     if (tile instanceof SoulRelayBlockEntity) {
-                        if (level.getBlockState(pos.below()).is(ModBlocks.SOUL_RELAY.get())) return false;
+                        if (level.getBlockState(pos.below()).is(ModBlocks.SOUL_RELAY)) return false;
 
                         SoulRelayBlockEntity soulRelay = (SoulRelayBlockEntity) tile;
                         return soulRelay.isPowered() && soulRelay.canVisit();

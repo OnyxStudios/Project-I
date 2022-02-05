@@ -1,4 +1,4 @@
-package dev.onyxstudios.projecti.tileentity;
+package dev.onyxstudios.projecti.blockentity;
 
 import dev.onyxstudios.projecti.api.block.IBellowsTickable;
 import dev.onyxstudios.projecti.registry.ModEntities;
@@ -44,7 +44,7 @@ public class BlowMoldBlockEntity extends BaseBlockEntity implements IBellowsTick
     private int progress;
 
     public BlowMoldBlockEntity(BlockPos pos, BlockState state) {
-        super(ModEntities.BLOW_MOLD_TYPE.get(), pos, state);
+        super(ModEntities.BLOW_MOLD, pos, state);
     }
 
     @Override

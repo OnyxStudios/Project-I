@@ -1,7 +1,7 @@
 package dev.onyxstudios.projecti.client.render.tile;
 
 import dev.onyxstudios.projecti.client.models.SoulRelayModel;
-import dev.onyxstudios.projecti.tileentity.SoulRelayBlockEntity;
+import dev.onyxstudios.projecti.blockentity.SoulRelayBlockEntity;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import software.bernie.geckolib3.renderers.geo.GeoBlockRenderer;
 

@@ -72,8 +72,8 @@ public class BlueCrystalBlock extends BaseEntityBlock {
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         BlockEntity tile = level.getBlockEntity(pos);
-        if (!level.isClientSide && tile instanceof CrystalBlockEntity)
-            ((CrystalBlockEntity) tile).setProps(true);
+        if (!level.isClientSide && tile instanceof CrystalBlockEntity crystal)
+            crystal.setProps(true);
     }
 
     @Override
@@ -108,16 +108,12 @@ public class BlueCrystalBlock extends BaseEntityBlock {
         Random random = lootBuilder.getLevel().random;
 
         BlockEntity tile = lootBuilder.getOptionalParameter(LootContextParams.BLOCK_ENTITY);
-        if (tile instanceof CrystalBlockEntity) {
-            CrystalBlockEntity crystal = (CrystalBlockEntity) tile;
+        if (tile instanceof CrystalBlockEntity crystal && crystal.fullyGrown) {
+            int returnAmt = crystal.returnItem ? 2 : 1;
 
-            if (crystal.fullyGrown) {
-                int returnAmt = crystal.returnItem ? 2 : 1;
-
-                drops.add(new ItemStack(this, returnAmt + (random.nextDouble() <= 0.15 ? 1 : 0)));
-                if (crystal.rare) {
-                    drops.add(new ItemStack(ModItems.YELLOW_CRYSTAL));
-                }
+            drops.add(new ItemStack(this, returnAmt + (random.nextDouble() <= 0.15 ? 1 : 0)));
+            if (crystal.rare) {
+                drops.add(new ItemStack(ModItems.YELLOW_CRYSTAL));
             }
         }
 

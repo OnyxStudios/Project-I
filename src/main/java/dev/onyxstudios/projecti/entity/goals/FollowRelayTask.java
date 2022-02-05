@@ -35,10 +35,9 @@ public class FollowRelayTask extends Behavior<SoulEntity> {
                     if (entity.isBlacklisted(pos)) return false;
 
                     BlockEntity tile = level.getBlockEntity(pos);
-                    if (tile instanceof SoulRelayBlockEntity) {
+                    if (tile instanceof SoulRelayBlockEntity soulRelay) {
                         if (level.getBlockState(pos.below()).is(ModBlocks.SOUL_RELAY)) return false;
 
-                        SoulRelayBlockEntity soulRelay = (SoulRelayBlockEntity) tile;
                         return soulRelay.isPowered() && soulRelay.canVisit();
                     }
 

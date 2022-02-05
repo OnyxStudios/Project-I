@@ -1,8 +1,8 @@
 package dev.onyxstudios.projecti.blocks;
 
+import dev.onyxstudios.projecti.blockentity.SoulRelayBlockEntity;
 import dev.onyxstudios.projecti.registry.ModBlocks;
 import dev.onyxstudios.projecti.registry.ModEntities;
-import dev.onyxstudios.projecti.blockentity.SoulRelayBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
@@ -59,8 +59,8 @@ public class SoulRelayBlock extends BaseEntityBlock {
     private void updatePower(Level level, BlockPos pos, boolean powered) {
         BlockEntity tile = level.getBlockEntity(pos);
 
-        if (tile instanceof SoulRelayBlockEntity) {
-            ((SoulRelayBlockEntity) tile).setPowered(powered);
+        if (tile instanceof SoulRelayBlockEntity soulRelay) {
+            soulRelay.setPowered(powered);
 
             if (level.getBlockState(pos.above()).is(this)) {
                 updatePower(level, pos.above(), powered);
@@ -72,18 +72,14 @@ public class SoulRelayBlock extends BaseEntityBlock {
         if (level.isClientSide()) return;
         BlockEntity tile = level.getBlockEntity(pos);
 
-        if (tile instanceof SoulRelayBlockEntity) {
-            SoulRelayBlockEntity soulRelay = (SoulRelayBlockEntity) tile;
+        if (tile instanceof SoulRelayBlockEntity soulRelay) {
             boolean flag = level.hasNeighborSignal(pos);
+
             if (!flag) {
                 BlockPos below = pos.below();
 
-                if (level.getBlockEntity(below) instanceof SoulRelayBlockEntity) {
-                    SoulRelayBlockEntity belowRelay = (SoulRelayBlockEntity) level.getBlockEntity(below);
-
-                    if (belowRelay != null && belowRelay.isPowered())
-                        flag = true;
-                }
+                if (level.getBlockEntity(below) instanceof SoulRelayBlockEntity belowRelay && belowRelay.isPowered())
+                    flag = true;
             }
 
             if (soulRelay.isPowered() != flag) {

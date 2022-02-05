@@ -46,8 +46,8 @@ public class CircuitStamperBlock extends BaseEntityBlock {
         BlockEntity tile = level.getBlockEntity(pos);
         ItemStack heldStack = player.getItemInHand(hand);
 
-        if (!level.isClientSide && state.getValue(STATUS) == StamperStatus.OPEN && tile instanceof StamperBlockEntity && rayTraceResult.getDirection() == Direction.UP) {
-            StamperBlockEntity stamper = (StamperBlockEntity) tile;
+        if (!level.isClientSide && state.getValue(STATUS) == StamperStatus.OPEN &&
+                tile instanceof StamperBlockEntity stamper && rayTraceResult.getDirection() == Direction.UP) {
             if (!heldStack.isEmpty() || (heldStack.isEmpty() && player.isShiftKeyDown())) {
                 int slot;
                 Vec3 hitVec = rayTraceResult.getLocation().subtract(pos.getX(), pos.getY(), pos.getZ());
@@ -56,22 +56,22 @@ public class CircuitStamperBlock extends BaseEntityBlock {
                 double x = 0;
                 double z = 0;
                 switch (direction) {
-                    case NORTH:
+                    case NORTH -> {
                         x = hitVec.x;
                         z = 1 - hitVec.z;
-                        break;
-                    case SOUTH:
+                    }
+                    case SOUTH -> {
                         x = 1 - hitVec.x;
                         z = hitVec.z;
-                        break;
-                    case EAST:
+                    }
+                    case EAST -> {
                         x = hitVec.z;
                         z = hitVec.x;
-                        break;
-                    case WEST:
+                    }
+                    case WEST -> {
                         x = 1 - hitVec.z;
                         z = 1 - hitVec.x;
-                        break;
+                    }
                 }
 
                 if (x > 0.0625f && x < 0.9375f && z > 0.0625f && z < 0.9375f) {
@@ -135,8 +135,8 @@ public class CircuitStamperBlock extends BaseEntityBlock {
         super.neighborChanged(state, level, pos, block, neighborPos, moving);
         BlockEntity tile = level.getBlockEntity(pos);
 
-        if (tile instanceof StamperBlockEntity) {
-            ((StamperBlockEntity) tile).run();
+        if (tile instanceof StamperBlockEntity stamper) {
+            stamper.run();
         }
     }
 

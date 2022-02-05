@@ -79,7 +79,6 @@ public class AlembicBlock extends BaseEntityBlock {
         findCage(level, pos);
         BlockEntity tileEntity = level.getBlockEntity(pos);
         if (tileEntity instanceof AlembicBlockEntity) {
-
             for (Direction direction : Direction.values()) {
                 BlockPos offsetPos = pos.relative(direction);
                 if (connectAlembics(level, pos, offsetPos, direction)) {
@@ -146,8 +145,7 @@ public class AlembicBlock extends BaseEntityBlock {
     public boolean connectAlembics(Level level, BlockPos pos, BlockPos neighborPos, Direction neighborDirection) {
         AlembicBlockEntity alembic = (AlembicBlockEntity) level.getBlockEntity(pos);
         BlockEntity neighborEntity = level.getBlockEntity(neighborPos);
-        if (alembic != null && neighborEntity instanceof AlembicBlockEntity) {
-            AlembicBlockEntity neighborAlembic = (AlembicBlockEntity) neighborEntity;
+        if (alembic != null && neighborEntity instanceof AlembicBlockEntity neighborAlembic) {
             boolean isFunnel = getAlembicType() == AlembicType.FUNNEL;
             boolean neighborFunnel = neighborAlembic.getAlembicType() == AlembicType.FUNNEL;
 

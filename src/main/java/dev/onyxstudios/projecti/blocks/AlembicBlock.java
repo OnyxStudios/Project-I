@@ -1,9 +1,9 @@
 package dev.onyxstudios.projecti.blocks;
 
 import dev.onyxstudios.projecti.api.block.AlembicType;
+import dev.onyxstudios.projecti.blockentity.AlembicBlockEntity;
 import dev.onyxstudios.projecti.registry.ModBlocks;
 import dev.onyxstudios.projecti.registry.ModEntities;
-import dev.onyxstudios.projecti.blockentity.AlembicBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
@@ -111,9 +111,7 @@ public class AlembicBlock extends BaseEntityBlock {
 
     @Override
     public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
-        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof AlembicBlockEntity) {
-            AlembicBlockEntity alembic = (AlembicBlockEntity) level.getBlockEntity(pos);
-
+        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof AlembicBlockEntity alembic) {
             if (alembic.hasParent()) {
                 alembic.getParent().removeChild();
             }
@@ -169,20 +167,13 @@ public class AlembicBlock extends BaseEntityBlock {
 
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext selectionContext) {
-        switch (type) {
-            case FUNNEL:
-                return FUNNEL_SHAPE;
-            case GOURD:
-                return GOURD_SHAPE;
-            case SPLITTER:
-                return SPLITTER_SHAPE;
-            case SPIRAL:
-                return SPIRAL_SHAPE;
-            case DECANTER:
-                return DECANTER_SHAPE;
-        }
-
-        return super.getShape(state, level, pos, selectionContext);
+        return switch (type) {
+            case FUNNEL -> FUNNEL_SHAPE;
+            case GOURD -> GOURD_SHAPE;
+            case SPLITTER -> SPLITTER_SHAPE;
+            case SPIRAL -> SPIRAL_SHAPE;
+            case DECANTER -> DECANTER_SHAPE;
+        };
     }
 
     public AlembicType getAlembicType() {

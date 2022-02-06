@@ -3,8 +3,8 @@ package dev.onyxstudios.projecti.client.models;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Vector4f;
-import dev.onyxstudios.projecti.client.ModClient;
 import dev.onyxstudios.projecti.blockentity.CrystalBlockEntity;
+import dev.onyxstudios.projecti.client.ModClient;
 import net.minecraft.client.model.Model;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -24,7 +24,6 @@ public class BlueCrystalModel extends Model {
 
     private final ModelPart base;
     private final ModelPart[] pillars;
-    private final ModelPart decoration;
 
     //Minecraft is stupid, STOP CHANGING RENDERING STUFF PLEASE
     //BANE OF MY EXISTENCE
@@ -32,7 +31,6 @@ public class BlueCrystalModel extends Model {
         super(RenderType::entityTranslucent);
         this.base = createBasePart();
         this.pillars = createPillarsPart();
-        this.decoration = createDecorationPart();
     }
 
     public ModelPart createBasePart() {
@@ -43,24 +41,6 @@ public class BlueCrystalModel extends Model {
                 .texOffs(9, 14).addBox(-1.0F, -11.0F, 0.0F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
                 .texOffs(7, 12).addBox(-1.0F, -11.0F, -2.0F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
                 .texOffs(6, 7).addBox(1.0F, -11.0F, 0.0F, 1.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
-
-        return LayerDefinition.create(meshdefinition, 16, 16).bakeRoot();
-    }
-
-    public ModelPart createDecorationPart() {
-        MeshDefinition meshdefinition = new MeshDefinition();
-        PartDefinition partdefinition = meshdefinition.getRoot();
-        partdefinition.addOrReplaceChild("decoration", CubeListBuilder.create().texOffs(9, 9).addBox(-6.0F, -1.0F, -7.0F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
-                .texOffs(8, 11).addBox(-7.0F, -1.0F, 0.0F, 2.0F, 1.0F, 2.0F, new CubeDeformation(0.0F))
-                .texOffs(10, 11).addBox(-5.0F, -1.0F, 5.0F, 2.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
-                .texOffs(10, 12).addBox(5.0F, -1.0F, 4.0F, 1.0F, 1.0F, 2.0F, new CubeDeformation(0.0F))
-                .texOffs(8, 12).addBox(6.0F, -1.0F, 5.0F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
-                .texOffs(3, 12).addBox(5.0F, -1.0F, -1.0F, 1.0F, 1.0F, 2.0F, new CubeDeformation(0.0F))
-                .texOffs(12, 8).addBox(7.0F, -1.0F, 0.0F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
-                .texOffs(8, 8).addBox(1.0F, -2.0F, -7.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.0F))
-                .texOffs(9, 9).addBox(1.0F, -1.0F, -8.0F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
-                .texOffs(9, 4).addBox(0.0F, -1.0F, -7.0F, 1.0F, 1.0F, 1.0F, new CubeDeformation(0.0F))
-                .texOffs(0, 0).addBox(-7.0F, -1.0F, -7.0F, 1.0F, 1.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
 
         return LayerDefinition.create(meshdefinition, 16, 16).bakeRoot();
     }
@@ -89,7 +69,6 @@ public class BlueCrystalModel extends Model {
     @Override
     public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int light, int lightOverlay, float passR, float passG, float passB, float passA) {
         base.render(poseStack, vertexConsumer, light, lightOverlay, CRYSTAL_COLOR.x(), CRYSTAL_COLOR.y(), CRYSTAL_COLOR.z(), CRYSTAL_COLOR.w());
-        decoration.render(poseStack, vertexConsumer, light, lightOverlay, DECO_COLOR.x(), DECO_COLOR.y(), DECO_COLOR.z(), DECO_COLOR.w());
     }
 
     public void renderPillars(CrystalBlockEntity tile, PoseStack poseStack, VertexConsumer vertexConsumer, int light, int lightOverlay) {

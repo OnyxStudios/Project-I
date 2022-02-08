@@ -1,5 +1,6 @@
 package dev.onyxstudios.projecti.client;
 
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import dev.onyxstudios.projecti.ProjectI;
 import dev.onyxstudios.projecti.client.render.entity.SoulEntityRenderer;
 import dev.onyxstudios.projecti.client.render.tile.*;
@@ -10,18 +11,18 @@ import dev.onyxstudios.projecti.registry.ModParticles;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.ShaderInstance;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
 import net.minecraft.client.renderer.entity.EntityRenderers;
 import net.minecraft.client.renderer.entity.ItemEntityRenderer;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraftforge.client.event.ModelBakeEvent;
-import net.minecraftforge.client.event.ModelRegistryEvent;
-import net.minecraftforge.client.event.ParticleFactoryRegisterEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
+import net.minecraftforge.client.event.*;
 import net.minecraftforge.client.model.ForgeModelBakery;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+
+import java.io.IOException;
 
 @Mod.EventBusSubscriber(modid = ProjectI.MODID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class ModClient {
@@ -32,6 +33,8 @@ public class ModClient {
     public static ResourceLocation LONG_CONNECTOR_LOC = new ResourceLocation(ProjectI.MODID, "block/alembic_long_connector");
     public static BakedModel SHORT_CONNECTOR;
     public static BakedModel LONG_CONNECTOR;
+
+    public static ShaderInstance SOUL_BLOOM_SHADER;
 
     public static void init() {
         initEntityRenders();
@@ -88,5 +91,11 @@ public class ModClient {
     public static void onModelBake(ModelBakeEvent event) {
         SHORT_CONNECTOR = event.getModelManager().getModel(SHORT_CONNECTOR_LOC);
         LONG_CONNECTOR = event.getModelManager().getModel(LONG_CONNECTOR_LOC);
+    }
+
+    @SubscribeEvent
+    public static void registerShaderEvent(RegisterShadersEvent event) throws IOException {
+        event.registerShader(new ShaderInstance(event.getResourceManager(), new ResourceLocation(ProjectI.MODID, "bloom"), DefaultVertexFormat.NEW_ENTITY),
+                shaderInstance -> SOUL_BLOOM_SHADER = shaderInstance);
     }
 }
